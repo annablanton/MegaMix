@@ -89,7 +89,7 @@ class Gordo {
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megamix_enemies.png");
 
-        this.animations = [];
+        this.animation = new Animator(this.spritesheet, 146, 255, 16, 16, 2, 0.09 * 3, 4, true, true);
 
     }
     update() {
@@ -97,7 +97,7 @@ class Gordo {
     }
 
     draw(ctx) {
-
+        this.animation.drawFrame(this.game.clockTick, ctx, 16, 16, 3);
     }
 }
 
@@ -106,7 +106,6 @@ class Wheelie {
         Object.assign(this, { game, x, y });
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megamix_enemies.png");
-        console.log(this.spritesheet);
 
         this.animations = [];
         for (var i = 0; i < 3; i++) { //three states (idle, aggressive, dead)
@@ -127,21 +126,21 @@ class Wheelie {
     }
 
     draw(ctx) {
-        this.animations[0][0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 3);
-        this.animations[0][0][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16, 3);
+        //this.animations[0][0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 3);
+        //this.animations[0][0][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16, 3);
 
-        this.animations[0][1][0].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 5, 3);
-        this.animations[0][1][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 5, 3);
+        //this.animations[0][1][0].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 5, 3);
+        //this.animations[0][1][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 5, 3);
 
-        this.animations[1][0][0].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 10, 3);
-        this.animations[1][0][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 10, 3);
-        this.animations[1][1][0].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 15, 3);
-        this.animations[1][1][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 15, 3);
+        //this.animations[1][0][0].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 10, 3);
+        //this.animations[1][0][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 10, 3);
+        //this.animations[1][1][0].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 15, 3);
+        //this.animations[1][1][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 15, 3);
 
-        this.animations[2][0][0].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 20, 3);
-        this.animations[2][0][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 20, 3);
-        this.animations[2][1][0].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 25, 3);
-        this.animations[2][1][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 25, 3);
+        //this.animations[2][0][0].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 20, 3);
+        //this.animations[2][0][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 20, 3);
+        //this.animations[2][1][0].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 25, 3);
+        //this.animations[2][1][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 25, 3);
 
     }
 

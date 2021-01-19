@@ -4,7 +4,7 @@ class SceneManager {
         this.game.camera = this;
         this.x = 0;
 
-        game.addEntity(new Wheelie(game, 16, 16));
+        game.addEntity(new Gordo(game, 16, 16));
     };
 
     clearEntities() {
