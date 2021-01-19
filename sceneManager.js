@@ -5,6 +5,7 @@ class SceneManager {
         this.x = 0;
 
         game.addEntity(new Wheelie(game, 16, 16));
+        game.addEntity(new Megaman(game, 100, 100));
     };
 
     clearEntities() {
