@@ -18,26 +18,44 @@ class AssetManager {
     downloadAll(callback) {
         if (this.downloadQueue.length === 0) setTimeout(callback, 10);
         for (var i = 0; i < this.downloadQueue.length; i++) {
-            var img = new Image();
             var that = this;
-
             var path = this.downloadQueue[i];
-            console.log(path);
 
-            img.addEventListener("load", function () {
-                console.log("Loaded " + this.src);
-                that.successCount++;
-                if (that.isDone()) callback();
-            });
+            if (path.endsWith(".png")) {
+                var img = new Image();
 
-            img.addEventListener("error", function () {
-                console.log("Error loading " + this.src);
-                that.errorCount++;
-                if (that.isDone()) callback();
-            });
+                img.addEventListener("load", function () {
+                    console.log("Loaded " + this.src);
+                    that.successCount++;
+                    if (that.isDone()) callback();
+                });
 
-            img.src = path;
-            this.cache[path] = img;
+                img.addEventListener("error", function () {
+                    console.log("Error loading " + this.src);
+                    that.errorCount++;
+                    if (that.isDone()) callback();
+                });
+
+                img.src = path;
+                this.cache[path] = img;
+            } else if (path.endsWith(".wav")) {
+                var aud = new Audio();
+
+                aud.addEventListener("canplaythrough", function () {
+                    console.log("Loaded " + this.src);
+                    that.successCount++;
+                    if (that.isDone()) callback();
+                });
+
+                aud.addEventListener("error", function () {
+                    console.log("Error loading " + this.src);
+                    that.errorCount++;
+                    if (that.isDone()) callback();
+                });
+
+                aud.src = path;
+                this.cache[path] = aud;
+            }
         }
     };
 
