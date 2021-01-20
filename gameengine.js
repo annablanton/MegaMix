@@ -49,18 +49,18 @@ class GameEngine {
         }
 
         this.ctx.canvas.addEventListener("mousemove", function (e) {
-            console.log(getXandY(e));
+            //console.log(getXandY(e));
             that.mouse = getXandY(e);
         }, false);
 
         this.ctx.canvas.addEventListener("click", function (e) {
-            console.log(getXandY(e)+"left click");
+            //console.log(getXandY(e)+"left click");
             that.click = getXandY(e);
             that.click = true;
         }, false);
 
         this.ctx.canvas.addEventListener("contextmenu", function (e) {
-            console.log(getXandY(e)+"right click");
+            //console.log(getXandY(e)+"right click");
             that.rightclick = getXandY(e);
             that.contextmenu = true;
             e.preventDefault();
@@ -74,17 +74,17 @@ class GameEngine {
                 case "ArrowLeft":
                 case "KeyA":
                     that.left = true;
-                    console.log("left");
+                    //console.log("left");
                     break;
                 case "ArrowRight":
                 case "KeyD":
                     that.right = true;
-                    console.log("right");
+                    //console.log("right");
                     break;
                 case "ArrowUp":
                 case "KeyW":
                     that.up = true;
-                    console.log("upupup");
+                    //console.log("upupup");
                     break;
                 case "ArrowDown":
                 case "KeyS":
@@ -92,15 +92,15 @@ class GameEngine {
                     break;
                 case "Space":
                     that.space = true;
-                    console.log("jump");
+                    //console.log("jump");
                     break;
                 case "ShiftLeft":
                     that.shift = true;
-                    console.log("slide");
+                    //console.log("slide");
                     break;
                 case "KeyQ":
                     that.q = true;
-                    console.log("weapon change");
+                    //console.log("weapon change");
                     break;
             }
         }, false);
