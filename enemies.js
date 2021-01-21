@@ -93,7 +93,7 @@ class Bulldozer {
     }
 
     draw(ctx) {
-        console.log(this.animations[0][0][0]);
+        //console.log(this.animations[0][0][0]);
         this.animations[0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 2);
         this.animations[0][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 10, 2);
         this.animations[0][2].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 20, 2);

@@ -18,8 +18,8 @@ class GameEngine {
         this.q=false;
         //mouse
         this.click=false;
-        this.mouse=false;
-        this.contextmenu =false;
+        this.mouse = false;
+        //this.contextmenu =false;
 
     };
 
@@ -53,19 +53,43 @@ class GameEngine {
             that.mouse = getXandY(e);
         }, false);
 
-        this.ctx.canvas.addEventListener("click", function (e) {
-            //console.log(getXandY(e)+"left click");
-            that.click = getXandY(e);
-            that.click = true;
-        }, false);
+        //this.ctx.canvas.addEventListener("click", function (e) {
+        //    //console.log(getXandY(e)+"left click");
+        //    that.click = getXandY(e);
+        //    that.click = true;
+        //}, false);
 
         this.ctx.canvas.addEventListener("contextmenu", function (e) {
             //console.log(getXandY(e)+"right click");
-            that.rightclick = getXandY(e);
-            that.contextmenu = true;
+            //that.rightclick = true;
+            //that.contextmenu = true;
             e.preventDefault();
         }, false);
 
+        this.ctx.canvas.addEventListener("mousedown", function (e) {
+            console.log("mouse click");
+            switch (event.button) {
+                case 0:
+                    that.click = true;
+                    break;
+                case 2:
+                    that.rightclick = true;
+                    break;
+            }
+        })
+
+        this.ctx.canvas.addEventListener("mouseup", function (e) {
+            switch (event.button) {
+                case 0:
+                    console.log("left mouse up");
+                    that.click = false;
+                    break;
+                case 2:
+                    console.log("right mouse up");
+                    that.rightclick = false;
+                    break;
+            }
+        })
 
 
 

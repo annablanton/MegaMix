@@ -25,6 +25,19 @@ window.requestAnimFrame = (function () {
         };
 })();
 
+function getAngle(vector) {
+    var acos = Math.acos(vector.x);
+    var asin = Math.asin(vector.y);
+
+    if (asin < 0) {
+        angle = 2 * Math.PI - acos;
+    } else {
+        angle = acos;
+    }
+    //console.log(angle);
+    return angle;
+}
+
 // add global parameters here
 
 var PARAMS = {
