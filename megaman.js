@@ -323,7 +323,6 @@ class Megaman {
         this.game.space =false;
       }
 
-
       if(this.game.click == true){
         //if(this.action ==0){
         //this.action=4;
@@ -369,9 +368,11 @@ class Megaman {
           else this.angle = 7;
           //this.game.rightclick = false;
       } 
+          
       if (!this.game.click && !this.game.rightclick) {
         this.firingState = 0;
       }
+          
       }
     }
   
