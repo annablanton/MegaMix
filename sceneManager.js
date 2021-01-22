@@ -4,7 +4,7 @@ class SceneManager {
         this.game.camera = this;
         this.x = 0;
 
-        //game.addEntity(new Gordo(game, 16, 16));
+        game.addEntity(new Gordo(game, 16, 16));
         //game.addEntity(new Wheelie(game, 16, 16));
         //game.addEntity(new ArmorKnight(game, 16, 16));
         //game.addEntity(new Bulldozer(game, 16, 16));
@@ -25,7 +25,11 @@ class SceneManager {
     };
 
     update() {
-        //PARAMS.DEBUG = document.getElementById("debug").checked;
+        PARAMS.DEBUG = document.getElementById("debug").checked;
+
+        let midpoint = PARAMS.CANVAS_WIDTH/2 - PARAMS.BLOCKWIDTH / 2;
+
+        this.x = this.Megaman.x - midpoint;
     };
 
     draw(ctx) {
