@@ -29,6 +29,7 @@ class GameEngine {
         this.surfaceHeight = this.ctx.canvas.height;
         this.startInput();
         this.timer = new Timer();
+
     };
 
     start() {
@@ -115,6 +116,7 @@ class GameEngine {
                     that.down = true;
                     break;
                 case "Space":
+                    e.preventDefault();
                     that.space = true;
                     //console.log("jump");
                     break;
