@@ -41,5 +41,6 @@ function getAngle(vector) {
 // add global parameters here
 
 var PARAMS = {
+    SCALE: 3,
     DEBUG: false
 };

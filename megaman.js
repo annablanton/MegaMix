@@ -1,14 +1,24 @@
 class Megaman {
     constructor(game, x , y) {
-        this.game = game
-        this.x = x;
-        this.y = y;
+      Object.assign(this, {game, x, y});
+        this.game.Megaman =this;
+
+        // this.game = game
+        // this.x = x;
+        // this.y = y;
+
+
+
+
         this.facing = 0; //0=left 1=right
         this.state =0; // 0 = normal 1 = poison
         this.action = 0; // 0= idle, 1 = walk/run 2 = jump 3 = sliding 4 = shooting 5=graphing 
         this.firingState = 0; // 0 = not firing, 1 = shooting weapon, 2 = grappling
         this.angle = 0; //in radians: 0=[0, pi/8)U[15pi/8, 2pi), 1=[pi/8, 3pi/8), 2=[3pi/8, pi/2), 3=[pi/2, 5pi/8), 4=[5pi/8, 7pi/8), 5=[7pi/8, 9pi/8), 6=[9pi/8, 3pi/2), 7=[3pi/2, 15pi/16)
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megaman.png");
+
+        this.velocity = {x: 0, y: 0};
+        this.fallAcc = 562.5;
 
         this.animations = [];
         this.firingAnims = [];
@@ -17,7 +27,7 @@ class Megaman {
 
     loadAnimation(){
       for(var i=0; i<2; i++){
-          this.animations.push([]); //2 facing (0=left | 1=right)
+          this.animations.push([]); //2 facing (0=left | 1=right) 
           this.firingAnims.push([]);
         for(var j=0; j<2; j++){
             this.animations[i].push([]); //2 condition (0=normal | 1 = poison)
@@ -209,18 +219,86 @@ class Megaman {
     };
 
     update() {
-      if(this.game.right){
-        this.facing = 1; //0=left 1=right
-        this.action =1;
-        this.x +=10;
-      }
-      if(this.game.left){
-          console.log("left true");
-          this.facing=0;
-          // this.action=1;
-          this.action=1;
-          this.x -=5;
-      } 
+      const TICK = this.game.clockTick;
+
+      const MIN_MOVING = 20;        //Values will be changed
+      const ACC_MOVING = 80;
+      const DEC_MOVING = 400;
+      const ACC_SLIDING = 200;
+      const DEC_SLIDING = 210;
+
+      const MAX_SLIDING = 400;
+      const MAX_MOVING = 200;
+
+
+  //2 facing (0=left | 1=right) 0= idle, 1 = walk/run 2 = jump 3=sliding  
+      //Ground moving to left and right
+      if(this.action !== 2){  //no jumping
+        //stopped and starting
+        if ( Math.abs(this.velocity.x)< MIN_MOVING){   
+          this.velocity.x = 0;
+          this.action = 0;
+          if(this.game.right){
+            // console.log("right clicking");
+             this.velocity.x += MIN_MOVING;         
+          }
+          if(this.game.left){
+            this.velocity.x -= MIN_MOVING;
+          } 
+        } 
+        //moving to right
+        else if (Math.abs(this.velocity.x) >= MIN_MOVING) {
+            if(this.facing === 1){
+              if(this.game.right && !this.game.left){
+                //when user click shft for sliding
+                if(this.game.shift){
+                  this.velocity.x += ACC_SLIDING * TICK;
+                } //when user just keep moving 
+                else this.velocity.x += ACC_MOVING * TICK;           
+              } // when user click left button during moving to right 
+              else if (this.game.left && !this.game.right) {
+                  this.velocity.x -= ACC_SLIDING * TICK;
+              } // when user doesn't put any key during run to right side 
+              else {
+                this.velocity.x -= DEC_MOVING *TICK;
+              }
+            }
+            // For left facing
+            if (this.facing === 0) {
+              if(this.game.left && !this.game.right){
+                if(this.game.shift){
+                  this.velocity.x -= ACC_SLIDING *TICK;
+                } else
+                this.velocity.x -= ACC_MOVING *TICK;
+              } else if (this.game.right && !this.game.left){
+                  this.velocity.x += DEC_SLIDING *TICK;
+              } else {
+                this.velocity.x += DEC_MOVING*TICK;
+              }
+            }
+          }
+        
+        //for updating action
+        if (this.action !== 2) {
+          if ((Math.abs(this.velocity.x) >= MIN_MOVING)&& !this.game.shift) this.action = 1;
+          else if ((Math.abs(this.velocity.x) >= MIN_MOVING)&& this.game.shift) this.action=3;
+          else this.action = 0;
+        } 
+
+        // update direction
+       if (this.velocity.x < 0) this.facing = 0;
+       if (this.velocity.x > 0) this.facing = 1;
+
+       // setting maximum
+        if (this.velocity.x >= MAX_SLIDING) this.velocity.x = MAX_SLIDING;
+        if (this.velocity.x <= -MAX_SLIDING) this.velocity.x = -MAX_SLIDING;
+        if (this.velocity.x >= MAX_MOVING && !this.game.shift) this.velocity.x = MAX_MOVING;
+        if (this.velocity.x <= -MAX_MOVING && !this.game.shift) this.velocity.x = -MAX_MOVING;
+
+        //update x and y
+        this.x += this.velocity.x * TICK * PARAMS.SCALE;
+        this.y += this.velocity.y * TICK * PARAMS.SCALE;
+
       if(this.game.up){
         this.action=0;
         this.y -=5;
@@ -245,13 +323,6 @@ class Megaman {
         this.game.space =false;
       }
 
-      if(this.game.shift ==true){
-        if(this.action ==0){
-          this.action=3;
-        } else{this.action=0;}
-        this.game.shift =false;
-      }
-
       if(this.game.click == true){
         //if(this.action ==0){
         //this.action=4;
@@ -274,34 +345,35 @@ class Megaman {
           else this.angle = 7;
         //this.game.click = false;
       }
+          
+      if (this.game.rightclick == true) {
+          //if(this.action ==0){
+          //  this.action=5;
+          //  } else { this.action = 0; }
+          this.firingState = 2;
+          var mouseX = this.game.mouse.x;
+          var mouseY = this.game.mouse.y;
 
-        if (this.game.rightclick == true) {
-            //if(this.action ==0){
-            //  this.action=5;
-            //  } else { this.action = 0; }
-            this.firingState = 2;
-            var mouseX = this.game.mouse.x;
-            var mouseY = this.game.mouse.y;
-
-            var vector = new Vector(mouseX - (this.x + 46), mouseY - (this.y + 46));
-            vector.normalize();
-            var angleRads = getAngle(vector);
-            console.log(angleRads);
-            if ((angleRads >= 0 && angleRads < Math.PI / 8) || (angleRads >= 15 * Math.PI / 8)) this.angle = 0;
-            else if (angleRads < Math.PI / 2) this.angle = 1;
-            else if (angleRads < 7 * Math.PI / 8) this.angle = 2;
-            else if (angleRads < 9 * Math.PI / 8) this.angle = 3;
-            else if (angleRads < 11 * Math.PI / 8) this.angle = 4;
-            else if (angleRads < 3 * Math.PI / 2) this.angle = 5;
-            else if (angleRads < 13 * Math.PI / 8) this.angle = 6;
-            else this.angle = 7;
-            //this.game.rightclick = false;
-        }
-
-        if (!this.game.click && !this.game.rightclick) {
-            this.firingState = 0;
-        }
-
+          var vector = new Vector(mouseX - (this.x + 46), mouseY - (this.y + 46));
+          vector.normalize();
+          var angleRads = getAngle(vector);
+          // console.log(angleRads);
+          if ((angleRads >= 0 && angleRads < Math.PI / 8) || (angleRads >= 15 * Math.PI / 8)) this.angle = 0;
+          else if (angleRads < Math.PI / 2) this.angle = 1;
+          else if (angleRads < 7 * Math.PI / 8) this.angle = 2;
+          else if (angleRads < 9 * Math.PI / 8) this.angle = 3;
+          else if (angleRads < 11 * Math.PI / 8) this.angle = 4;
+          else if (angleRads < 3 * Math.PI / 2) this.angle = 5;
+          else if (angleRads < 13 * Math.PI / 8) this.angle = 6;
+          else this.angle = 7;
+          //this.game.rightclick = false;
+      } 
+          
+      if (!this.game.click && !this.game.rightclick) {
+        this.firingState = 0;
+      }
+          
+      }
     }
   
     draw(ctx) {
