@@ -8,14 +8,18 @@ class Megaman {
         this.action = 0; // 0= idle, 1 = walk/run 2 = jump 3 = sliding 4 = shooting 5=graphing 
         this.firingState = 0; // 0 = not firing, 1 = shooting weapon, 2 = grappling
         this.angle = 0; //in radians: 0=[0, pi/8)U[15pi/8, 2pi), 1=[pi/8, 3pi/8), 2=[3pi/8, pi/2), 3=[pi/2, 5pi/8), 4=[5pi/8, 7pi/8), 5=[7pi/8, 9pi/8), 6=[9pi/8, 3pi/2), 7=[3pi/2, 15pi/16)
+        this.angleRads = 0;
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megaman.png");
+        this.FIRE_OFFSET_X = 46;
+        this.FIRE_OFFSET_Y = 44;
 
         this.animations = [];
         this.firingAnims = [];
         this.loadAnimation();
     };
 
-    loadAnimation(){
+    loadAnimation() {
+
       for(var i=0; i<2; i++){
           this.animations.push([]); //2 facing (0=left | 1=right)
           this.firingAnims.push([]);
@@ -209,6 +213,7 @@ class Megaman {
     };
 
     update() {
+
       if(this.game.right){
         this.facing = 1; //0=left 1=right
         this.action =1;
@@ -260,17 +265,17 @@ class Megaman {
           var mouseX = this.game.mouse.x;
           var mouseY = this.game.mouse.y;
 
-          var vector = new Vector(mouseX - (this.x + 46), mouseY - (this.y + 46));
+          var vector = new Vector(mouseX - (this.x + this.FIRE_OFFSET_X), mouseY - (this.y + this.FIRE_OFFSET_Y));
           vector.normalize();
-          var angleRads = getAngle(vector);
-          console.log(angleRads);
-          if ((angleRads >= 0 && angleRads < Math.PI / 8) || (angleRads >= 15 * Math.PI / 8)) this.angle = 0;
-          else if (angleRads < Math.PI / 2) this.angle = 1;
-          else if (angleRads < 7 * Math.PI / 8) this.angle = 2;
-          else if (angleRads < 9 * Math.PI / 8) this.angle = 3;
-          else if (angleRads < 11 * Math.PI / 8) this.angle = 4;
-          else if (angleRads < 3 * Math.PI / 2) this.angle = 5;
-          else if (angleRads < 13 * Math.PI / 8) this.angle = 6;
+          this.angleRads = getAngle(vector);
+          console.log(this.angleRads);
+          if ((this.angleRads >= 0 && this.angleRads < Math.PI / 8) || (this.angleRads >= 15 * Math.PI / 8)) this.angle = 0;
+          else if (this.angleRads < Math.PI / 2) this.angle = 1;
+          else if (this.angleRads < 7 * Math.PI / 8) this.angle = 2;
+          else if (this.angleRads < 9 * Math.PI / 8) this.angle = 3;
+          else if (this.angleRads < 11 * Math.PI / 8) this.angle = 4;
+          else if (this.angleRads < 3 * Math.PI / 2) this.angle = 5;
+          else if (this.angleRads < 13 * Math.PI / 8) this.angle = 6;
           else this.angle = 7;
         //this.game.click = false;
       }
@@ -285,15 +290,15 @@ class Megaman {
 
             var vector = new Vector(mouseX - (this.x + 46), mouseY - (this.y + 46));
             vector.normalize();
-            var angleRads = getAngle(vector);
-            console.log(angleRads);
-            if ((angleRads >= 0 && angleRads < Math.PI / 8) || (angleRads >= 15 * Math.PI / 8)) this.angle = 0;
-            else if (angleRads < Math.PI / 2) this.angle = 1;
-            else if (angleRads < 7 * Math.PI / 8) this.angle = 2;
-            else if (angleRads < 9 * Math.PI / 8) this.angle = 3;
-            else if (angleRads < 11 * Math.PI / 8) this.angle = 4;
-            else if (angleRads < 3 * Math.PI / 2) this.angle = 5;
-            else if (angleRads < 13 * Math.PI / 8) this.angle = 6;
+            this.angleRads = getAngle(vector);
+            console.log(this.angleRads);
+            if ((this.angleRads >= 0 && this.angleRads < Math.PI / 8) || (this.angleRads >= 15 * Math.PI / 8)) this.angle = 0;
+            else if (this.angleRads < Math.PI / 2) this.angle = 1;
+            else if (this.angleRads < 7 * Math.PI / 8) this.angle = 2;
+            else if (this.angleRads < 9 * Math.PI / 8) this.angle = 3;
+            else if (this.angleRads < 11 * Math.PI / 8) this.angle = 4;
+            else if (this.angleRads < 3 * Math.PI / 2) this.angle = 5;
+            else if (this.angleRads < 13 * Math.PI / 8) this.angle = 6;
             else this.angle = 7;
             //this.game.rightclick = false;
         }
@@ -305,9 +310,17 @@ class Megaman {
     }
   
     draw(ctx) {
-
         if (this.firingState) this.firingAnims[this.facing][this.state][this.action][this.angle].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
         else this.animations[this.facing][this.state][this.action].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+        if (PARAMS.DEBUG) {
+            //ctx.beginPath();
+            //ctx.ellipse(this.x + this.FIRE_OFFSET_X, this.y + this.FIRE_OFFSET_Y, 40, 25, 0, 0, this.angleRads);
+            //ctx.stroke();
+            var ellipsePoint = findEllipsePoint(40, 25, this.angleRads);
+
+            ctx.beginPath();
+            ctx.fillRect(this.x + this.FIRE_OFFSET_X + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y + ellipsePoint.y, 10, 10);
+        }
       
     };
 

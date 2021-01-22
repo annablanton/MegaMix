@@ -14,6 +14,7 @@ class SceneManager {
         game.addEntity(new Met(game, 400, 16));
 	    game.addEntity(new Carock(game, 400, 64));
         game.addEntity(new Megaman(game, 100, 100));
+        game.addEntity(this);
     };
 
     clearEntities() {
@@ -26,7 +27,7 @@ class SceneManager {
     };
 
     update() {
-        //PARAMS.DEBUG = document.getElementById("debug").checked;
+        PARAMS.DEBUG = document.getElementById("debug").checked;
     };
 
     draw(ctx) {

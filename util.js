@@ -38,6 +38,22 @@ function getAngle(vector) {
     return angle;
 }
 
+function findEllipsePoint(minorAxis, majorAxis, angle) {
+    /* method of locating point on ellipse courtesy of Ross Millikan at https://math.stackexchange.com/questions/22064/calculating-a-point-that-lies-on-an-ellipse-given-an-angle */
+    var xOffset = ((minorAxis * majorAxis) / (Math.sqrt(majorAxis ** 2 + (minorAxis ** 2) * (Math.tan(angle) ** 2))));
+
+    var yOffset = Math.sqrt(majorAxis ** 2 * (1 - (xOffset ** 2 / minorAxis ** 2)));
+
+    if (angle >= Math.PI / 2 && angle <= 3 * Math.PI / 2) {
+        xOffset = -xOffset;
+    }
+    if (angle >= Math.PI) {
+        yOffset = -yOffset;
+    }
+
+    return { x: xOffset, y: yOffset };
+}
+
 // add global parameters here
 
 var PARAMS = {
