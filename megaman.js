@@ -345,10 +345,8 @@ class Megaman {
           else if (angleRads < 13 * Math.PI / 8) this.angle = 6;
           else this.angle = 7;
         //this.game.click = false;
-      } else{
-        this.firingState = 0;
       }
-
+          
       if (this.game.rightclick == true) {
           //if(this.action ==0){
           //  this.action=5;
@@ -371,7 +369,9 @@ class Megaman {
           else this.angle = 7;
           //this.game.rightclick = false;
       } 
-
+      if (!this.game.click && !this.game.rightclick) {
+        this.firingState = 0;
+      }
       }
     }
   
