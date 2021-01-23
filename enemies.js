@@ -227,13 +227,23 @@ class HammerBro {
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megamix_enemies.png");
 
         this.animations = [];
+        for (var i = 0; i < 2; i++) {
+            this.animations.push([]);
+        }
+        this.animations[0][0] = new Animator(this.spritesheet, 110, 5, 18, 24, 4, 0.09 * 3, 0, false, true); // attack left
+        this.animations[0][1] = new Animator(this.spritesheet, 110, 5, 18, 24, 1, 0.09 * 3, 0, false, true); // idle left
+        this.animations[1][0] = new Animator(this.spritesheet, 188, 5, 18, 24, 4, 0.09 * 3, 0, true, true); // attack right
+        this.animations[1][1] = new Animator(this.spritesheet, 242, 5, 18, 24, 1, 0.09 * 3, 0, false, true); // idle right
     }
     update() {
-
+        
     }
 
     draw(ctx) {
-
+        this.animations[0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 2);
+        this.animations[0][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 5, 2);
+        this.animations[1][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16, 2);
+        this.animations[1][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 5, 2);
     }
 }
 
