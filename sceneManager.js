@@ -3,15 +3,19 @@ class SceneManager {
         this.game = game;
         this.game.camera = this;
         this.x = 0;
-        this.loadLevelOne();
-        game.addEntity(new Gordo(game, 16, 16));
-        //game.addEntity(new Wheelie(game, 16, 16));
-        //game.addEntity(new ArmorKnight(game, 16, 16));
-        //game.addEntity(new Bulldozer(game, 16, 16));
-        //game.addEntity(new Met(game, 16, 16));
-        //game.addEntity(new Carock(game, 16, 16));
-        // game.addEntity(new HammerBro(game, 120, 120));
-        game.addEntity(new Megaman(game, 100, 100));
+        this.megaman = new Megaman(game, 100, 100);
+
+        game.addEntity(new Gordo(game, 400, 380, 1, 0));
+        game.addEntity(new Gordo(game, 400, 380, 0, 1));
+        game.addEntity(new Gordo(game, 400, 380, -1, 0));
+        game.addEntity(new Gordo(game, 400, 380, 0, -1));
+        game.addEntity(new Wheelie(game, 400, 600));
+        game.addEntity(new ArmorKnight(game, 400, 300));
+        game.addEntity(new Bulldozer(game, 400, 170));
+        game.addEntity(new Met(game, 400, 16));
+	      game.addEntity(new Carock(game, 400, 64));
+        game.addEntity(this.megaman);
+        game.addEntity(this);
     };
 
     clearEntities() {
@@ -36,10 +40,9 @@ class SceneManager {
 
     update() {
         PARAMS.DEBUG = document.getElementById("debug").checked;
-
         let midpoint = PARAMS.CANVAS_WIDTH/2 - PARAMS.BLOCKWIDTH / 2;
 
-        this.x = this.Megaman.x - midpoint;
+        this.x = this.megaman.x - midpoint;
     };
 
     draw(ctx) {
