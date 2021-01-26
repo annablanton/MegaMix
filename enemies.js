@@ -1,8 +1,16 @@
+this.TURN_CHANCE_ADJUST = 30;
+
 class Met {
     constructor(game, x, y) {
         Object.assign(this, { game, x, y });
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megamix_enemies.png");
+
+        this.state = 0; //0=idle, 1=aggressive, 2=dead
+        this.action = 0; //0=walk, 1=stationary/shooting/dead, 2=hide, 3=hidden, 4=unhide
+        this.facing = 0; //0=left, 1=right
+        this.velocity = {x: -15, y: 0}
+        this.turnTimer = this.game.timer.gameTime;
 
         this.animations = [];
         for (var i = 0; i < 2; i++) { //two directions
@@ -23,27 +31,52 @@ class Met {
         this.animations[1][4] = new Animator(this.spritesheet, 236, 36, 18, 19, 3, 0.09 * 3, 4, true, true) //unhide
     }
     update() {
+        //console.log(1/this.game.clockTick);
+        if (this.state == 0) {
+            if (this.action == 0) {
+                if (this.game.timer.gameTime - this.turnTimer >= 2) {
+                    if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
+                        this.turnTimer = this.game.timer.gameTime;
+                        this.facing = (this.facing == 1 ? 0 : 1);
+                        this.velocity.x = -this.velocity.x;
+                    } else {
+                        console.log("check failed");
+                    }
+                }
 
+                this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
+                this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
+            }
+        }
     }
 
     draw(ctx) {
-        this.animations[0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 2);
-        this.animations[0][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 5, 2);
-        this.animations[0][2].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 10, 2);
-        this.animations[0][3].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 15, 2);
-        this.animations[0][4].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 20, 2);
+        this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+        //this.animations[0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 2);
+        //this.animations[0][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 5, 2);
+        //this.animations[0][2].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 10, 2);
+        //this.animations[0][3].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 15, 2);
+        //this.animations[0][4].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 20, 2);
 
-        this.animations[1][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16, 2);
-        this.animations[1][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 5, 2);
-        this.animations[1][2].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 10, 2);
-        this.animations[1][3].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 15, 2);
-        this.animations[1][4].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 20, 2);
+        //this.animations[1][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16, 2);
+        //this.animations[1][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 5, 2);
+        //this.animations[1][2].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 10, 2);
+        //this.animations[1][3].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 15, 2);
+        //this.animations[1][4].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 20, 2);
+
+
     }
 }
 
 class Carock {
     constructor(game, x, y) {
         Object.assign(this, { game, x, y });
+
+        this.state = 0; //0=idle, 1=aggressive, 2=dead
+        this.action = 0; //0=walk, 1=firing
+        this.facing = 0; //0=left, 1=right
+        this.velocity = { x: -40, y: 0 }
+        this.turnTimer = this.game.timer.gameTime;
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megamix_enemies.png");
 
@@ -58,15 +91,29 @@ class Carock {
         this.animations[1][1] = new Animator(this.spritesheet, 236, 197, 32, 47, 1, 0.09 * 3, 4, false, true);
     }
     update() {
+        if (this.state == 0) {
+            if (this.action == 0) {
+                if (this.game.timer.gameTime - this.turnTimer >= 2) {
+                    if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
+                        this.turnTimer = this.game.timer.gameTime;
+                        this.facing = (this.facing == 1 ? 0 : 1);
+                        this.velocity.x = -this.velocity.x;
+                    }
+                }
 
+                this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
+                this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
+            }
+        }
     }
 
     draw(ctx) {
-        this.animations[0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 2);
-        this.animations[1][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16, 2);
+        this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+        //this.animations[0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 2);
+        //this.animations[1][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16, 2);
 
-        this.animations[0][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 10, 2);
-        this.animations[1][1].drawFrame(this.game.clockTick, ctx, 16+16*5, 16 + 16 * 10, 2);
+        //this.animations[0][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 10, 2);
+        //this.animations[1][1].drawFrame(this.game.clockTick, ctx, 16+16*5, 16 + 16 * 10, 2);
     }
 }
 
@@ -75,6 +122,12 @@ class Bulldozer {
         Object.assign(this, { game, x, y });
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megamix_enemies.png");
+
+        this.state = 0; //0=idle, 1=aggressive, 2=dead
+        this.action = 0; //0=slow roll, 1=fast roll, 2=stationary/dead
+        this.facing = 0; //0=left, 1=right
+        this.velocity = { x: -25, y: 0 };
+        this.turnTimer = this.game.timer.gameTime;
 
         this.animations = [];
         for (var i = 0; i < 2; i++) { //two directions
@@ -89,17 +142,32 @@ class Bulldozer {
         this.animations[1][2] = new Animator(this.spritesheet, 188, 126, 40, 64, 1, 0.09, 5, false, true); //stationary/dead
     }
     update() {
+        if (this.state == 0) {
+            if (this.action == 0) {
+                if (this.game.timer.gameTime - this.turnTimer >= 2) {
+                    if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
+                        this.turnTimer = this.game.timer.gameTime;
+                        this.facing = (this.facing == 1 ? 0 : 1);
+                        this.velocity.x = -this.velocity.x;
+                    }
+                }
 
+                this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
+                this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
+            }
+        }
     }
 
     draw(ctx) {
+        this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+
         //console.log(this.animations[0][0][0]);
-        this.animations[0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 2);
-        this.animations[0][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 10, 2);
-        this.animations[0][2].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 20, 2);
-        this.animations[1][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 7, 16, 2);
-        this.animations[1][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 7, 16 + 16 * 10, 2);
-        this.animations[1][2].drawFrame(this.game.clockTick, ctx, 16 + 16 * 7, 16 + 16 * 20, 2);
+        //this.animations[0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 2);
+        //this.animations[0][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 10, 2);
+        //this.animations[0][2].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 20, 2);
+        //this.animations[1][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 7, 16, 2);
+        //this.animations[1][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 7, 16 + 16 * 10, 2);
+        //this.animations[1][2].drawFrame(this.game.clockTick, ctx, 16 + 16 * 7, 16 + 16 * 20, 2);
     }
 }
 
@@ -108,6 +176,12 @@ class ArmorKnight {
         Object.assign(this, { game, x, y });
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megamix_enemies.png");
+
+        this.state = 0; //0=idle, 1=aggressive, 2=dead
+        this.action = 0; //0=walk, 1=attacking
+        this.facing = 0; //0=left, 1=right
+        this.velocity = { x: -25, y: 0 };
+        this.turnTimer = this.game.timer.gameTime;
 
         this.animations = [];
         for (var i = 0; i < 2; i++) { //two directions
@@ -120,14 +194,29 @@ class ArmorKnight {
         this.animations[1][1] = new Animator(this.spritesheet, 188, 65, 39, 32, 1, 0.09 * 3, 0, false, true); //spear attack
     }
     update() {
+        if (this.state == 0) {
+            if (this.action == 0) {
+                if (this.game.timer.gameTime - this.turnTimer >= 2) {
+                    if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
+                        this.turnTimer = this.game.timer.gameTime;
+                        this.facing = (this.facing == 1 ? 0 : 1);
+                        this.velocity.x = -this.velocity.x;
+                    }
+                }
 
+                this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
+                this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
+            }
+        }
     }
 
     draw(ctx) {
-        this.animations[0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 2);
-        this.animations[0][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 5, 2);
-        this.animations[1][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16, 2);
-        this.animations[1][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 5, 2);
+        this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2.25);
+
+        //this.animations[0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 2);
+        //this.animations[0][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 5, 2);
+        //this.animations[1][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16, 2);
+        //this.animations[1][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 5, 2);
     }
 }
 
@@ -159,8 +248,12 @@ class HammerBro {
 }
 
 class Gordo {
-    constructor(game, x, y) {
-        Object.assign(this, { game, x, y });
+    constructor(game, x, y, movementScaleX, movementScaleY) {
+        Object.assign(this, { game, x, y, movementScaleX, movementScaleY });
+
+        this.velocity = { x: 15, y: 15 };
+
+        
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megamix_enemies.png");
 
@@ -168,11 +261,12 @@ class Gordo {
 
     }
     update() {
-
+        this.x += this.velocity.x * this.movementScaleX * this.game.clockTick * PARAMS.SCALE;
+        this.y += this.velocity.y * this.movementScaleY * this.game.clockTick * PARAMS.SCALE;
     }
 
     draw(ctx) {
-        this.animation.drawFrame(this.game.clockTick, ctx, 16, 16, 3);
+        this.animation.drawFrame(this.game.clockTick, ctx, this.x, this.y, 3);
     }
 }
 
@@ -181,6 +275,12 @@ class Wheelie {
         Object.assign(this, { game, x, y });
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megamix_enemies.png");
+
+        this.state = 0; //0=idle, 1=aggressive, 2=dead
+        this.action = 0; //0=walk, 1=firing
+        this.facing = 0; //0=left, 1=right
+        this.velocity = { x: -25, y: 0 };
+        this.turnTimer = this.game.timer.gameTime;
 
         this.animations = [];
         for (var i = 0; i < 2; i++) { //two directions (left right)
@@ -195,25 +295,39 @@ class Wheelie {
 
     }
     update() {
+        if (this.state == 0) {
+            if (this.action == 0) {
+                if (this.game.timer.gameTime - this.turnTimer >= 2) {
+                    if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
+                        this.turnTimer = this.game.timer.gameTime;
+                        this.facing = (this.facing == 1 ? 0 : 1);
+                        this.velocity.x = -this.velocity.x;
+                    }
+                }
 
+                this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
+                this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
+            }
+        }
     }
 
     draw(ctx) {
-        this.animations[0][0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 3);
-        this.animations[1][0][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16, 3);
+        this.animations[this.facing][this.state][this.action].drawFrame(this.game.clockTick, ctx, this.x, this.y, 3);
+        //this.animations[0][0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 3);
+        //this.animations[1][0][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16, 3);
 
-        this.animations[0][0][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 5, 3);
-        this.animations[1][0][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 5, 3);
+        //this.animations[0][0][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 5, 3);
+        //this.animations[1][0][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 5, 3);
 
-        this.animations[0][1][0].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 10, 3);
-        this.animations[1][1][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 10, 3);
-        this.animations[0][1][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 15, 3);
-        this.animations[1][1][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 15, 3);
+        //this.animations[0][1][0].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 10, 3);
+        //this.animations[1][1][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 10, 3);
+        //this.animations[0][1][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 15, 3);
+        //this.animations[1][1][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 15, 3);
 
-        this.animations[0][2][0].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 20, 3);
-        this.animations[1][2][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 20, 3);
-        this.animations[0][2][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 25, 3);
-        this.animations[1][2][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 25, 3);
+        //this.animations[0][2][0].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 20, 3);
+        //this.animations[1][2][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 20, 3);
+        //this.animations[0][2][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 25, 3);
+        //this.animations[1][2][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 25, 3);
 
     }
 
