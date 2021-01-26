@@ -302,6 +302,7 @@ class Megaman {
         //update x and y
         this.x += this.velocity.x * TICK * PARAMS.SCALE;
         this.y += this.velocity.y * TICK * PARAMS.SCALE;
+
       if(this.game.up){
         this.action=0;
         this.y -=5;
@@ -333,6 +334,7 @@ class Megaman {
           this.firingState = 1;
           var mouseX = this.game.mouse.x;
           var mouseY = this.game.mouse.y;
+
 
           var vector = new Vector(mouseX - (this.x + this.FIRE_OFFSET_X), mouseY - (this.y + this.FIRE_OFFSET_Y));
           vector.normalize();

@@ -53,7 +53,6 @@ function findEllipsePoint(minorAxis, majorAxis, angle) {
 
     return { x: xOffset, y: yOffset };
 }
-
 // add global parameters here
 
 var PARAMS = {

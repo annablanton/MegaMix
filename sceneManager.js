@@ -13,7 +13,7 @@ class SceneManager {
         game.addEntity(new ArmorKnight(game, 400, 300));
         game.addEntity(new Bulldozer(game, 400, 170));
         game.addEntity(new Met(game, 400, 16));
-	    game.addEntity(new Carock(game, 400, 64));
+	      game.addEntity(new Carock(game, 400, 64));
         game.addEntity(this.megaman);
         game.addEntity(this);
     };
@@ -23,8 +23,19 @@ class SceneManager {
     };
 
     loadLevelOne() {
-        
-
+        // Test for tile drawing method
+        this.game.addEntity(new Tile(this.game, 500, 500, 9, 0));
+        this.game.addEntity(new Tile(this.game, 500, 532, 9, 1));
+        this.game.addEntity(new Tile(this.game, 500, 564, 9, 2));
+        this.game.addEntity(new Tile(this.game, 500, 596, 9, 3));
+        this.game.addEntity(new Tile(this.game, 532, 500, 10, 0));
+        this.game.addEntity(new Tile(this.game, 532, 532, 10, 1));
+        this.game.addEntity(new Tile(this.game, 532, 564, 10, 2));
+        this.game.addEntity(new Tile(this.game, 532, 596, 10, 3));
+        this.game.addEntity(new Tile(this.game, 70, 170, 0, 0));
+        this.game.addEntity(new Tile(this.game, 102, 170, 1, 0));
+        this.game.addEntity(new Tile(this.game, 134, 170, 2, 0));
+        this.game.addEntity(new Tile(this.game, 166, 170, 3, 0));
     };
 
     update() {
@@ -35,7 +46,6 @@ class SceneManager {
     };
 
     draw(ctx) {
-
         if (PARAMS.DEBUG) {
         }
     };
