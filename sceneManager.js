@@ -10,10 +10,12 @@ class SceneManager {
         game.addEntity(new Gordo(game, 400, 380, -1, 0));
         game.addEntity(new Gordo(game, 400, 380, 0, -1));
         game.addEntity(new Wheelie(game, 400, 600));
-        game.addEntity(new ArmorKnight(game, 400, 300));
+        game.addEntity(new ArmorKnight(game, 600, 300));
         game.addEntity(new Bulldozer(game, 400, 170));
         game.addEntity(new Met(game, 400, 16));
-	      game.addEntity(new Carock(game, 400, 64));
+        game.addEntity(new HammerBro(game, 400, 700));
+        game.addEntity(new Carock(game, 400, 64));
+        this.loadLevelOne();
         game.addEntity(this.megaman);
         game.addEntity(this);
     };
@@ -36,6 +38,16 @@ class SceneManager {
         this.game.addEntity(new Tile(this.game, 102, 170, 1, 0));
         this.game.addEntity(new Tile(this.game, 134, 170, 2, 0));
         this.game.addEntity(new Tile(this.game, 166, 170, 3, 0));
+        this.game.addEntity(new Tile(this.game, 300, 16, 3, 0));
+        this.game.addEntity(new Tile(this.game, 300, 64, 3, 0));
+        this.game.addEntity(new Tile(this.game, 300, 300, 3, 0));
+        this.game.addEntity(new Tile(this.game, 500, 64, 3, 0));
+        this.game.addEntity(new Tile(this.game, 300, 700, 3, 0));
+        this.game.addEntity(new Tile(this.game, 400, 250, 3, 0));
+        this.game.addEntity(new Tile(this.game, 400, 526, 3, 0));
+        this.game.addEntity(new Tile(this.game, 200, 600, 3, 0));
+        this.game.addEntity(new Tile(this.game, 270, 380, 3, 0));
+        this.game.addEntity(new Tile(this.game, 546, 380, 3, 0));
     };
 
     update() {
