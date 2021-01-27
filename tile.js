@@ -1,4 +1,5 @@
 class Tile {
+
     constructor(game, x, y, col, row) {
         Object.assign(this, {game, x, y, col, row});
         const TILE_COLUMNS = 24;
@@ -17,10 +18,15 @@ class Tile {
                 this.tileSheet[j][k] = new Animator(this.spritesheet, (j * TILE_GAP) + 1, (k * TILE_GAP) + 1, TILE_DIMENSION, TILE_DIMENSION, 1, 1, 0, false, true);
             }
         }
+        this.updateBB();
     }
     
     update() {
+        this.updateBB();
+    }
 
+    updateBB() {
+        this.BB = new BoundingBox(this.x, this.y, 16 * 2, 16 * 2);
     }
 
     draw(ctx) {
@@ -37,6 +43,9 @@ class Tile {
                 throw new Error("One of the tile is using index [" + this.col+ "][" + this.row + "] is out of bound, col index " + this.col + " is too big" +
                 ", make sure it is less than 24");
             }
+        }
+        if (PARAMS.DEBUG) {
+            ctx.strokeRect(this.BB.x, this.BB.y, this.BB.width, this.BB.height);
         }
     }
 }
