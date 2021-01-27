@@ -17,8 +17,8 @@ class Megaman {
         this.angle = 0; //in radians: 0=[0, pi/8)U[15pi/8, 2pi), 1=[pi/8, 3pi/8), 2=[3pi/8, pi/2), 3=[pi/2, 5pi/8), 4=[5pi/8, 7pi/8), 5=[7pi/8, 9pi/8), 6=[9pi/8, 3pi/2), 7=[3pi/2, 15pi/16)
         this.angleRads = 0;
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megaman.png");
-        this.FIRE_OFFSET_X = 46;
-        this.FIRE_OFFSET_Y = 44;
+        this.FIRE_OFFSET_X = 26;
+        this.FIRE_OFFSET_Y = 26;
 
         this.velocity = {x: 0, y: 0};
         this.fallAcc = 562.5;
@@ -575,7 +575,7 @@ class Megaman {
             //ctx.beginPath();
             //ctx.ellipse(this.x + this.FIRE_OFFSET_X, this.y + this.FIRE_OFFSET_Y, 40, 25, 0, 0, this.angleRads);
             //ctx.stroke();
-            var ellipsePoint = findEllipsePoint(40, 25, this.angleRads);
+            var ellipsePoint = findEllipsePoint(this.FIRE_OFFSET_X, this.FIRE_OFFSET_Y, this.angleRads);
 
             ctx.beginPath();
             ctx.fillRect(this.x + this.FIRE_OFFSET_X + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y + ellipsePoint.y, 10, 10);
