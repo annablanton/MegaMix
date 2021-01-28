@@ -44,7 +44,7 @@ class Met {
                         this.facing = (this.facing == 1 ? 0 : 1);
                         this.velocity.x = -this.velocity.x;
                     } else {
-                        console.log("check failed");
+                        //console.log("check failed");
                     }
                 }
 
@@ -66,8 +66,8 @@ class Met {
                     that.velocity.y = 0;
                     that.updateBB();
                 } else if (entity !== that) {
-                    console.log(that.x);
-                    console.log(entity.BB.right);
+                    //console.log(that.x);
+                    //console.log(entity.BB.right);
                     //console.log("collision");
 
                     if (that.facing == 1 && that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
@@ -165,8 +165,8 @@ class Carock {
                     that.velocity.y = 0;
                     that.updateBB();
                 } else if (entity !== that) {
-                    console.log(that.x);
-                    console.log(entity.BB.right);
+                    //console.log(that.x);
+                    //console.log(entity.BB.right);
                     //console.log("collision");
 
                     if (that.facing == 1 && that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
@@ -259,8 +259,8 @@ class Bulldozer {
                     that.velocity.y = 0;
                     that.updateBB();
                 } else if (entity !== that) {
-                    console.log(that.x);
-                    console.log(entity.BB.right);
+                    //console.log(that.x);
+                    //console.log(entity.BB.right);
                     //console.log("collision");
 
                     if (that.facing == 1 && that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
@@ -332,7 +332,7 @@ class ArmorKnight {
             if (this.action == 0) {
                 if (this.game.timer.gameTime - this.turnTimer >= 2) {
                     if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
-                        console.log("random turn");
+                        //console.log("random turn");
                         this.turnTimer = this.game.timer.gameTime;
                         this.facing = (this.facing == 1 ? 0 : 1);
                         this.velocity.x = -this.velocity.x;
@@ -492,7 +492,7 @@ class Gordo {
         this.y += this.velocity.y * this.movementScaleY * this.game.clockTick * PARAMS.SCALE;
 
         this.updateBB();
-        console.log(this.BB);
+        //console.log(this.BB);
 
         var that = this;
         this.game.entities.forEach(function (entity) {

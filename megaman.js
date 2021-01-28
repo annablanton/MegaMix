@@ -18,7 +18,7 @@ class Megaman {
         this.angleRads = 0;
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megaman.png");
         this.FIRE_OFFSET_X = 26;
-        this.FIRE_OFFSET_Y = 26;
+        this.FIRE_OFFSET_Y = 20;
 
         this.velocity = {x: 0, y: 0};
         this.fallAcc = 562.5;
@@ -504,7 +504,7 @@ class Megaman {
           var vector = new Vector(mouseX - (this.x + this.FIRE_OFFSET_X), mouseY - (this.y + this.FIRE_OFFSET_Y));
           vector.normalize();
           this.angleRads = getAngle(vector);
-          console.log(this.angleRads);
+          //console.log(this.angleRads);
           if ((this.angleRads >= 0 && this.angleRads < Math.PI / 8) || (this.angleRads >= 15 * Math.PI / 8)) this.angle = 0;
           else if (this.angleRads < Math.PI / 2) this.angle = 1;
           else if (this.angleRads < 7 * Math.PI / 8) this.angle = 2;
@@ -535,7 +535,7 @@ class Megaman {
             var vector = new Vector(mouseX - (this.x + 46), mouseY - (this.y + 46));
             vector.normalize();
             this.angleRads = getAngle(vector);
-            console.log(this.angleRads);
+            //console.log(this.angleRads);
             if ((this.angleRads >= 0 && this.angleRads < Math.PI / 8) || (this.angleRads >= 15 * Math.PI / 8)) this.angle = 0;
             else if (this.angleRads < Math.PI / 2) this.angle = 1;
             else if (this.angleRads < 7 * Math.PI / 8) this.angle = 2;
