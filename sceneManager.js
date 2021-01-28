@@ -15,6 +15,8 @@ class SceneManager {
         game.addEntity(new Met(game, 400, 16));
         game.addEntity(new HammerBro(game, 400, 700));
         game.addEntity(new Carock(game, 400, 64));
+        game.addEntity(new Barba(game, 600, 100));
+        game.addEntity(new BigBoo(game, 600, 600));
         this.loadLevelOne();
         game.addEntity(this.megaman);
         game.addEntity(this);
