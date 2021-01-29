@@ -573,7 +573,7 @@ class Megaman {
             //   that.updateBB();
             // }
 
-            if(that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.righ){
+            if(that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left){
               that.x += (entity.BB.left - that.BB.right);
               that.velocity.x = 0
             }
