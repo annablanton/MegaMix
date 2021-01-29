@@ -19,6 +19,7 @@ class GameEngine {
         //mouse
         this.click=false;
         this.mouse = false;
+        this.qReleased = true;
         //this.contextmenu =false;
 
     };
