@@ -38,6 +38,22 @@ function getAngle(vector) {
     return angle;
 }
 
+function rotationCanvas(spritesheet, sx, sy, sw, sh, rads, scale) {
+    var offscreenCanvas = document.createElement("canvas");
+    var dim = Math.max(sw, sh);
+    offscreenCanvas.width = dim * scale;
+    console.log(dim * scale);
+    offscreenCanvas.height = dim * scale;
+    var offscreenCtx = offscreenCanvas.getContext("2d");
+    offscreenCtx.save();
+    offscreenCtx.translate(dim * scale/2, dim * scale/2);
+    offscreenCtx.rotate(rads);
+    offscreenCtx.translate(-1 * (dim * scale / 2), -1 * (dim * scale / 2));
+    offscreenCtx.drawImage(spritesheet, sx, sy, sw, sh, (dim - sw) * scale / 2, (dim - sh) * scale / 2, sw * scale, sh * scale);
+    offscreenCtx.restore();
+    return offscreenCanvas;
+}
+
 function findEllipsePoint(minorAxis, majorAxis, angle) {
     /* method of locating point on ellipse courtesy of Ross Millikan at https://math.stackexchange.com/questions/22064/calculating-a-point-that-lies-on-an-ellipse-given-an-angle */
     var xOffset = ((minorAxis * majorAxis) / (Math.sqrt(majorAxis ** 2 + (minorAxis ** 2) * (Math.tan(angle) ** 2))));
