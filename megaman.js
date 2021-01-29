@@ -2,6 +2,8 @@ class Megaman {
     constructor(game, x , y) {
       Object.assign(this, {game, x, y});
         this.game.Megaman = this;
+        this.MEGAMAN_HEIGHT= 48;   //24*2
+        this.MEGAMAN_WIDTH = 42;   //21*2
         this.PELLET_WIDTH = 16;
         this.PELLET_HEIGHT = 12;
         this.LASER_WIDTH = 1024;
@@ -10,9 +12,6 @@ class Megaman {
         // this.game = game
         // this.x = x;
         // this.y = y;
-
-
-
 
         this.facing = 0; //0=left 1=right
         this.state =0; // 0 = normal 1 = poison
@@ -34,6 +33,11 @@ class Megaman {
         this.firingAnims = [];
         this.loadAnimation();
     };
+
+    updateBB() {
+      this.BB = new BoundingBox(this.x+26 , this.y+24, this.MEGAMAN_WIDTH , this.MEGAMAN_HEIGHT)
+            //this.x+13*2, this.y+12*2, 
+    }
 
     loadAnimation() {
 
@@ -399,96 +403,206 @@ class Megaman {
     update() {
       const TICK = this.game.clockTick;
 
-      const MIN_MOVING = 20;        //Values will be changed
-      const ACC_MOVING = 1;
-      const DEC_MOVING = 400;
-      const ACC_SLIDING = 1;
-      const DEC_SLIDING = 210;
-
-      const MAX_SLIDING = 400;
-        const MAX_MOVING = 200;
+      const MIN_MOVING = 4.45;        //Values will be changed
+      const ACC_MOVING = 133;
+      const DEC_MOVING = 183;
+      const ACC_SLIDING = 200;
+      const DEC_SLIDING = 365;
+  
+      const MAX_SLIDING = 153.75;
+      const MAX_MOVING = 93;
+  
+      const STOP_FALL = 1575;
+      const WALK_FALL = 1800;
+      const RUN_FALL = 2025;
+      const STOP_FALL_SPACE = 450;
+      const RUN_FALL_SPACE = 562.5;
+  
+      const MAX_FALL = 270; 
 
         if (this.weaponTimer > 0) {
             this.weaponTimer -= (this.weaponTimer <= this.game.clockTick ? this.weaponTimer : this.game.clockTick);
         }
 
 
-  //2 facing (0=left | 1=right) 0= idle, 1 = walk/run 2 = jump 3=sliding  
-      //Ground moving to left and right
-      if(this.action !== 2){  //no jumping
-        //stopped and starting
-        if ( Math.abs(this.velocity.x)< MIN_MOVING){   
-          this.velocity.x = 0;
-          this.action = 0;
-          if(this.game.right){
-            // console.log("right clicking");
-             this.velocity.x += MIN_MOVING;         
-          }
-          if(this.game.left){
-            this.velocity.x -= MIN_MOVING;
-          } 
+//2 facing (0=left | 1=right) 0= idle, 1 = walk/run 2 = jump 3=sliding  
+    //Ground moving to left and right
+    if(this.action !== 2){  //no jumping
+      //stopped and starting
+      if ( Math.abs(this.velocity.x)< MIN_MOVING){   
+        this.velocity.x = 0;
+        this.action = 0;
+        if(this.game.right){
+          // console.log("right clicking");
+           this.velocity.x += MIN_MOVING;         
+        }
+        if(this.game.left){
+          this.velocity.x -= MIN_MOVING;
         } 
-        //moving to right
-        else if (Math.abs(this.velocity.x) >= MIN_MOVING) {
-            if(this.facing === 1){
-              if(this.game.right && !this.game.left){
-                //when user click shft for sliding
-                if(this.game.shift){
-                  this.velocity.x += ACC_SLIDING * TICK;
-                } //when user just keep moving 
-                else this.velocity.x += ACC_MOVING * TICK;           
-              } // when user click left button during moving to right 
-              else if (this.game.left && !this.game.right) {
-                  this.velocity.x -= ACC_SLIDING * TICK;
-              } // when user doesn't put any key during run to right side 
-              else {
-                this.velocity.x -= DEC_MOVING *TICK;
-              }
-            }
-            // For left facing
-            if (this.facing === 0) {
-              if(this.game.left && !this.game.right){
-                if(this.game.shift){
-                  this.velocity.x -= ACC_SLIDING *TICK;
-                } else
-                this.velocity.x -= ACC_MOVING *TICK;
-              } else if (this.game.right && !this.game.left){
-                  this.velocity.x += DEC_SLIDING *TICK;
-              } else {
-                this.velocity.x += DEC_MOVING*TICK;
-              }
+      } 
+      //moving to right
+      else if (Math.abs(this.velocity.x) >= MIN_MOVING) {
+          if(this.facing === 1){
+            if(this.game.right && !this.game.left){
+              //when user click shft for sliding
+              if(this.game.shift){
+                this.velocity.x += ACC_SLIDING * TICK;
+              } //when user just keep moving 
+              else this.velocity.x += ACC_MOVING * TICK;           
+            } // when user click left button during moving to right 
+            else if (this.game.left && !this.game.right) {
+                this.velocity.x -= ACC_SLIDING * TICK;
+            } // when user doesn't put any key during run to right side 
+            else {
+              this.velocity.x -= DEC_MOVING *TICK;
             }
           }
-        
-        //for updating action
-        if (this.action !== 2) {
-          if ((Math.abs(this.velocity.x) >= MIN_MOVING)&& !this.game.shift) this.action = 1;
-          else if ((Math.abs(this.velocity.x) >= MIN_MOVING)&& this.game.shift) this.action=3;
-          else this.action = 0;
-        } 
+          // For left facing
+          if (this.facing === 0) {
+            if(this.game.left && !this.game.right){
+              if(this.game.shift){
+                this.velocity.x -= ACC_SLIDING *TICK;
+              } else
+              this.velocity.x -= ACC_MOVING *TICK;
+            } else if (this.game.right && !this.game.left){
+                this.velocity.x += DEC_SLIDING *TICK;
+            } else {
+              this.velocity.x += DEC_MOVING*TICK;
+            }
+          }
+        }
 
-        // update direction
-       if (this.velocity.x < 0) this.facing = 0;
-       if (this.velocity.x > 0) this.facing = 1;
+       this.velocity.y += this.fallAcc * TICK;
 
-       // setting maximum
-        if (this.velocity.x >= MAX_SLIDING) this.velocity.x = MAX_SLIDING;
-        if (this.velocity.x <= -MAX_SLIDING) this.velocity.x = -MAX_SLIDING;
-        if (this.velocity.x >= MAX_MOVING && !this.game.shift) this.velocity.x = MAX_MOVING;
-        if (this.velocity.x <= -MAX_MOVING && !this.game.shift) this.velocity.x = -MAX_MOVING;
-
-        //update x and y
-        this.x += this.velocity.x * TICK * PARAMS.SCALE;
-        this.y += this.velocity.y * TICK * PARAMS.SCALE;
-
-      if(this.game.up){
-        this.action=0;
-        this.y -=5;
+      //for jumping
+      if(this.game.space){
+        if(Math.abs(this.velocity.x) < 16) {
+          this.velocity.y = -240;
+          this.fallAcc = STOP_FALL;
+        } else if(Math.abs(this.velocity.x)< 40){
+          this.velocity.y = -240;
+          this.fallAcc = WALK_FALL;
+        } else{
+          this.velocity.y = -300;
+          this.fallAcc = RUN_FALL;
+        }
+        this.action = 2;
       }
-      if(this.game.down){
-        this.action=0;
-        this.y +=10;
+    } else{
+      //vertical phycis
+      if(this.velocity.y < 0 && this.game.space){
+        if(this.fallacc === STOP_FALL) this.velocity.y -=(STOP_FALL-STOP_FALL_SPACE)*TICK;
+        if(this.fallacc === RUN_FALL) this.velocity.y -= (RUN_FALL-RUN_FALL_SPACE)*TICK;
       }
+      this.velocity.y += this.fallAcc *TICK;
+
+      //horizontal phycis
+      if(this.game.right && !this.game.left){
+        this.velocity.x += ACC_MOVING * TICK;
+      } else if (this.game.left && !this.game.right){
+        this.velocity.x -= ACC_MOVING * TICK;
+      }
+    }     
+
+     // setting maximum
+     if(this.velocity.y >= MAX_FALL) this.velocity.y = MAX_FALL;
+     if(this.velocity.y <= -MAX_FALL) this.velocity.y = -MAX_FALL;
+     
+     if (this.velocity.x >= MAX_SLIDING) this.velocity.x = MAX_SLIDING;
+     if (this.velocity.x <= -MAX_SLIDING) this.velocity.x = -MAX_SLIDING;
+     if (this.velocity.x >= MAX_MOVING && !this.game.shift) this.velocity.x = MAX_MOVING;
+     if (this.velocity.x <= -MAX_MOVING && !this.game.shift) this.velocity.x = -MAX_MOVING;
+       
+
+      //update x and y
+      this.x += this.velocity.x * TICK * PARAMS.SCALE;
+      this.y += this.velocity.y * TICK * PARAMS.SCALE;
+      this.updateBB();
+
+      
+       var that = this;
+        this.game.entities.forEach(function(entity){
+            if(entity.BB && that.BB.collide(entity.BB)){
+              if(that.velocity.y > 0 ){ //landing & jumping 
+              if(entity instanceof Tile && that.BB.bottom-that.velocity.y*that.game.clockTick*PARAMS.SCALE <= entity.BB.top){
+                that.y = entity.BB.top - 73;   //73  => this.MEGAMAN_HEIGHT= 48; +25
+                that.velocity.y =0 ;
+                that.updateBB();
+                if(that.action =2) that.action = 0;
+            }
+          }
+        }
+        })
+       
+        //  this.game.entities.forEach(function(entity){
+        //    //related with top of entities + falling
+        //    if(entity.BB && that.BB.collide(entity.BB)){
+        //  if(that.velocity.y>0){
+        //   console.log("testing landing collision")
+        //   if(entity instanceof Tile && that.BB.bottom-that.velocity.y * that.game.clockTick * PARAMS.SCALE  <= entity.BB.top) {//that.BB.bottom <= entity.BB.top){
+        //     that.y = entity.BB.top - PARAMS.BLOCKWIDTH;
+        //   }//that.velocity.y * that.game.clockTick * PARAMS.SCALE
+        //   that.velocity.y ===0;
+        //   if(that.action = 2) that.action = 0;
+        //   that.updateBB();       
+        //           //  Bulldozer,Wheelie,Gordo,HammerBro,ArmorKnight,Carock,Met
+        //   if((entity instanceof Bulldozer || entity instanceof Wheelie ||  
+        //     entity instanceof Gordo  || entity instanceof HammerBro  || 
+        //     entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met)&&
+        //     that.velocity.y * that.game.clockTick * PARAMS.SCALE<= entity.BB.top){ 
+        //       //dead or loose life points
+        //       that.velocity.y= -200;              
+        //       that.action = 2;
+        //       that.velocity.x = -20;
+        //     }   
+        //   that.updateBB();    
+        // }
+
+    //     if(that.velocity.y < 0){   //jumping and hit ceiling 
+    //       console.log("testing jumping collision")
+    //       if(entity instanceof Tile &&  that.BB.top  <= entity.BB.top>= entity.BB.Bottom) {
+    //         // && that.BB.collide(entity.BB.left) && that.BB.collide(entity.BB.right) &&that.BB.collide(entity.BB.bottom)
+    //           that.velocity.y = 0;
+    //           that.y = entity.BB.bottom + PARAMS.BLOCKWIDTH;
+    //       }
+    //     }
+    //   }
+    // });
+
+
+    if(this.game.click == true){
+      //if(this.action ==0){
+      //this.action=4;
+      //} else{this.action=0;}
+        this.firingState = 1;
+        var mouseX = this.game.mouse.x;
+        var mouseY = this.game.mouse.y;
+
+
+        var vector = new Vector(mouseX - (this.x + this.FIRE_OFFSET_X), mouseY - (this.y + this.FIRE_OFFSET_Y));
+        vector.normalize();
+        this.angleRads = getAngle(vector);
+        console.log(this.angleRads);
+        if ((this.angleRads >= 0 && this.angleRads < Math.PI / 8) || (this.angleRads >= 15 * Math.PI / 8)) this.angle = 0;
+        else if (this.angleRads < Math.PI / 2) this.angle = 1;
+        else if (this.angleRads < 7 * Math.PI / 8) this.angle = 2;
+        else if (this.angleRads < 9 * Math.PI / 8) this.angle = 3;
+        else if (this.angleRads < 11 * Math.PI / 8) this.angle = 4;
+        else if (this.angleRads < 3 * Math.PI / 2) this.angle = 5;
+        else if (this.angleRads < 13 * Math.PI / 8) this.angle = 6;
+        else this.angle = 7;
+      //this.game.click = false;
+    }
+
+
+
+
+
+      
+
+
+
+
           if (this.game.q == true) {
               //if(this.state==0){
               //  this.state=1;
@@ -503,13 +617,6 @@ class Megaman {
           } else {
               this.qReleased = true;
           }
-
-      if(this.game.space ==true){
-        if(this.action ==0){
-          this.action=2;
-        } else{this.action=0;}
-        this.game.space =false;
-      }
 
       if(this.game.click == true){
         //if(this.action ==0){
@@ -664,8 +771,16 @@ class Megaman {
       //    //this.game.rightclick = false;
       //} 
           
+      if (this.action !== 2) {
+        if ((Math.abs(this.velocity.x) >= MIN_MOVING)&& !this.game.shift) this.action = 1;
+        else if ((Math.abs(this.velocity.x) >= MIN_MOVING)&& this.game.shift) this.action=3;
+        else this.action = 0;
+        }        
+        // update direction
+         if (this.velocity.x < 0) this.facing = 0;
+         if (this.velocity.x > 0) this.facing = 1;
       }
-    }
+         
   
     draw(ctx) {
         if (this.firingState) this.firingAnims[this.facing][this.state][this.action][this.angle].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
