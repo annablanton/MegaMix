@@ -35,6 +35,7 @@ class Megaman {
     };
 
     updateBB() {
+      this.lastBB=this.BB;
       this.BB = new BoundingBox(this.x+26 , this.y+24, this.MEGAMAN_WIDTH , this.MEGAMAN_HEIGHT)
             //this.x+13*2, this.y+12*2, 
     }
@@ -527,49 +528,63 @@ class Megaman {
               if(entity instanceof Tile && that.BB.bottom-that.velocity.y*that.game.clockTick*PARAMS.SCALE <= entity.BB.top){
                 that.y = entity.BB.top - 73;   //73  => this.MEGAMAN_HEIGHT= 48; +25
                 that.velocity.y =0 ;
-                that.updateBB();
                 if(that.action =2) that.action = 0;
+                that.updateBB();
             }
-          }
+          } 
+           if((entity instanceof Bulldozer || entity instanceof Wheelie ||  
+             entity instanceof Gordo  || entity instanceof HammerBro  || 
+              entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met)&&
+              that.BB.bottom-that.velocity.y * that.game.clockTick * PARAMS.SCALE<= entity.BB.top){ 
+              //dead or loose life points
+              that.velocity.y= -400;              
+              that.action = 2;
+              if(that.facing=0){
+                that.velocity.x = +40;  
+              } else {
+                that.velocity.x = -40                  //checking later
+              }
+              that.updateBB();    
+            }
+
+            if (that.velocity.y <0 ){   //jumping and hit celing (bottom of tiles)&& that.BB.collide(entity.BB.left) && that.BB.collide(entith.BB.right)
+              if(entity instanceof Tile && (that.lastBB.top >= entity.BB.bottom) ){
+                if(that.BB.collide(entity.BB.left)) {
+                  that.y = entity.BB.bottom
+                  that.velocity.y = 0
+                  // that.x += (entity.BB.right-that.BB.left-5);
+                } 
+                else if (that.BB.collide(entity.BB.right)){
+                    that.y = entity.BB.bottom;
+                    that.velocity.y = 0;
+                    // that.x +=(entity.BB.left-that.BB.right-5);
+                } else {
+                  that.y = entity.BB.bottom -5;
+                  that.velocity.y = 0;
+                }
+              }
+             that.updateBB(); 
+            }
+            // if (that.velocity.y <0 ){   //jumping and hig celing (bottom of tiles)
+            //   if(entity instanceof Tile && that.lastBB.top >= entity.BB.bottom && that.BB.collide(entity.leftBB) && that.BB.collide(entity.rightBB)){
+            //     that.y = entity.BB.bottom;
+            //     that.velocity.y = 0;
+            //   }
+            //   that.updateBB();
+            // }
+
+            if(that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.righ){
+              that.x += (entity.BB.left - that.BB.right);
+              that.velocity.x = 0
+            }
+
+            if(that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE >= entity.BB.right){
+              that.x += (entity.BB.right - that.BB.left);
+              that.velocity.x = 0
+            }
         }
         })
        
-        //  this.game.entities.forEach(function(entity){
-        //    //related with top of entities + falling
-        //    if(entity.BB && that.BB.collide(entity.BB)){
-        //  if(that.velocity.y>0){
-        //   console.log("testing landing collision")
-        //   if(entity instanceof Tile && that.BB.bottom-that.velocity.y * that.game.clockTick * PARAMS.SCALE  <= entity.BB.top) {//that.BB.bottom <= entity.BB.top){
-        //     that.y = entity.BB.top - PARAMS.BLOCKWIDTH;
-        //   }//that.velocity.y * that.game.clockTick * PARAMS.SCALE
-        //   that.velocity.y ===0;
-        //   if(that.action = 2) that.action = 0;
-        //   that.updateBB();       
-        //           //  Bulldozer,Wheelie,Gordo,HammerBro,ArmorKnight,Carock,Met
-        //   if((entity instanceof Bulldozer || entity instanceof Wheelie ||  
-        //     entity instanceof Gordo  || entity instanceof HammerBro  || 
-        //     entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met)&&
-        //     that.velocity.y * that.game.clockTick * PARAMS.SCALE<= entity.BB.top){ 
-        //       //dead or loose life points
-        //       that.velocity.y= -200;              
-        //       that.action = 2;
-        //       that.velocity.x = -20;
-        //     }   
-        //   that.updateBB();    
-        // }
-
-    //     if(that.velocity.y < 0){   //jumping and hit ceiling 
-    //       console.log("testing jumping collision")
-    //       if(entity instanceof Tile &&  that.BB.top  <= entity.BB.top>= entity.BB.Bottom) {
-    //         // && that.BB.collide(entity.BB.left) && that.BB.collide(entity.BB.right) &&that.BB.collide(entity.BB.bottom)
-    //           that.velocity.y = 0;
-    //           that.y = entity.BB.bottom + PARAMS.BLOCKWIDTH;
-    //       }
-    //     }
-    //   }
-    // });
-
-
     if(this.game.click == true){
       //if(this.action ==0){
       //this.action=4;
@@ -593,12 +608,6 @@ class Megaman {
         else this.angle = 7;
       //this.game.click = false;
     }
-
-
-
-
-
-      
 
 
 
