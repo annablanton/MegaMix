@@ -2,26 +2,17 @@
 class GameEngine {
     constructor() {
         this.entities = [];
-        // this.showOutlines = false;
-        // this.surfaceWidth = null;
-        // this.surfaceHeight = null;
-
         this.ctx = null;
-        //direction
-        this.left=false;
+        this.left=false; //direction
         this.right=false;
         this.up=false;
         this.down=false;
-        //jump, slide and weapon 
-        this.space =false;
-        this.shift=false;
-        this.q=false;
-        //mouse
-        this.click=false;
+        this.space =false;  //jumping
+        this.shift=false;   //sliding
+        this.q=false;       //weapon switching 
+        this.click=false;   //for mouse
         this.mouse = false;
         this.qReleased = true;
-        //this.contextmenu =false;
-
     };
 
     init(ctx) {
@@ -55,16 +46,7 @@ class GameEngine {
             that.mouse = getXandY(e);
         }, false);
 
-        //this.ctx.canvas.addEventListener("click", function (e) {
-        //    //console.log(getXandY(e)+"left click");
-        //    that.click = getXandY(e);
-        //    that.click = true;
-        //}, false);
-
         this.ctx.canvas.addEventListener("contextmenu", function (e) {
-            //console.log(getXandY(e)+"right click");
-            //that.rightclick = true;
-            //that.contextmenu = true;
             e.preventDefault();
         }, false);
 
@@ -93,24 +75,19 @@ class GameEngine {
             }
         })
 
-
-
         this.ctx.canvas.addEventListener("keydown", function (e) {
             switch (e.code) {
                 case "ArrowLeft":
                 case "KeyA":
                     that.left = true;
-                    //console.log("left");
                     break;
                 case "ArrowRight":
                 case "KeyD":
                     that.right = true;
-                    //console.log("right");
                     break;
                 case "ArrowUp":
                 case "KeyW":
                     that.up = true;
-                    //console.log("upupup");
                     break;
                 case "ArrowDown":
                 case "KeyS":
@@ -119,15 +96,12 @@ class GameEngine {
                 case "Space":
                     e.preventDefault();
                     that.space = true;
-                    //console.log("jump");
                     break;
                 case "ShiftLeft":
                     that.shift = true;
-                    //console.log("slide");
                     break;
                 case "KeyQ":
                     that.q = true;
-                    //console.log("weapon change");
                     break;
             }
         }, false);
@@ -152,15 +126,12 @@ class GameEngine {
                     break;
                 case "Space":
                     that.space = false;
-                    console.log("jump");
                     break;
                 case "ShiftLeft":
                     that.shift = false;
-                    console.log("slide");
                     break;
                 case "KeyQ":
                     that.q = false;
-                    console.log("weapon change");
                     break;
             }
         }, false);

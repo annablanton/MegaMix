@@ -17,7 +17,6 @@ ASSET_MANAGER.downloadAll(function () {
 	canvas.width = CANVAS_WIDTH;
 	canvas.height = CANVAS_HEIGHT;
 	var ctx = canvas.getContext('2d');
-
 	gameEngine.init(ctx);
 
 	new SceneManager(gameEngine);
