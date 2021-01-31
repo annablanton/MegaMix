@@ -31,7 +31,8 @@ class Met {
         this.animations[1][4] = new Animator(this.spritesheet, 236, 36, 18, 19, 3, 0.09 * 3, 4, true, true) //unhide
     }
     update() {
-        //console.log(1/this.game.clockTick);
+        // console.log(1/this.game.clockTick);
+        
         if (this.state == 0) {
             if (this.action == 0) {
                 if (this.game.timer.gameTime - this.turnTimer >= 2) {
@@ -47,11 +48,82 @@ class Met {
                 this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
                 this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
             }
+        } else if (this.state == 1) {
+            // Todo: Aggressive state
+            if (this.action == 0) {
+                if (this.game.timer.gameTime - this.turnTimer >= 2) {
+                    if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
+                        this.turnTimer = this.game.timer.gameTime;
+                        this.facing = (this.facing == 1 ? 0 : 1);
+                        this.velocity.x = -this.velocity.x;
+                    } else {
+                        //console.log("check failed");
+                    }
+                }
+
+                this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
+                this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
+            }
         }
+<<<<<<< Updated upstream
+=======
+
+        this.updateBB();
+
+        var that = this;
+        this.game.entities.forEach(function (entity) {
+            //console.log(entity);
+            //console.log(entity.BB);
+            if (entity.BB && that.BB.collide(entity.BB)) {
+                //console.log(entity.BB);
+                if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
+                    that.y = entity.BB.top - SPRITE_HEIGHT;
+                    that.velocity.y = 0;
+                    that.updateBB();
+                } else if (entity !== that) {
+                    //console.log(that.x);
+                    //console.log(entity.BB.right);
+                    //console.log("collision");
+
+                    if (that.facing == 1 && that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
+                        that.x += (entity.BB.left - that.BB.right) * 2;
+                        that.velocity.x = -that.velocity.x;
+                        that.facing = (that.facing == 1 ? 0 : 1);
+                    } else if (that.facing == 0 && that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE >= entity.BB.right) {
+                        that.x += (entity.BB.right - that.BB.left) * 2;
+                        that.velocity.x = -that.velocity.x;
+                        that.facing = (that.facing == 1 ? 0 : 1);
+                    }
+                    that.turnTimer = that.game.timer.gameTime;
+                }
+            }
+            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 250) {
+                that.state = 1;
+            }
+        });
+    }
+
+    updateBB() {
+        this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH * 2, this.SPRITE_HEIGHT * 2)
+>>>>>>> Stashed changes
     }
 
     draw(ctx) {
         this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+<<<<<<< Updated upstream
+=======
+        if (PARAMS.DEBUG) {
+            ctx.strokeRect(this.BB.x, this.BB.y, this.BB.width, this.BB.height);
+            ctx.font = "25px Arial";
+            
+            if (this.state == 0) {
+                ctx.fillStyle = "Lightgreen";
+            } else {
+                ctx.fillStyle = "Red";
+            }
+            ctx.fillText(" • ", this.BB.x, this.BB.y);
+        }
+>>>>>>> Stashed changes
         //this.animations[0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 2);
         //this.animations[0][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 5, 2);
         //this.animations[0][2].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 10, 2);
@@ -91,6 +163,8 @@ class Carock {
         this.animations[1][1] = new Animator(this.spritesheet, 236, 197, 32, 47, 1, 0.09 * 3, 4, false, true);
     }
     update() {
+        
+
         if (this.state == 0) {
             if (this.action == 0) {
                 if (this.game.timer.gameTime - this.turnTimer >= 2) {
@@ -104,7 +178,61 @@ class Carock {
                 this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
                 this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
             }
+        } else if (this.state == 1) {
+            // Todo: Aggressive state
+            if (this.action == 0) {
+                if (this.game.timer.gameTime - this.turnTimer >= 2) {
+                    if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
+                        this.turnTimer = this.game.timer.gameTime;
+                        this.facing = (this.facing == 1 ? 0 : 1);
+                        this.velocity.x = -this.velocity.x;
+                    }
+                }
+
+                this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
+                this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
+            }
         }
+<<<<<<< Updated upstream
+=======
+        this.updateBB();
+
+        var that = this;
+        this.game.entities.forEach(function (entity) {
+            //console.log(entity);
+            //console.log(entity.BB);
+            if (entity.BB && that.BB.collide(entity.BB)) {
+                //console.log(entity.BB);
+                if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
+                    that.y = entity.BB.top - SPRITE_HEIGHT;
+                    that.velocity.y = 0;
+                    that.updateBB();
+                } else if (entity !== that) {
+                    //console.log(that.x);
+                    //console.log(entity.BB.right);
+                    //console.log("collision");
+
+                    if (that.facing == 1 && that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
+                        that.x += (entity.BB.left - that.BB.right) * 2;
+                        that.velocity.x = -that.velocity.x;
+                        that.facing = (that.facing == 1 ? 0 : 1);
+                    } else if (that.facing == 0 && that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE >= entity.BB.right) {
+                        that.x += (entity.BB.right - that.BB.left) * 2;
+                        that.velocity.x = -that.velocity.x;
+                        that.facing = (that.facing == 1 ? 0 : 1);
+                    }
+                    that.turnTimer = that.game.timer.gameTime;
+                }
+            }
+            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 250) {
+                that.state = 1;
+            }
+        });
+    }
+
+    updateBB() {
+        this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH_WALK * 2, this.SPRITE_HEIGHT * 2)
+>>>>>>> Stashed changes
     }
 
     draw(ctx) {
@@ -114,6 +242,19 @@ class Carock {
 
         //this.animations[0][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 10, 2);
         //this.animations[1][1].drawFrame(this.game.clockTick, ctx, 16+16*5, 16 + 16 * 10, 2);
+<<<<<<< Updated upstream
+=======
+        if (PARAMS.DEBUG) {
+            ctx.strokeRect(this.BB.x, this.BB.y, this.BB.width, this.BB.height);
+            if (this.state == 0) {
+                ctx.fillStyle = "Lightgreen";
+            } else {
+                ctx.fillStyle = "Red";
+            }
+            ctx.fillText(" • ", this.BB.x, this.BB.y);
+        }
+        
+>>>>>>> Stashed changes
     }
 }
 
@@ -155,7 +296,65 @@ class Bulldozer {
                 this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
                 this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
             }
+        } else if (this.state == 1) {
+            // Todo: Aggressive state
+            if (this.action == 0) {
+                if (this.game.timer.gameTime - this.turnTimer >= 2) {
+                    if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
+                        this.turnTimer = this.game.timer.gameTime;
+                        this.facing = (this.facing == 1 ? 0 : 1);
+                        this.velocity.x = -this.velocity.x;
+                    }
+                }
+
+                this.x += 2 * this.velocity.x * this.game.clockTick * PARAMS.SCALE;
+                this.y += 2 * this.velocity.y * this.game.clockTick * PARAMS.SCALE;
+            }
         }
+<<<<<<< Updated upstream
+=======
+
+        this.updateBB();
+
+        var that = this;
+        this.game.entities.forEach(function (entity) {
+            //console.log(entity);
+            //console.log(entity.BB);
+            if (entity.BB && that.BB.collide(entity.BB)) {
+                //console.log(entity.BB);
+                if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
+                    that.y = entity.BB.top - SPRITE_HEIGHT;
+                    that.velocity.y = 0;
+                    that.updateBB();
+                } else if (entity !== that) {
+                    //console.log(that.x);
+                    //console.log(entity.BB.right);
+                    //console.log("collision");
+
+                    if (that.facing == 1 && that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
+                        that.x += (entity.BB.left - that.BB.right) * 2;
+                        that.velocity.x = -that.velocity.x;
+                        that.facing = (that.facing == 1 ? 0 : 1);
+                    } else if (that.facing == 0 && that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE >= entity.BB.right) {
+                        that.x += (entity.BB.right - that.BB.left) * 2;
+                        that.velocity.x = -that.velocity.x;
+                        that.facing = (that.facing == 1 ? 0 : 1);
+                    }
+                    that.turnTimer = that.game.timer.gameTime;
+                    
+                }
+            }
+
+            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 250) {
+                that.state = 1;
+            }
+        });
+
+    }
+
+    updateBB() {
+        this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH * 2, this.SPRITE_HEIGHT * 2)
+>>>>>>> Stashed changes
     }
 
     draw(ctx) {
@@ -168,6 +367,19 @@ class Bulldozer {
         //this.animations[1][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 7, 16, 2);
         //this.animations[1][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 7, 16 + 16 * 10, 2);
         //this.animations[1][2].drawFrame(this.game.clockTick, ctx, 16 + 16 * 7, 16 + 16 * 20, 2);
+<<<<<<< Updated upstream
+=======
+
+        if (PARAMS.DEBUG) {
+            ctx.strokeRect(this.BB.x, this.BB.y, this.BB.width, this.BB.height);
+            if (this.state == 0) {
+                ctx.fillStyle = "Lightgreen";
+            } else {
+                ctx.fillStyle = "Red";
+            }
+            ctx.fillText(" • ", this.BB.x, this.BB.y);
+        }
+>>>>>>> Stashed changes
     }
 }
 
@@ -207,12 +419,79 @@ class ArmorKnight {
                 this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
                 this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
             }
+        } else if (this.state == 1) {
+            if (this.action == 0) {
+                if (this.game.timer.gameTime - this.turnTimer >= 2) {
+                    if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
+                        //console.log("random turn");
+                        this.turnTimer = this.game.timer.gameTime;
+                        this.facing = (this.facing == 1 ? 0 : 1);
+                        this.velocity.x = -this.velocity.x;
+                    }
+                }
+
+                this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
+                this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
+            }
         }
+<<<<<<< Updated upstream
+=======
+
+        this.updateBB();
+
+        var that = this;
+        this.game.entities.forEach(function (entity) {
+            //console.log(entity);
+            //console.log(entity.BB);
+            if (entity.BB && that.BB.collide(entity.BB)) {
+                //console.log(entity.BB);
+                if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
+                    that.y = entity.BB.top - SPRITE_HEIGHT;
+                    that.velocity.y = 0;
+                    that.updateBB();
+                } else if (entity !== that) {
+                    console.log(that.x);
+                    console.log(entity.BB.right);
+                    //console.log("collision");
+
+                    if (that.facing == 1 && that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
+                        that.x += (entity.BB.left - that.BB.right) * 2;
+                        that.velocity.x = -that.velocity.x;
+                        that.facing = (that.facing == 1 ? 0 : 1);
+                    } else if (that.facing == 0 && that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE >= entity.BB.right) {
+                        that.x += (entity.BB.right - that.BB.left) * 2;
+                        that.velocity.x = -that.velocity.x;
+                        that.facing = (that.facing == 1 ? 0 : 1);
+                    }
+                    that.turnTimer = that.game.timer.gameTime;
+                }
+            }
+            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 250) {
+                that.state = 1;
+            }
+        });
+    }
+
+    updateBB() {
+        this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH_WALK * 2.25, this.SPRITE_HEIGHT * 2.25)
+>>>>>>> Stashed changes
     }
 
     draw(ctx) {
         this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2.25);
+<<<<<<< Updated upstream
 
+=======
+        if (PARAMS.DEBUG) {
+            ctx.strokeRect(this.BB.x, this.BB.y, this.BB.width, this.BB.height);
+            if (this.state == 0) {
+                ctx.fillStyle = "Lightgreen";
+            } else {
+                ctx.fillStyle = "Red";
+            }
+            ctx.fillText(" • ", this.BB.x, this.BB.y);
+        }
+>>>>>>> Stashed changes
         //this.animations[0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 2);
         //this.animations[0][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 5, 2);
         //this.animations[1][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16, 2);
@@ -236,6 +515,7 @@ class HammerBro {
         this.animations[1][1] = new Animator(this.spritesheet, 242, 5, 18, 24, 1, 0.09 * 3, 0, false, true); // idle right
     }
     update() {
+<<<<<<< Updated upstream
         
     }
 
@@ -244,6 +524,83 @@ class HammerBro {
         this.animations[0][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 5, 2);
         this.animations[1][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16, 2);
         this.animations[1][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 5, 2);
+=======
+        if (this.state == 0) {
+            if (this.action == 0) {
+                if (this.game.timer.gameTime - this.turnTimer >= 2) {
+                    if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
+                        this.turnTimer = this.game.timer.gameTime;
+                        this.facing = (this.facing == 1 ? 0 : 1);
+                        this.velocity.x = -this.velocity.x;
+                    }
+                }
+
+                this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
+                this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
+            }
+        } else if (this.state == 1) {
+            // Todo: Aggressive state
+            if (this.action == 0) {
+                if (this.game.timer.gameTime - this.turnTimer >= 2) {
+                    if (Math.random() >= 0.5 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
+                        this.turnTimer = this.game.timer.gameTime;
+                        this.facing = (this.facing == 1 ? 0 : 1);
+                        this.velocity.x = -this.velocity.x;
+                    }
+                }
+
+                this.x += 3 * this.velocity.x * this.game.clockTick * PARAMS.SCALE;
+                this.y += 3 * this.velocity.y * this.game.clockTick * PARAMS.SCALE;
+            }
+        }
+        this.updateBB();
+
+        var that = this;
+        this.game.entities.forEach(function (entity) {
+            //console.log(entity);
+            //console.log(entity.BB);
+            if (entity.BB && that.BB.collide(entity.BB)) {
+                //console.log(entity.BB);
+                if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
+                    that.y = entity.BB.top - SPRITE_HEIGHT;
+                    that.velocity.y = 0;
+                    that.updateBB();
+                } else if (entity !== that) {
+                    console.log(that.x);
+                    console.log(entity.BB.right);
+                    //console.log("collision");
+                    that.facing = (that.facing == 1 ? 0 : 1);
+                    that.velocity.x = -that.velocity.x;
+                    that.turnTimer = that.game.timer.gameTime;
+                    if (that.facing == 0) {
+                        that.x += (entity.BB.left - that.BB.right) * 2;
+                    } else {
+                        that.x += (entity.BB.right - that.BB.left) * 2;
+                    }
+                }
+            }
+            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 250) {
+                that.state = 1;
+            }
+        });
+    }
+
+    updateBB() {
+        this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH * 2.5, this.SPRITE_HEIGHT * 2.5)
+    }
+
+    draw(ctx) {
+        this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2.5);
+        if (PARAMS.DEBUG) {
+            ctx.strokeRect(this.BB.x, this.BB.y, this.BB.width, this.BB.height);
+            if (this.state == 0) {
+                ctx.fillStyle = "Lightgreen";
+            } else {
+                ctx.fillStyle = "Red";
+            }
+            ctx.fillText(" • ", this.BB.x, this.BB.y);
+        }
+>>>>>>> Stashed changes
     }
 }
 
@@ -308,11 +665,75 @@ class Wheelie {
                 this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
                 this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
             }
+        } else if (this.state == 1) {
+            if (this.action == 0) {
+                if (this.game.timer.gameTime - this.turnTimer >= 2) {
+                    if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
+                        this.turnTimer = this.game.timer.gameTime;
+                        this.facing = (this.facing == 1 ? 0 : 1);
+                        this.velocity.x = -this.velocity.x;
+                    }
+                }
+
+                this.x += 5 * this.velocity.x * this.game.clockTick * PARAMS.SCALE;
+                this.y += 5 * this.velocity.y * this.game.clockTick * PARAMS.SCALE;
+            }
         }
+<<<<<<< Updated upstream
+=======
+
+        this.updateBB();
+
+        var that = this;
+        this.game.entities.forEach(function (entity) {
+            //console.log(entity);
+            //console.log(entity.BB);
+            if (entity.BB && that.BB.collide(entity.BB)) {
+                //console.log(entity.BB);
+                if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
+                    that.y = entity.BB.top - SPRITE_HEIGHT;
+                    that.velocity.y = 0;
+                    that.updateBB();
+                } else if (entity !== that) {
+                    console.log(that.x);
+                    console.log(entity.BB.right);
+                    //console.log("collision");
+                    that.facing = (that.facing == 1 ? 0 : 1);
+                    that.velocity.x = -that.velocity.x;
+                    that.turnTimer = that.game.timer.gameTime;
+                    if (that.facing == 0) {
+                        that.x += (entity.BB.left - that.BB.right) * 2;
+                    } else {
+                        that.x += (entity.BB.right - that.BB.left) * 2;
+                    }
+                }
+                
+            }
+            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 250) {
+                that.state = 1;
+            }
+        });
+    }
+
+    updateBB() {
+        this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH * 3, this.SPRITE_HEIGHT * 3)
+>>>>>>> Stashed changes
     }
 
     draw(ctx) {
         this.animations[this.facing][this.state][this.action].drawFrame(this.game.clockTick, ctx, this.x, this.y, 3);
+<<<<<<< Updated upstream
+=======
+        if (PARAMS.DEBUG) {
+            ctx.strokeRect(this.BB.x, this.BB.y, this.BB.width, this.BB.height);
+            if (this.state == 0) {
+                ctx.fillStyle = "Lightgreen";
+            } else {
+                ctx.fillStyle = "Red";
+            }
+            ctx.fillText(" • ", this.BB.x, this.BB.y);
+        }
+>>>>>>> Stashed changes
         //this.animations[0][0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 3);
         //this.animations[1][0][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16, 3);
 
