@@ -3,7 +3,7 @@ class SceneManager {
         this.game = game;
         this.game.camera = this;
         this.x = 0;
-        this.megaman = new Megaman(game, 100, 100);
+        this.megaman = new Megaman(game, 100, 20);
 
         game.addEntity(new Gordo(game, 400, 380, 1, 0));
         game.addEntity(new Gordo(game, 400, 380, 0, 1));
