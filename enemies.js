@@ -82,21 +82,20 @@ class Met {
                     that.y = entity.BB.top - SPRITE_HEIGHT;
                     that.velocity.y = 0;
                     that.updateBB();
-                } else if (entity !== that) {
+                } else if (entity !== that && !(entity instanceof Megaman)) {
                     //console.log(that.x);
                     //console.log(entity.BB.right);
                     //console.log("collision");
 
                     if (that.facing == 1 && that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
-                        that.x += (entity.BB.left - that.BB.right) * 2;
                         that.velocity.x = -that.velocity.x;
                         that.facing = (that.facing == 1 ? 0 : 1);
                     } else if (that.facing == 0 && that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE >= entity.BB.right) {
-                        that.x += (entity.BB.right - that.BB.left) * 2;
                         that.velocity.x = -that.velocity.x;
                         that.facing = (that.facing == 1 ? 0 : 1);
                     }
                     that.turnTimer = that.game.timer.gameTime;
+                    that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                 }
             }
             if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 250) {
@@ -208,21 +207,20 @@ class Carock {
                     that.y = entity.BB.top - SPRITE_HEIGHT;
                     that.velocity.y = 0;
                     that.updateBB();
-                } else if (entity !== that) {
+                } else if (entity !== that && !(entity instanceof Megaman)) {
                     //console.log(that.x);
                     //console.log(entity.BB.right);
                     //console.log("collision");
 
                     if (that.facing == 1 && that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
-                        that.x += (entity.BB.left - that.BB.right) * 2;
                         that.velocity.x = -that.velocity.x;
                         that.facing = (that.facing == 1 ? 0 : 1);
                     } else if (that.facing == 0 && that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE >= entity.BB.right) {
-                        that.x += (entity.BB.right - that.BB.left) * 2;
                         that.velocity.x = -that.velocity.x;
                         that.facing = (that.facing == 1 ? 0 : 1);
                     }
                     that.turnTimer = that.game.timer.gameTime;
+                    that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                 }
             }
             if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 250) {
@@ -326,22 +324,20 @@ class Bulldozer {
                     that.y = entity.BB.top - SPRITE_HEIGHT;
                     that.velocity.y = 0;
                     that.updateBB();
-                } else if (entity !== that) {
+                } else if (entity !== that && !(entity instanceof Megaman)) {
                     //console.log(that.x);
                     //console.log(entity.BB.right);
                     //console.log("collision");
 
                     if (that.facing == 1 && that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
-                        that.x += (entity.BB.left - that.BB.right) * 2;
                         that.velocity.x = -that.velocity.x;
                         that.facing = (that.facing == 1 ? 0 : 1);
                     } else if (that.facing == 0 && that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE >= entity.BB.right) {
-                        that.x += (entity.BB.right - that.BB.left) * 2;
                         that.velocity.x = -that.velocity.x;
                         that.facing = (that.facing == 1 ? 0 : 1);
                     }
                     that.turnTimer = that.game.timer.gameTime;
-                    
+                    that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                 }
             }
 
@@ -449,21 +445,20 @@ class ArmorKnight {
                     that.y = entity.BB.top - SPRITE_HEIGHT;
                     that.velocity.y = 0;
                     that.updateBB();
-                } else if (entity !== that) {
+                } else if (entity !== that && !(entity instanceof Megaman)) {
                     console.log(that.x);
                     console.log(entity.BB.right);
                     //console.log("collision");
 
                     if (that.facing == 1 && that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
-                        that.x += (entity.BB.left - that.BB.right) * 2;
                         that.velocity.x = -that.velocity.x;
                         that.facing = (that.facing == 1 ? 0 : 1);
                     } else if (that.facing == 0 && that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE >= entity.BB.right) {
-                        that.x += (entity.BB.right - that.BB.left) * 2;
                         that.velocity.x = -that.velocity.x;
                         that.facing = (that.facing == 1 ? 0 : 1);
                     }
                     that.turnTimer = that.game.timer.gameTime;
+                    that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                 }
             }
             if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 250) {
@@ -558,14 +553,14 @@ class HammerBro {
                     that.y = entity.BB.top - SPRITE_HEIGHT;
                     that.velocity.y = 0;
                     that.updateBB();
-                } else if (entity !== that) {
+                } else if (entity !== that && !(entity instanceof Megaman)) {
                     console.log(that.x);
                     console.log(entity.BB.right);
                     //console.log("collision");
                     that.facing = (that.facing == 1 ? 0 : 1);
                     that.velocity.x = -that.velocity.x;
                     that.turnTimer = that.game.timer.gameTime;
-                    that.x += that.velocity.x * that.game.clockTick;
+                    that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                 }
 
             }
@@ -621,23 +616,23 @@ class Gordo {
             //console.log(entity);
             //console.log(entity.BB);
             if (entity.BB && that.BB.collide(entity.BB)) {
-                if (!(entity instanceof Gordo)) {
+                if (!(entity instanceof Gordo) && !(entity instanceof Megaman)) {
                     //console.log("collided with " + entity.constructor.name);
                     if (that.BB.right - that.velocity.x * that.movementScaleX * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
                         that.velocity.x = -that.velocity.x;
-                        that.x += that.velocity.x * that.game.clockTick * that.movementScaleX;
+                        that.x += that.velocity.x * that.game.clockTick * that.movementScaleX * PARAMS.SCALE;
                     } else if (that.BB.left - that.velocity.x * that.movementScaleX * that.game.clockTick * PARAMS.SCALE >= entity.BB.right) {
                         that.x += (entity.BB.right - that.BB.left) * 2;
                         that.velocity.x = -that.velocity.x;
-                        that.x += that.velocity.x * that.game.clockTick * that.movementScaleX;
+                        that.x += that.velocity.x * that.game.clockTick * that.movementScaleX * PARAMS.SCALE;
                     }
 
                     if (that.BB.bottom - that.velocity.y * that.movementScaleY * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
                         that.velocity.y = -that.velocity.y;
-                        that.y += (that.velocity.y * that.game.clockTick * that.movementScaleY);
+                        that.y += (that.velocity.y * that.game.clockTick * that.movementScaleY * PARAMS.SCALE);
                     } else if (that.BB.top - that.velocity.y * that.movementScaleY * that.game.clockTick * PARAMS.SCALE >= entity.BB.bottom) {
                         that.velocity.y = -that.velocity.y;
-                        that.y += (that.velocity.y * that.game.clockTick * that.movementScaleY);
+                        that.y += (that.velocity.y * that.game.clockTick * that.movementScaleY * PARAMS.SCALE);
                     }
                 }
             }
@@ -733,13 +728,8 @@ class Wheelie {
                     that.facing = (that.facing == 1 ? 0 : 1);
                     that.velocity.x = -that.velocity.x;
                     that.turnTimer = that.game.timer.gameTime;
-                    if (that.facing == 0 && that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
-                        that.x += (entity.BB.left - that.BB.right) * 2;
-                    } else if (that.facing == 0 && that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE >= entity.BB.right) {
-                        that.x += (entity.BB.right - that.BB.left) * 2;
-                    }
                     that.turnTimer = that.game.timer.gameTime;
-                    that.x += that.velocity.x * that.game.clockTick;
+                    that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                 }
                 
             }
