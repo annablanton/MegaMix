@@ -27,10 +27,10 @@ class Tile {
 
     updateBB() {
         this.BB = new BoundingBox(this.x, this.y, 16 * 2, 16 * 2);
-        this.leftBB = new BoundingBox(this.x, this.y, 8*2,16*2);
-        this.rightBB = new BoundingBox(this.x + 8*2, this.y, 8*2,16*2);
-        this.topBB = new BoundingBox(this.x, this.y, 16*2,8*2);
-        this.bottomBB = new BoundingBox(this.x, this.y +8*2, 16*2,8*2);
+        //this.leftBB = new BoundingBox(this.x, this.y, 8*2,16*2);
+        //this.rightBB = new BoundingBox(this.x + 8*2, this.y, 8*2,16*2);
+        //this.topBB = new BoundingBox(this.x, this.y, 16*2,8*2);
+        //this.bottomBB = new BoundingBox(this.x, this.y +8*2, 16*2,8*2);
     }
 
     draw(ctx) {
@@ -49,6 +49,7 @@ class Tile {
             }
         }
         if (PARAMS.DEBUG) {
+            ctx.fillStyle = "Red";
             ctx.strokeRect(this.BB.x, this.BB.y, this.BB.width, this.BB.height);
         }
     }

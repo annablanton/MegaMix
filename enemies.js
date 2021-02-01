@@ -597,9 +597,9 @@ class Wheelie {
                     that.facing = (that.facing == 1 ? 0 : 1);
                     that.velocity.x = -that.velocity.x;
                     that.turnTimer = that.game.timer.gameTime;
-                    if (that.facing == 0) {
+                    if (that.facing == 0 && that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
                         that.x += (entity.BB.left - that.BB.right) * 2;
-                    } else {
+                    } else if (that.facing == 0 && that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE >= entity.BB.right) {
                         that.x += (entity.BB.right - that.BB.left) * 2;
                     }
                 }
