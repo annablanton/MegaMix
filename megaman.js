@@ -351,7 +351,7 @@ class Megaman {
           if(entity.BB && that.BB.collide(entity.BB)){
             if(that.velocity.y > 0 ){ //landing & jumping 
             if(entity instanceof Tile && that.BB.bottom-that.velocity.y*that.game.clockTick*PARAMS.SCALE <= entity.BB.top){
-              that.y = entity.BB.top - 73;   //73  => this.MEGAMAN_HEIGHT= 48; +25
+              that.y = entity.BB.top - 72;   //73  => this.MEGAMAN_HEIGHT= 48; +25
               that.velocity.y =0 ;
               if(that.action =2) that.action = 0;
               that.updateBB();

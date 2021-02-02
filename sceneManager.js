@@ -38,10 +38,10 @@ class SceneManager {
         this.game.addEntity(new Tile(this.game, 532, 532, 10, 1));
         this.game.addEntity(new Tile(this.game, 532, 564, 10, 2));
         this.game.addEntity(new Tile(this.game, 532, 596, 10, 3));
-        this.game.addEntity(new Tile(this.game, 70, 170, 0, 0));
-        this.game.addEntity(new Tile(this.game, 102, 170, 1, 0));
-        this.game.addEntity(new Tile(this.game, 134, 170, 2, 0));
-        this.game.addEntity(new Tile(this.game, 166, 170, 3, 0));
+        this.game.addEntity(new Tile(this.game, 70, 300, 0, 0));
+        this.game.addEntity(new Tile(this.game, 102, 300, 1, 0));
+        this.game.addEntity(new Tile(this.game, 134, 300, 2, 0));
+        this.game.addEntity(new Tile(this.game, 166, 300, 3, 0));
         this.game.addEntity(new Tile(this.game, 300, 16, 3, 0));
         this.game.addEntity(new Tile(this.game, 300, 64, 3, 0));
         this.game.addEntity(new Tile(this.game, 300, 300, 3, 0));
