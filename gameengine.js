@@ -51,7 +51,7 @@ class GameEngine {
         }, false);
 
         this.ctx.canvas.addEventListener("mousedown", function (e) {
-            console.log("mouse click");
+            //console.log("mouse click");
             switch (event.button) {
                 case 0:
                     that.click = true;
@@ -65,11 +65,11 @@ class GameEngine {
         this.ctx.canvas.addEventListener("mouseup", function (e) {
             switch (event.button) {
                 case 0:
-                    console.log("left mouse up");
+                    //console.log("left mouse up");
                     that.click = false;
                     break;
                 case 2:
-                    console.log("right mouse up");
+                    //console.log("right mouse up");
                     that.rightclick = false;
                     break;
             }
@@ -144,7 +144,7 @@ class GameEngine {
     draw() {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         for (var i = 0; i < this.entities.length; i++) {
-            this.entities[i].draw(this.ctx);
+            this.entities[i].draw(this.ctx);            
         }
     };
 

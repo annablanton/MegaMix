@@ -230,6 +230,7 @@ class Megaman {
       };
 
     update() {
+      
       const TICK = this.game.clockTick;
       const MIN_MOVING = 4.45;   
       const ACC_MOVING = 133;
@@ -253,7 +254,7 @@ class Megaman {
         }
 
         if (this.invulnTimer > 0) {
-            this.invulnTimer -= (this.invulnTimer <= this.game.clockTick ? this.weaponTimer : this.game.clockTick);
+            this.invulnTimer -= (this.invulnTimer <= this.game.clockTick ? this.invulnTimer : this.game.clockTick);
         }
 
 
@@ -334,7 +335,6 @@ class Megaman {
         this.velocity.x -= ACC_MOVING * TICK;
       }
     }     
-
      // setting maximum
      if(this.velocity.y >= MAX_FALL) this.velocity.y = MAX_FALL;
      if(this.velocity.y <= -MAX_FALL) this.velocity.y = -MAX_FALL;
@@ -350,92 +350,58 @@ class Megaman {
       this.updateBB();
 
       
-      //collision for megaman
-      var that = this;
-      this.game.entities.forEach(function(entity){
-          //collision for landing and jumping on the top of tiles
-          if (entity.BB && that.BB.collide(entity.BB)) {
-              if (that.velocity.y > 0) { //landing & jumping 
-                  if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
-                      that.y = entity.BB.top - 72;   //73  => this.MEGAMAN_HEIGHT= 48; +25
-                      that.velocity.y = 0;
-                      if (that.action = 2) that.action = 0;
-                      that.updateBB();
-                  }
-              }
+        //collision for megaman
+        var that = this;
+        this.game.entities.forEach(function (entity) {
+            if (entity.BB && that.BB.collide(entity.BB)) {
+                if (that.velocity.y > 0) { // falling and landing on the block
+                    if (entity instanceof Tile && (that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE) <= entity.BB.top) { // was above last tick
+                        that.y = entity.BB.top - 72;
+                        that.velocity.y = 0;
+                        if (that.action == 2) that.action = 0;
+                        that.updateBB();
+                    }
+                    //that.velocity.y === 0;
+                }
+            }
+            //jumping and cit bottome of tile
+            if (that.velocity.y < 0) {
+                if (entity instanceof Tile && (that.BB.top - that.velocity.y * that.game.clockTick * PARAMS.SCALE) >= entity.BB.bottom // was below last tick
+                    && that.BB.collide(entity.leftBB) && that.BB.collide(entity.rightBB)) { // collide with the center point of the brick
+                    that.velocity.y = 0;
+                }
+            }
+            //Hit left or right side of tile
+            if (entity instanceof Tile
+                && that.BB.collide(entity.topBB) && that.BB.collide(entity.bottomBB)) {
+                if (that.BB.collide(entity.leftBB)) {
+                    that.x = entity.BB.left - 72;
+                    if (that.velocity.x > 0) that.velocity.x = 0;
+                } else if (that.BB.collide(entity.rightBB)) {
+                    that.x = entity.BB.right - 22;
+                    if (that.velocity.x < 0) that.velocity.x = 0;
+                }
+                that.updateBB();
+            }
 
-              //Collision for top of enemies
-              if ((entity instanceof Bulldozer || entity instanceof Wheelie ||
-                  entity instanceof Gordo || entity instanceof HammerBro ||
-                  entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met) &&
-                  that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top && !that.invulnTimer) {
-                  console.log("invuln timer" + that.invulnTimer);
-                  //dead or loose life points
-                  that.velocity.y = -400;
-                  that.action = 2;
-                  if (that.facing = 0) {
-                      that.velocity.x = +40;
-                  } else {
-                      that.velocity.x = -40
-                  }
-                  that.updateBB();
-                  that.invulnTimer = 2;
-              }
-
-              //Collision for jumping and hit the bottom of tiles 
-              if (that.velocity.y < 0) {
-                  if (entity instanceof Tile && (that.lastBB.top >= entity.BB.bottom)) {
-                      if (that.BB.collide(entity.BB.left)) {
-                          that.y = entity.BB.bottom;
-                          that.velocity.y = 0;
-                      }
-                      else if (that.BB.collide(entity.BB.right)) {
-                          that.y = entity.BB.bottom;
-                          that.velocity.y = 0;
-                      } else {
-                          that.y = entity.BB.bottom - 5;
-                          that.velocity.y = 0;
-                      }
-                      //jumping and cit bottome of tile
-                      if (that.velocity.y < 0) {
-                          if (entity instanceof Tile && (that.BB.top - that.velocity.y * that.game.clockTick * PARAMS.SCALE) >= entity.BB.bottom // was below last tick
-                              && that.BB.collide(entity.leftBB) && that.BB.collide(entity.rightBB)) { // collide with the center point of the brick
-                              that.velocity.y = 0;
-                          }
-                      }
-                      //Hit left of right side of tile
-                      if (entity instanceof Tile
-                          && that.BB.collide(entity.BB)) {
-                          if (that.BB.collide(entity.leftBB)) {
-                              that.x = entity.BB.left - 72;
-                              if (that.velocity.x > 0) that.velocity.x = 0;
-                          } else if (that.BB.collide(entity.rightBB)) {
-                              that.x = entity.BB.right - 22;
-                              if (that.velocity.x < 0) that.velocity.x = 0;
-                          }
-                          that.updateBB();
-                      }
-                  }
-              }
-
-              //collision with enemies
-              if ((entity instanceof Wheelie || entity instanceof Bulldozer ||
-                  entity instanceof Gordo || entity instanceof HammerBro ||
-                  entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met) && (that.BB.collide(entity.BB))) {
-
-                  console.log(that.velocity.x);
-                  that.action = 2;
-                  that.velocity.y = -180;
-                  if (that.facing == 1) {
-                      that.velocity.x = -160;
-                  }
-                  if (that.facing == 0) {
-                      that.velocity.x = +160;
-                  }
-              }
-              that.updateBB();
-          }
-      });
+            //collision with enemies
+            if ((entity instanceof Wheelie || entity instanceof Bulldozer ||
+                entity instanceof Gordo || entity instanceof HammerBro ||
+                entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met) && (that.BB.collide(entity.BB)) && !that.invulnTimer) {
+                that.action = 2;
+                that.velocity.y = -180;
+                if (that.facing == 1) {
+                    that.velocity.x = -160;
+                }
+                if (that.facing == 0) {
+                    that.velocity.x = +160;
+                }
+                that.invulnTimer = 1.5;
+                //console.log(that.velocity.y);
+                
+            }
+            that.updateBB();
+        });
 
 
       //for clicking q button (weapon toggling)
@@ -507,40 +473,115 @@ class Megaman {
               }
           } else {
               if (!this.weaponTimer) {
+                  //this.game.addEntity(new Laser(this.game, this));
+                  //if (this.action != 3) {
+                  //    if (this.angleRads >= Math.PI / 5 && this.angleRads <= Math.PI / 2) {
+                  //        var ellipsePoint = findEllipsePoint(40 + this.LASER_WIDTH / 2, 25 + this.LASER_HEIGHT / 2, Math.PI / 5);
+                  //        var laserOrigin = findEllipsePoint(40, 25, Math.PI / 5);
+                  //        this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2 + ellipsePoint.x,
+                  //            this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y, Math.PI / 5, laserOrigin.x + this.x + this.FIRE_OFFSET_X, laserOrigin.y + this.y + this.FIRE_OFFSET_Y));
+                  //    } else if (this.angleRads >= Math.PI / 2 && this.angleRads <= 4 * Math.PI / 5) {
+                  //        var ellipsePoint = findEllipsePoint(40 + this.LASER_WIDTH / 2, 25 + this.LASER_HEIGHT / 2, 4 * Math.PI / 5);
+                  //        var laserOrigin = findEllipsePoint(40, 25, 4 * Math.PI / 5);
+                  //        this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2 + ellipsePoint.x,
+                  //            this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y, 4 * Math.PI / 5, laserOrigin.x + this.x + this.FIRE_OFFSET_X, laserOrigin.y + this.y + this.FIRE_OFFSET_Y));
+
+                  //    } else {
+                  //        var ellipsePoint = findEllipsePoint(40 + this.LASER_WIDTH / 2, 25 + this.LASER_HEIGHT / 2, this.angleRads);
+                  //        var laserOrigin = findEllipsePoint(40, 25, this.angleRads);
+                  //        this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2 + ellipsePoint.x,
+                  //            this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y, this.angleRads, laserOrigin.x + this.x + this.FIRE_OFFSET_X, laserOrigin.y + this.y + this.FIRE_OFFSET_Y));
+                  //    }
+                  //} else if (this.facing == 1) {
+                  //    if (this.angleRads >= Math.PI / 5 && this.angleRads < 11 * Math.PI / 12) {
+                  //        var ellipsePoint = findEllipsePoint(40 + this.LASER_WIDTH / 2, 25 + this.LASER_HEIGHT / 2, Math.PI / 5);
+                  //        var laserOrigin = findEllipsePoint(40, 25, Math.PI / 5);
+                  //        this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2 + ellipsePoint.x,
+                  //            this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y, Math.PI / 5, laserOrigin.x + this.x + this.FIRE_OFFSET_X, laserOrigin.y + this.y + this.FIRE_OFFSET_Y));
+                  //    } else if (this.angleRads >= 11 * Math.PI / 12 && this.angleRads <= 3 * Math.PI / 2) {
+                  //        var ellipsePoint = findEllipsePoint(40 + this.LASER_WIDTH / 2, 25 + this.LASER_HEIGHT / 2, 3 * Math.PI / 2);
+                  //        var laserOrigin = findEllipsePoint(40, 25, 3 * Math.PI / 2);
+                  //        this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2 + ellipsePoint.x,
+                  //            this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y, 3 * Math.PI / 2, laserOrigin.x + this.x + this.FIRE_OFFSET_X, laserOrigin.y + this.y + this.FIRE_OFFSET_Y));
+
+
+                  //    } else {
+                  //        var laserOrigin = findEllipsePoint(40, 25, this.angleRads);
+                  //        var ellipsePoint = findEllipsePoint(40 + this.LASER_WIDTH / 2, 25 + this.LASER_HEIGHT / 2, this.angleRads);
+                  //        this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2 + ellipsePoint.x,
+                  //            this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y, this.angleRads, laserOrigin.x + this.x + this.FIRE_OFFSET_X, laserOrigin.y + this.y + this.FIRE_OFFSET_Y));
+                  //    }
+                  //} else {
+                  //    if (this.angleRads <= 4 * Math.PI / 5 && this.angleRads > Math.PI / 12) {
+                  //        var laserOrigin = findEllipsePoint(40, 25, 4 * Math.PI / 5);
+                  //        var ellipsePoint = findEllipsePoint(40 + this.LASER_WIDTH / 2, 25 + this.LASER_HEIGHT / 2, 4 * Math.PI / 5);
+                  //        this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2 + ellipsePoint.x,
+                  //            this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y, 4 * Math.PI / 5, laserOrigin.x + this.x + this.FIRE_OFFSET_X, laserOrigin.y + this.y + this.FIRE_OFFSET_Y));
+                  //    } else if ((this.angleRads <= Math.PI / 12 && this.angleRads >= 0) || (this.angleRads >= 3 * Math.PI / 2 && this.angleRads <= 2 * Math.PI)) {
+                  //        var ellipsePoint = findEllipsePoint(40 + this.LASER_WIDTH / 2, 25 + this.LASER_HEIGHT / 2, 3 * Math.PI / 2);
+                  //        var laserOrigin = findEllipsePoint(40, 25, 3 * Math.PI / 2);
+                  //        this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2 + ellipsePoint.x,
+                  //            this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y, 3 * Math.PI / 2, laserOrigin.x + this.x + this.FIRE_OFFSET_X, laserOrigin.y + this.y + this.FIRE_OFFSET_Y));
+                  //    } else {
+                  //        var ellipsePoint = findEllipsePoint(40 + this.LASER_WIDTH / 2, 25 + this.LASER_HEIGHT / 2, this.angleRads);
+                  //        var laserOrigin = findEllipsePoint(40, 25, this.angleRads);
+                  //        this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2 + ellipsePoint.x,
+                  //            this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y, this.angleRads, laserOrigin.x + this.x + this.FIRE_OFFSET_X, laserOrigin.y + this.y + this.FIRE_OFFSET_Y));
+                  //    }
+                  //}
                   if (this.action != 3) {
                       if (this.angleRads >= Math.PI / 5 && this.angleRads <= Math.PI / 2) {
-                          var ellipsePoint = findEllipsePoint(40 + this.LASER_WIDTH / 2, 25 + this.LASER_HEIGHT / 2, Math.PI / 5);
-                          this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y, Math.PI / 5));
+                          var laserOrigin = findEllipsePoint(40, 25, Math.PI / 5);
+                          this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X,
+                              this.y + this.FIRE_OFFSET_Y, Math.PI / 5, laserOrigin.x + this.x + this.FIRE_OFFSET_X, laserOrigin.y + this.y + this.FIRE_OFFSET_Y));
                       } else if (this.angleRads >= Math.PI / 2 && this.angleRads <= 4 * Math.PI / 5) {
-                          var ellipsePoint = findEllipsePoint(40 + this.LASER_WIDTH / 2, 25 + this.LASER_HEIGHT / 2, 4 * Math.PI / 5);
-                          this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y, 4 * Math.PI / 5));
+                          var laserOrigin = findEllipsePoint(40, 25, 4 * Math.PI / 5);
+                          this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X,
+                              this.y + this.FIRE_OFFSET_Y, 4 * Math.PI / 5, laserOrigin.x + this.x + this.FIRE_OFFSET_X, laserOrigin.y + this.y + this.FIRE_OFFSET_Y));
+                          //this.x = this.x + this.FIRE_OFFSET_X - this.laserLength / 2 + ellipsePoint.x;
+                          //this.y = this.y + this.FIRE_OFFSET_Y - this.laserLength / 2 + ellipsePoint.y;
+                          //this.laserOriginX = laserOrigin.x + this.x + this.FIRE_OFFSET_X;
+                          //this.laserOriginY = laserOrigin.y + this.y + this.FIRE_OFFSET_Y;
 
                       } else {
-                          var ellipsePoint = findEllipsePoint(40 + this.LASER_WIDTH / 2, 25 + this.LASER_HEIGHT / 2, this.angleRads);
-                          this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y, this.angleRads));
+                          var laserOrigin = findEllipsePoint(40, 25, this.angleRads);
+                          this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X,
+                              this.y + this.FIRE_OFFSET_Y, this.angleRads, laserOrigin.x + this.x + this.FIRE_OFFSET_X, laserOrigin.y + this.y + this.FIRE_OFFSET_Y));
+                          //this.y + this.FIRE_OFFSET_Y - this.laserLength / 2 + ellipsePoint.y, this.angleRads, laserOrigin.x + this.x + this.FIRE_OFFSET_X, laserOrigin.y + this.y + this.FIRE_OFFSET_Y));
+                          //this.laserOriginX = laserOrigin.x + this.x + this.FIRE_OFFSET_X;
+                          //this.laserOriginY = laserOrigin.y + this.y + this.FIRE_OFFSET_Y;
                       }
                   } else if (this.facing == 1) {
                       if (this.angleRads >= Math.PI / 5 && this.angleRads < 11 * Math.PI / 12) {
-                          var ellipsePoint = findEllipsePoint(40 + this.LASER_WIDTH / 2, 25 + this.LASER_HEIGHT / 2, Math.PI / 5);
-                          this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y, Math.PI / 5));
+                          var laserOrigin = findEllipsePoint(40, 25, Math.PI / 5);
+                          this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X,
+                              this.y + this.FIRE_OFFSET_Y, Math.PI / 5, laserOrigin.x + this.x + this.FIRE_OFFSET_X, laserOrigin.y + this.y + this.FIRE_OFFSET_Y));
                       } else if (this.angleRads >= 11 * Math.PI / 12 && this.angleRads <= 3 * Math.PI / 2) {
-                          var ellipsePoint = findEllipsePoint(40 + this.LASER_WIDTH / 2, 25 + this.LASER_HEIGHT / 2, 3 * Math.PI / 2);
-                          this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y, 3 * Math.PI / 2));
-
+                          var laserOrigin = findEllipsePoint(40, 25, 3 * Math.PI / 2);
+                          this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X,
+                              this.y + this.FIRE_OFFSET_Y, 3 * Math.PI / 2, laserOrigin.x + this.x + this.FIRE_OFFSET_X, laserOrigin.y + this.y + this.FIRE_OFFSET_Y));
                       } else {
-                          var ellipsePoint = findEllipsePoint(40 + this.LASER_WIDTH / 2, 25 + this.LASER_HEIGHT / 2, this.angleRads);
-                          this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y, this.angleRads));
+                          var laserOrigin = findEllipsePoint(40, 25, this.angleRads);
+                          this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X,
+                              this.y + this.FIRE_OFFSET_Y, this.angleRads, laserOrigin.x + this.x + this.FIRE_OFFSET_X, laserOrigin.y + this.y + this.FIRE_OFFSET_Y));
                       }
                   } else {
                       if (this.angleRads <= 4 * Math.PI / 5 && this.angleRads > Math.PI / 12) {
-                          var ellipsePoint = findEllipsePoint(40 + this.LASER_WIDTH / 2, 25 + this.LASER_HEIGHT / 2, 4 * Math.PI / 5);
-                          this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y, 4 * Math.PI / 5));
+                          var laserOrigin = findEllipsePoint(40, 25, 4 * Math.PI / 5);
+                          //this.angle = 4 * Math.PI / 5;
+                          this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X,
+                              this.y + this.FIRE_OFFSET_Y, 4 * Math.PI / 5, laserOrigin.x + this.x + this.FIRE_OFFSET_X, laserOrigin.y + this.y + this.FIRE_OFFSET_Y));
+                          //this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X - this.laserLength / 2 + ellipsePoint.x,
+                          //    this.y + this.FIRE_OFFSET_Y - this.laserLength / 2 + ellipsePoint.y, 4 * Math.PI / 5, laserOrigin.x + this.x + this.FIRE_OFFSET_X, laserOrigin.y + this.y + this.FIRE_OFFSET_Y));
                       } else if ((this.angleRads <= Math.PI / 12 && this.angleRads >= 0) || (this.angleRads >= 3 * Math.PI / 2 && this.angleRads <= 2 * Math.PI)) {
-                          var ellipsePoint = findEllipsePoint(40 + this.LASER_WIDTH / 2, 25 + this.LASER_HEIGHT / 2, 3 * Math.PI / 2);
-                          this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y, 3 * Math.PI / 2));
+                          var laserOrigin = findEllipsePoint(40, 25, 3 * Math.PI / 2);
+                          //this.angle = 3 * Math.PI / 2;
+                          this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X,
+                              this.y + this.FIRE_OFFSET_Y, 3 * Math.PI / 2, laserOrigin.x + this.x + this.FIRE_OFFSET_X, laserOrigin.y + this.y + this.FIRE_OFFSET_Y));
                       } else {
-                          var ellipsePoint = findEllipsePoint(40 + this.LASER_WIDTH / 2, 25 + this.LASER_HEIGHT / 2, this.angleRads);
-                          this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y, this.angleRads));
+                          var laserOrigin = findEllipsePoint(40, 25 + 16, this.angleRads);
+                          this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X,
+                              this.y + this.FIRE_OFFSET_Y, this.angleRads, laserOrigin.x + this.x + this.FIRE_OFFSET_X, laserOrigin.y + this.y + this.FIRE_OFFSET_Y));
                       }
                   }
                   this.weaponTimer = 1;
@@ -583,7 +624,10 @@ class Megaman {
       // direction updates
         if (this.velocity.x < 0) this.facing = 0;
         if (this.velocity.x > 0) this.facing = 1;
-      }
+
+        //console.log(that.velocity.y);
+    }
+
          
       draw(ctx) {
         if (this.firingState) this.firingAnims[this.facing][this.state][this.action][this.angle].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
