@@ -345,6 +345,7 @@ class Megaman {
       this.updateBB();
 
       
+      //collision for megaman
       var that = this;
       this.game.entities.forEach(function(entity){
           //collision for landing and jumping on the top of tiles
@@ -387,25 +388,46 @@ class Megaman {
                 that.y = entity.BB.bottom -5;
                 that.velocity.y = 0;
               }
-            }
-            that.updateBB(); 
-          }
+              //jumping and cit bottome of tile
+              if (that.velocity.y < 0) { 
+                if (entity instanceof Tile && (that.BB.top-that.velocity.y*that.game.clockTick*PARAMS.SCALE) >= entity.BB.bottom // was below last tick
+                      && that.BB.collide(entity.leftBB) && that.BB.collide(entity.rightBB)) { // collide with the center point of the brick
+                      that.velocity.y = 0;
+                  }
+              }
+              //Hit left of right side of tile
+              if (entity instanceof Tile 
+                  && that.BB.collide(entity.BB)) {
+                  if (that.BB.collide(entity.leftBB)) {
+                      that.x = entity.BB.left - 72;
+                      if (that.velocity.x > 0) that.velocity.x = 0;
+                  } else if (that.BB.collide(entity.rightBB)) {
+                      that.x = entity.BB.right - 22;
+                      if (that.velocity.x < 0) that.velocity.x = 0;
+                  }
+                  that.updateBB();
+              }       
 
-          //Collision for left side of tiles
-          if(that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left){
-            that.x += (entity.BB.left - that.BB.right);
-            that.velocity.x = 0
-          }
+              //collision with enemies
+              if((entity instanceof Wheelie || entity instanceof Bulldozer||
+                  entity instanceof Gordo  || entity instanceof HammerBro  || 
+                  entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met) && (that.BB.collide(entity.BB))){
+                 
+                    console.log(that.velocity.x);
+                    that.action=2;
+                    that.velocity.y= -180; 
+                    if(that.facing ==1){
+                      that.velocity.x = -160;
+                    } 
+                    if(that.facing ==0){
+                      that.velocity.x = +160;
+                    }
+              }
+              that.updateBB();
+      });
 
-          //Collision for Right side of tiles
-          if(that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE >= entity.BB.right){
-            that.x += (entity.BB.right - that.BB.left);
-            that.velocity.x = 0
-          }
-      }
-      })
 
-      //for clicking q button
+      //for clicking q button (weapon toggling)
       if (this.game.q == true) {
         if (this.qReleased) {
           this.weaponToggle = (this.weaponToggle == 0 ? this.weaponToggle = 1 : this.weaponToggle = 0);

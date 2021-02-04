@@ -74,4 +74,5 @@ function findEllipsePoint(minorAxis, majorAxis, angle) {
 var PARAMS = {
     SCALE: 3,
     DEBUG: false
+    
 };

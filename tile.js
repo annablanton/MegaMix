@@ -26,11 +26,11 @@ class Tile {
     }
 
     updateBB() {
-        this.BB = new BoundingBox(this.x, this.y, 16 * 2, 16 * 2);
-        //this.leftBB = new BoundingBox(this.x, this.y, 8*2,16*2);
-        //this.rightBB = new BoundingBox(this.x + 8*2, this.y, 8*2,16*2);
-        //this.topBB = new BoundingBox(this.x, this.y, 16*2,8*2);
-        //this.bottomBB = new BoundingBox(this.x, this.y +8*2, 16*2,8*2);
+        this.BB = new BoundingBox(this.x+4, this.y, 32*3/4, 32);
+        this.leftBB = new BoundingBox(this.x, this.y, 8*2,16*2);
+        this.rightBB = new BoundingBox(this.x + 16, this.y, 16,32);
+        this.topBB = new BoundingBox(this.x, this.y, 32,16);
+        this.bottomBB = new BoundingBox(this.x, this.y + 16, 32, 16);
     }
 
     draw(ctx) {
