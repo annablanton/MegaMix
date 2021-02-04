@@ -211,11 +211,12 @@ class Carock {
                     that.velocity.y = 0;
                     that.updateBB();
                 } else if (entity !== that &&!(entity instanceof Pellet)) { //&& !(entity instanceof Megaman)
-                    if((entity instanceof Pellet)){
+                    if ((entity instanceof Pellet)) {
                         //update lose life
-                    //console.log(that.x);
-                    //console.log(entity.BB.right);
-                    //console.log("collision");
+                        //console.log(that.x);
+                        //console.log(entity.BB.right);
+                        //console.log("collision");
+                    }
 
                     if (that.facing == 1 && that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
                         that.velocity.x = -that.velocity.x;
