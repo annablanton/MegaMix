@@ -454,7 +454,8 @@ class ArmorKnight {
                     that.y = entity.BB.top - SPRITE_HEIGHT;
                     that.velocity.y = 0;
                     that.updateBB();
-                } else if (entity !== that&&!(entity instanceof Pellet)) { // && !(entity instanceof Megaman)
+                }                 
+                else if (entity !== that&&!(entity instanceof Pellet)) { // && !(entity instanceof Megaman)
                     if((entity instanceof Pellet)){
                         //update lose life
                     }
@@ -565,7 +566,24 @@ class HammerBro {
                     that.y = entity.BB.top - SPRITE_HEIGHT;
                     that.velocity.y = 0;
                     that.updateBB();
-                } else if (entity !== that && !(entity instanceof Pellet)) {//!(entity instanceof Megaman)
+                } 
+                if (entity instanceof Tile && that.BB.collide(entity.BB)){
+                    if (that.BB.collide(entity.leftBB)) {
+                        that.facing = (that.facing == 1 ? 0 : 1);
+                        that.velocity.x = -that.velocity.x;
+                        that.turnTimer = that.game.timer.gameTime;
+                        that.turnTimer = that.game.timer.gameTime;
+                        that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
+                    } else if (that.BB.collide(entity.rightBB)) {
+                        that.facing = (that.facing == 1 ? 0 : 1);
+                        that.velocity.x = -that.velocity.x;
+                        that.turnTimer = that.game.timer.gameTime;
+                        that.turnTimer = that.game.timer.gameTime;
+                        that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
+                    }
+                    that.updateBB();
+                }
+                else if (entity !== that && !(entity instanceof Pellet)) {//!(entity instanceof Megaman)
                     if((entity instanceof Pellet)){
                         //update lose life
                     }
@@ -738,7 +756,26 @@ class Wheelie {
                     that.y = entity.BB.top - SPRITE_HEIGHT;
                     that.velocity.y = 0;
                     that.updateBB();
-                } else if (entity !== that &&!(entity instanceof Pellet)) { //&& !(entity instanceof Megaman)
+                }
+                //added for side hit of tiles 
+                if (entity instanceof Tile && that.BB.collide(entity.BB)){
+                    if (that.BB.collide(entity.leftBB)) {
+                        that.facing = (that.facing == 1 ? 0 : 1);
+                        that.velocity.x = -that.velocity.x;
+                        that.turnTimer = that.game.timer.gameTime;
+                        that.turnTimer = that.game.timer.gameTime;
+                        that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
+                    } else if (that.BB.collide(entity.rightBB)) {
+                        that.facing = (that.facing == 1 ? 0 : 1);
+                        that.velocity.x = -that.velocity.x;
+                        that.turnTimer = that.game.timer.gameTime;
+                        that.turnTimer = that.game.timer.gameTime;
+                        that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
+                    }
+                    that.updateBB();
+                }
+
+                else if (entity !== that &&!(entity instanceof Pellet)) { //&& !(entity instanceof Megaman)
                     if((entity instanceof Pellet)){
                         //update lose life
                     }

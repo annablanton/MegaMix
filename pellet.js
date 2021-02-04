@@ -25,7 +25,7 @@ class Pellet {
         this.updateBB();
         var that = this;
         this.game.entities.forEach(function (entity) {
-            if ((entity instanceof Wheelie || entity instanceof Bulldozer||
+            if ((entity instanceof Tile||entity instanceof Wheelie || entity instanceof Bulldozer||
                 entity instanceof Gordo  || entity instanceof HammerBro  || 
                 entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met) && that.BB.collide(entity.BB)) {
                 that.removeFromWorld= true;   

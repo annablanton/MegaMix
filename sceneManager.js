@@ -30,6 +30,7 @@ class SceneManager {
 
     loadLevelOne() {
         // Test for tile drawing method
+        //testing map
         this.game.addEntity(new Tile(this.game, 500, 500, 9, 0));
         this.game.addEntity(new Tile(this.game, 500, 532, 9, 1));
         this.game.addEntity(new Tile(this.game, 500, 564, 9, 2));
@@ -39,22 +40,34 @@ class SceneManager {
         this.game.addEntity(new Tile(this.game, 532, 564, 10, 2));
         this.game.addEntity(new Tile(this.game, 532, 596, 10, 3));
         this.game.addEntity(new Tile(this.game, 70, 300, 0, 0));
-        this.game.addEntity(new Tile(this.game, 102, 300, 1, 0));
+        this.game.addEntity(new Tile(this.game, 70, 330, 0, 0));
+        
+        this.game.addEntity(new Tile(this.game, 102, 300, 1, 3));
         this.game.addEntity(new Tile(this.game, 134, 300, 2, 0));
         this.game.addEntity(new Tile(this.game, 166, 300, 3, 0));
-        this.game.addEntity(new Tile(this.game, 300, 16, 3, 0));
-        this.game.addEntity(new Tile(this.game, 300, 64, 3, 0));
-        this.game.addEntity(new Tile(this.game, 300, 300, 3, 0));
+        this.game.addEntity(new Tile(this.game, 300, 16, 3, 2));
+        this.game.addEntity(new Tile(this.game, 400, 16, 3, 2));
+        this.game.addEntity(new Tile(this.game, 400, 48, 3, 2));
+       
+        this.game.addEntity(new Tile(this.game, 300, 64, 3, 2));
+        this.game.addEntity(new Tile(this.game, 310, 250, 3, 3));
+        this.game.addEntity(new Tile(this.game, 310, 280, 3, 3));
         this.game.addEntity(new Tile(this.game, 500, 64, 3, 0));
+        this.game.addEntity(new Tile(this.game, 500, 96, 3, 0));
+        this.game.addEntity(new Tile(this.game, 500, 128, 3, 0));
         this.game.addEntity(new Tile(this.game, 300, 700, 3, 0));
         this.game.addEntity(new Tile(this.game, 400, 250, 3, 0));
         this.game.addEntity(new Tile(this.game, 400, 526, 3, 2));
 
         this.game.addEntity(new Tile(this.game, 200, 600, 3, 2));
         this.game.addEntity(new Tile(this.game, 200, 632, 3, 2));
-        
-        this.game.addEntity(new Tile(this.game, 270, 380, 3, 0));
+        this.game.addEntity(new Tile(this.game, 270, 360, 3, 3));
+        this.game.addEntity(new Tile(this.game, 270, 392, 3, 1));
+        this.game.addEntity(new Tile(this.game, 270, 424, 3, 1));
         this.game.addEntity(new Tile(this.game, 546, 380, 3, 0));
+        
+
+        // testing map2
         // this.game.addEntity(new Tile(this.game, 0, 736, 9, 0));
         // this.game.addEntity(new Tile(this.game, 0, 704, 9, 0));
         // this.game.addEntity(new Tile(this.game, 0, 672, 9, 0));
@@ -94,8 +107,8 @@ class SceneManager {
 
 
         // this.game.addEntity(new Tile(this.game, 96, 736, 9, 0));
-        // this.game.addEntity(new Tile(this.game, 96, 690, 9, 0));
-        // // this.game.addEntity(new Tile(this.game, 96, 650, 9, 0));
+        // this.game.addEntity(new Tile(this.game, 96, 704, 9, 0));
+        // this.game.addEntity(new Tile(this.game, 96, 672, 9, 0));
         
         // this.game.addEntity(new Tile(this.game, 128, 736, 9, 0));
         // this.game.addEntity(new Tile(this.game, 160, 736, 9, 0));
@@ -118,7 +131,8 @@ class SceneManager {
         // this.game.addEntity(new Tile(this.game, 673, 736, 9, 0));
         // this.game.addEntity(new Tile(this.game, 705, 736, 9, 0));
         // this.game.addEntity(new Tile(this.game, 737, 736, 9, 0));
-        
+        /////////////////////////////////////////////////////////////// second testing map end
+
         // this.game.addEntity(new Tile(this.game, 500, 532, 9, 1));
         // this.game.addEntity(new Tile(this.game, 500, 564, 9, 2));
         // this.game.addEntity(new Tile(this.game, 500, 596, 9, 3));
