@@ -7,7 +7,7 @@ class Laser {
 
         //the laser should only collide with other entities on the first frame
         //therefore, we will perform collision detection during the constructor method
-        var minLaserLength = 1280; //max laser length
+        this.laserLength = 1280;
         var possibleHits = [];
         var that = this;
         this.game.entities.forEach(function (entity) {
@@ -18,17 +18,15 @@ class Laser {
                 //console.log(entity.BB);
                 if (entity instanceof Tile) {
                     console.log("tile collision");
-                    var length = lineAndBoxIntersect(that.laserOriginX, that.laserOriginY, that.angle, minLaserLength, entity.BB);
+                    var length = lineAndBoxIntersect(that.laserOriginX, that.laserOriginY, that.angle, that.laserLength, entity.BB);
                     console.log(length);
-                    if (length < minLaserLength) minLaserLength = length;
+                    if (length < that.laserLength) that.laserLength = length;
                 } else if ((entity instanceof HammerBro || entity instanceof Barba
                     || entity instanceof BigBoo || entity instanceof Wheelie || entity instanceof Met
                     || entity instanceof ArmorKnight || entity instanceof Bulldozer
                     || entity instanceof Carock)) possibleHits.push(entity);
             }
         });
-        console.log(minLaserLength);
-        this.laserLength = minLaserLength;
 
 
         possibleHits.forEach(function (entity) {
@@ -40,7 +38,7 @@ class Laser {
     collide(bb) {
         //currently assumes all relevant BBs are boxes
         //if that changes, update this code
-        return lineAndBoxIntersect(this.laserOriginX, this.laserOriginY, this.angle, 1280, bb) < 1280;
+        return lineAndBoxIntersect(this.laserOriginX, this.laserOriginY, this.angle, this.laserLength, bb) < this.laserLength;
     }
 
     update() {
