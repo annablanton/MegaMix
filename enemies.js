@@ -338,13 +338,8 @@ class Bulldozer {
                     //console.log(entity.BB.right);
                     //console.log("collision");
 
-                    if (that.facing == 1 && that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
-                        that.velocity.x = -that.velocity.x;
-                        that.facing = (that.facing == 1 ? 0 : 1);
-                    } else if (that.facing == 0 && that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE >= entity.BB.right) {
-                        that.velocity.x = -that.velocity.x;
-                        that.facing = (that.facing == 1 ? 0 : 1);
-                    }
+                    that.velocity.x = -that.velocity.x;
+                    that.facing = (that.facing == 1 ? 0 : 1);
                     that.turnTimer = that.game.timer.gameTime;
                     that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                 }

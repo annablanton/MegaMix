@@ -24,6 +24,7 @@ class Megaman {
         this.firedWeapon = false;           //keeps track of if megaman can fire another pellet yet
         this.weaponTimer = false;
         this.weaponToggle = 0;              //0 = pellet, 1 = laser
+        this.invulnTimer = 0; //increased when megaman is hit; if > 0, megaman is invulnerable
 
         this.velocity = {x: 0, y: 0};
         this.fallAcc = 562.5;
@@ -249,7 +250,11 @@ class Megaman {
   
       if (this.weaponTimer > 0) {
           this.weaponTimer -= (this.weaponTimer <= this.game.clockTick ? this.weaponTimer : this.game.clockTick);
-      }
+        }
+
+        if (this.invulnTimer > 0) {
+            this.invulnTimer -= (this.invulnTimer <= this.game.clockTick ? this.weaponTimer : this.game.clockTick);
+        }
 
 
       //2 facing (0=left | 1=right) 0= idle, 1 = walk/run 2 = jump 3=sliding  
@@ -363,7 +368,8 @@ class Megaman {
               if ((entity instanceof Bulldozer || entity instanceof Wheelie ||
                   entity instanceof Gordo || entity instanceof HammerBro ||
                   entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met) &&
-                  that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
+                  that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top && !that.invulnTimer) {
+                  console.log("invuln timer" + that.invulnTimer);
                   //dead or loose life points
                   that.velocity.y = -400;
                   that.action = 2;
@@ -373,6 +379,7 @@ class Megaman {
                       that.velocity.x = -40
                   }
                   that.updateBB();
+                  that.invulnTimer = 2;
               }
 
               //Collision for jumping and hit the bottom of tiles 
