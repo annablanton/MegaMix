@@ -347,17 +347,46 @@ class Megaman {
       
       //collision for megaman
       var that = this;
-      this.game.entities.forEach(function (entity) {
-          if (entity.BB && that.BB.collide(entity.BB)) {
-              if (that.velocity.y > 0) { // falling and landing on the block
-                  if (entity instanceof Tile&& (that.BB.bottom-that.velocity.y*that.game.clockTick*PARAMS.SCALE) <= entity.BB.top) { // was above last tick
-                        that.y = entity.BB.top - 72;
-                        that.velocity.y = 0;
-                        if(that.action =2) that.action = 0;
-                        that.updateBB();
-                      }
-                      that.velocity.y === 0;
-                  }
+      this.game.entities.forEach(function(entity){
+          //collision for landing and jumping on the top of tiles
+          if(entity.BB && that.BB.collide(entity.BB)){
+            if(that.velocity.y > 0 ){ //landing & jumping 
+            if(entity instanceof Tile && that.BB.bottom-that.velocity.y*that.game.clockTick*PARAMS.SCALE <= entity.BB.top){
+              that.y = entity.BB.top - 72;   //73  => this.MEGAMAN_HEIGHT= 48; +25
+              that.velocity.y =0 ;
+              if(that.action =2) that.action = 0;
+              that.updateBB();
+            }
+          } 
+          //Collision for top of enemies
+          if((entity instanceof Bulldozer || entity instanceof Wheelie ||  
+            entity instanceof Gordo  || entity instanceof HammerBro  || 
+            entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met)&&
+            that.BB.bottom-that.velocity.y * that.game.clockTick * PARAMS.SCALE<= entity.BB.top){ 
+            //dead or loose life points
+            that.velocity.y= -400;              
+            that.action = 2;
+            if(that.facing=0){
+              that.velocity.x = +40;  
+            } else {
+              that.velocity.x = -40              
+            }
+            that.updateBB();    
+          }
+
+          //Collision for jumping and hit the bottom of tiles 
+          if (that.velocity.y <0 ){   
+            if(entity instanceof Tile && (that.lastBB.top >= entity.BB.bottom) ){
+              if(that.BB.collide(entity.BB.left)) {
+                that.y = entity.BB.bottom
+                that.velocity.y = 0
+              } 
+              else if (that.BB.collide(entity.BB.right)){
+                that.y = entity.BB.bottom;
+                that.velocity.y = 0;
+              } else {
+                that.y = entity.BB.bottom -5;
+                that.velocity.y = 0;
               }
               //jumping and cit bottome of tile
               if (that.velocity.y < 0) { 

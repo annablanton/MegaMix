@@ -40,18 +40,13 @@ class SceneManager {
         this.game.addEntity(new Tile(this.game, 532, 564, 10, 2));
         this.game.addEntity(new Tile(this.game, 532, 596, 10, 3));
         this.game.addEntity(new Tile(this.game, 70, 300, 0, 0));
-        this.game.addEntity(new Tile(this.game, 70, 330, 0, 0));
-        
-        this.game.addEntity(new Tile(this.game, 102, 300, 1, 3));
+        this.game.addEntity(new Tile(this.game, 102, 300, 1, 0));
         this.game.addEntity(new Tile(this.game, 134, 300, 2, 0));
         this.game.addEntity(new Tile(this.game, 166, 300, 3, 0));
-        this.game.addEntity(new Tile(this.game, 300, 16, 3, 2));
-        this.game.addEntity(new Tile(this.game, 400, 16, 3, 2));
-        this.game.addEntity(new Tile(this.game, 400, 48, 3, 2));
-       
-        this.game.addEntity(new Tile(this.game, 300, 64, 3, 2));
-        this.game.addEntity(new Tile(this.game, 310, 250, 3, 3));
-        this.game.addEntity(new Tile(this.game, 310, 280, 3, 3));
+        this.game.addEntity(new Tile(this.game, 300, 16, 3, 0));
+        this.game.addEntity(new Tile(this.game, 300, 64, 3, 0));
+        this.game.addEntity(new Tile(this.game, 300, 300, 3, 0));
+      
         this.game.addEntity(new Tile(this.game, 500, 64, 3, 0));
         this.game.addEntity(new Tile(this.game, 500, 96, 3, 0));
         this.game.addEntity(new Tile(this.game, 500, 128, 3, 0));

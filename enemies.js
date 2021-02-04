@@ -213,7 +213,6 @@ class Carock {
                 } else if (entity !== that &&!(entity instanceof Pellet)) { //&& !(entity instanceof Megaman)
                     if((entity instanceof Pellet)){
                         //update lose life
-                    }
                     //console.log(that.x);
                     //console.log(entity.BB.right);
                     //console.log("collision");
