@@ -10,12 +10,16 @@ class Megaman {
         this.PELLET_HEIGHT = 12;
         this.LASER_WIDTH = 1024;
         this.LASER_HEIGHT = 1024;
+        this.FULL_HEALTH_POINT = 28;
 
         this.facing = 0;                    //0=left 1=right
         this.state =0;                      // 0 = normal 1 = poison
         this.action = 0;                    // 0= idle, 1 = walk/run 2 = jump 3 = sliding 4 = shooting 5=graphing 
         this.firingState = 0;               // 0 = not firing, 1 = shooting weapon, 2 = grappling
-
+        this.healthPoint = this.FULL_HEALTH_POINT;
+        this.poisonedTimer = 0;
+        this.healthBar = new HealthMeter(this);
+        
         this.angle = 0;                     //in radians: 0=[0, pi/8)U[15pi/8, 2pi), 1=[pi/8, 3pi/8), 2=[3pi/8, pi/2), 3=[pi/2, 5pi/8), 
         this.angleRads = 0;                 //4=[5pi/8, 7pi/8), 5=[7pi/8, 9pi/8), 6=[9pi/8, 3pi/2), 7=[3pi/2, 15pi/16)
         
@@ -163,7 +167,7 @@ class Megaman {
         this.firingAnims[0][1][1][6] = new Animator(this.spritesheet, 1075, 156 + 661, 46, 46, 4, 0.1, 5, true, true);
         this.firingAnims[0][1][1][7] = new Animator(this.spritesheet, 1075, 207 + 661, 46, 46, 4, 0.1, 5, true, true);
         // facing left = 0, poison = 1  |  0= idle, 1 = walk/run 2 = jump 3 = sliding
-        this.animations[0][1][2] = new Animator(this.spritesheet, 361, 664, 461, 46, 4, 0.1, 5, true, true);
+        this.animations[0][1][2] = new Animator(this.spritesheet, 361, 663, 46, 46, 4, 0.1, 5, true, true);
         this.firingAnims[0][1][2][0] = new Animator(this.spritesheet, 1279, 54 + 661, 46, 46, 4, 0.1, 5, true, true);
         this.firingAnims[0][1][2][1] = new Animator(this.spritesheet, 1279, 258 + 661, 46, 46, 4, 0.1, 5, true, true);
         this.firingAnims[0][1][2][2] = new Animator(this.spritesheet, 361, 258 + 661, 46, 46, 4, 0.1, 5, true, true);
@@ -249,7 +253,23 @@ class Megaman {
   
       if (this.weaponTimer > 0) {
           this.weaponTimer -= (this.weaponTimer <= this.game.clockTick ? this.weaponTimer : this.game.clockTick);
+<<<<<<< Updated upstream
       }
+=======
+        }
+
+      if (this.invulnTimer > 0) {
+          this.invulnTimer -= (this.invulnTimer <= this.game.clockTick ? this.invulnTimer : this.game.clockTick);
+      }
+
+      if (this.state == 1){
+          this.poisonedTimer++;
+          if (this.poisonedTimer > 200) {
+            this.state = 0;
+          }
+      }
+      
+>>>>>>> Stashed changes
 
 
       //2 facing (0=left | 1=right) 0= idle, 1 = walk/run 2 = jump 3=sliding  
@@ -373,6 +393,7 @@ class Megaman {
             that.updateBB();    
           }
 
+<<<<<<< Updated upstream
           //Collision for jumping and hit the bottom of tiles 
           if (that.velocity.y <0 ){   
             if(entity instanceof Tile && (that.lastBB.top >= entity.BB.bottom) ){
@@ -387,6 +408,26 @@ class Megaman {
                 that.y = entity.BB.bottom -5;
                 that.velocity.y = 0;
               }
+=======
+            //collision with enemies
+            if ((entity instanceof Wheelie || entity instanceof Bulldozer ||
+                entity instanceof Gordo || entity instanceof HammerBro ||
+                entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met) && (that.BB.collide(entity.BB)) && !that.invulnTimer) {
+                that.action = 2;
+                that.velocity.y = -180;
+                if (that.facing == 1) {
+                    that.velocity.x = -160;
+                }
+                if (that.facing == 0) {
+                    that.velocity.x = +160;
+                }
+                if (that.healthPoint > 0) {
+                  that.healthPoint -= 3;
+                } 
+                that.invulnTimer = 1.5;
+                //console.log(that.velocity.y);
+                
+>>>>>>> Stashed changes
             }
             that.updateBB(); 
           }
@@ -423,7 +464,7 @@ class Megaman {
           var vector = new Vector(mouseX - (this.x + this.FIRE_OFFSET_X), mouseY - (this.y + this.FIRE_OFFSET_Y));
           vector.normalize();
           this.angleRads = getAngle(vector);
-          //console.log(this.angleRads);
+          // console.log(this.angleRads);
           if ((this.angleRads >= 0 && this.angleRads < Math.PI / 12) || (this.angleRads >= 23 * Math.PI / 12)) this.angle = 0;
           else if (this.angleRads < Math.PI / 2) this.angle = 1;
           else if (this.angleRads < 11 * Math.PI / 12) this.angle = 2;
@@ -565,7 +606,7 @@ class Megaman {
             ctx.fillRect(this.x + this.FIRE_OFFSET_X - 2, this.y + this.FIRE_OFFSET_Y - 2, 4, 4);
             ctx.fillRect(this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2 + ellipsePoint.x - 1, this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y - 1, 2, 2);
         }
-      
+        this.healthBar.draw(ctx);
     };
 
 

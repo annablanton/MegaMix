@@ -10,6 +10,8 @@ ASSET_MANAGER.queueDownload("./sprites/tiles.png");
 ASSET_MANAGER.queueDownload("./sprites/barba.png");
 ASSET_MANAGER.queueDownload("./sprites/bigboo.png");
 ASSET_MANAGER.queueDownload("./sprites/projectiles.png");
+ASSET_MANAGER.queueDownload("./sprites/mushrooms.png")
+ASSET_MANAGER.queueDownload("./sprites/healthmeter.png");
 
 
 ASSET_MANAGER.downloadAll(function () {
