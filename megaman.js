@@ -253,9 +253,6 @@ class Megaman {
   
       if (this.weaponTimer > 0) {
           this.weaponTimer -= (this.weaponTimer <= this.game.clockTick ? this.weaponTimer : this.game.clockTick);
-<<<<<<< Updated upstream
-      }
-=======
         }
 
       if (this.invulnTimer > 0) {
@@ -269,7 +266,6 @@ class Megaman {
           }
       }
       
->>>>>>> Stashed changes
 
 
       //2 facing (0=left | 1=right) 0= idle, 1 = walk/run 2 = jump 3=sliding  
@@ -385,6 +381,7 @@ class Megaman {
             //dead or loose life points
             that.velocity.y= -400;              
             that.action = 2;
+            that.healthPoint -= 3;
             if(that.facing=0){
               that.velocity.x = +40;  
             } else {
@@ -393,7 +390,6 @@ class Megaman {
             that.updateBB();    
           }
 
-<<<<<<< Updated upstream
           //Collision for jumping and hit the bottom of tiles 
           if (that.velocity.y <0 ){   
             if(entity instanceof Tile && (that.lastBB.top >= entity.BB.bottom) ){
@@ -408,7 +404,6 @@ class Megaman {
                 that.y = entity.BB.bottom -5;
                 that.velocity.y = 0;
               }
-=======
             //collision with enemies
             if ((entity instanceof Wheelie || entity instanceof Bulldozer ||
                 entity instanceof Gordo || entity instanceof HammerBro ||
@@ -427,7 +422,6 @@ class Megaman {
                 that.invulnTimer = 1.5;
                 //console.log(that.velocity.y);
                 
->>>>>>> Stashed changes
             }
             that.updateBB(); 
           }
@@ -444,6 +438,7 @@ class Megaman {
             that.velocity.x = 0
           }
       }
+    }
       })
 
       //for clicking q button
