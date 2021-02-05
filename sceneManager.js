@@ -69,6 +69,7 @@ class SceneManager {
         
 
         // testing map2
+
         this.game.addEntity(new Tile(this.game, 0, 736, 9, 0));
         this.game.addEntity(new Tile(this.game, 0, 704, 9, 0));
         this.game.addEntity(new Tile(this.game, 0, 672, 9, 0));
@@ -168,54 +169,54 @@ class SceneManager {
 
 
         
-        // this.game.addEntity(new Tile(this.game, 38, 596, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 70, 596, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 38, 596, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 70, 596, 3, 0));
 
         
-        // this.game.addEntity(new Tile(this.game, 38, 500, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 70, 500, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 102, 500, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 134, 500, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 166, 500, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 198, 500, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 230, 500, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 230, 468, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 230, 436, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 230, 404, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 198, 436, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 166, 456, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 38, 500, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 70, 500, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 102, 500, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 134, 500, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 166, 500, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 198, 500, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 230, 500, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 230, 468, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 230, 436, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 230, 404, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 198, 436, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 166, 456, 3, 0));
 
-        // this.game.addEntity(new Tile(this.game, 400, 250, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 400, 526, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 200, 600, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 270, 380, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 546, 380, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 500, 500, 9, 0));
-        // this.game.addEntity(new Tile(this.game, 500, 532, 9, 1));
+         //this.game.addEntity(new Tile(this.game, 400, 250, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 400, 526, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 200, 600, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 270, 380, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 546, 380, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 500, 500, 9, 0));
+         //this.game.addEntity(new Tile(this.game, 500, 532, 9, 1));
 
-        // this.game.addEntity(new Tile(this.game, 500, 564, 9, 2));
-        // this.game.addEntity(new Tile(this.game, 500, 596, 9, 3));
+         //this.game.addEntity(new Tile(this.game, 500, 564, 9, 2));
+         //this.game.addEntity(new Tile(this.game, 500, 596, 9, 3));
 
-        // this.game.addEntity(new Tile(this.game, 532, 500, 10, 0));
-        // this.game.addEntity(new Tile(this.game, 532, 532, 10, 1));
-        // this.game.addEntity(new Tile(this.game, 532, 564, 10, 2));
-        // this.game.addEntity(new Tile(this.game, 532, 596, 10, 0));
-        // this.game.addEntity(new Tile(this.game, 70, 300, 0, 0));
-        // this.game.addEntity(new Tile(this.game, 102, 300, 1, 0));
-        // this.game.addEntity(new Tile(this.game, 134, 300, 2, 0));
-        // this.game.addEntity(new Tile(this.game, 166, 300, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 300, 16, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 300, 64, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 300, 300, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 500, 64, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 300, 700, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 400, 250, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 400, 526, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 532, 500, 10, 0));
+         //this.game.addEntity(new Tile(this.game, 532, 532, 10, 1));
+         //this.game.addEntity(new Tile(this.game, 532, 564, 10, 2));
+         //this.game.addEntity(new Tile(this.game, 532, 596, 10, 0));
+         //this.game.addEntity(new Tile(this.game, 70, 300, 0, 0));
+         //this.game.addEntity(new Tile(this.game, 102, 300, 1, 0));
+         //this.game.addEntity(new Tile(this.game, 134, 300, 2, 0));
+         //this.game.addEntity(new Tile(this.game, 166, 300, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 300, 16, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 300, 64, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 300, 300, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 500, 64, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 300, 700, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 400, 250, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 400, 526, 3, 0));
 
-        // this.game.addEntity(new Tile(this.game, 232, 596, 3, 2)); //this one is working
-        // // this.game.addEntity(new Tile(this.game, 200, 596, 3, 2)); //this one is not working
-        // this.game.addEntity(new Tile(this.game, 270, 380, 3, 0));
-        // this.game.addEntity(new Tile(this.game, 546, 380, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 232, 596, 3, 2)); //this one is working
+         //// this.game.addEntity(new Tile(this.game, 200, 596, 3, 2)); //this one is not working
+         //this.game.addEntity(new Tile(this.game, 270, 380, 3, 0));
+         //this.game.addEntity(new Tile(this.game, 546, 380, 3, 0));
     };
 
     update() {
