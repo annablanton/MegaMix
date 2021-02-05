@@ -36,6 +36,6 @@ class Pellet {
 
 
     draw(ctx) {
-        ctx.drawImage(this.rotatedPellet, this.x, this.y);
+        ctx.drawImage(this.rotatedPellet, this.x-this.game.camera.x, this.y);
     }
 }

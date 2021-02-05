@@ -344,11 +344,12 @@ class Megaman {
      if (this.velocity.x >= MAX_MOVING && !this.game.shift) this.velocity.x = MAX_MOVING;
      if (this.velocity.x <= -MAX_MOVING && !this.game.shift) this.velocity.x = -MAX_MOVING;
        
+      
       //update x and y
       this.x += this.velocity.x * TICK * PARAMS.SCALE;
       this.y += this.velocity.y * TICK * PARAMS.SCALE;
       this.updateBB();
-
+      
       
         //collision for megaman
         var that = this;
@@ -392,15 +393,14 @@ class Megaman {
                 that.velocity.y = -180;
                 if (that.facing == 1) {
                     that.velocity.x = -160;
-                }
+                  }
                 if (that.facing == 0) {
                     that.velocity.x = +160;
                 }
                 that.invulnTimer = 1.5;
                 //console.log(that.velocity.y);
-                
-            }
-            that.updateBB();
+            }that.updateBB();
+
         });
 
 
@@ -630,8 +630,8 @@ class Megaman {
 
          
       draw(ctx) {
-        if (this.firingState) this.firingAnims[this.facing][this.state][this.action][this.angle].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
-        else this.animations[this.facing][this.state][this.action].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+        if (this.firingState) this.firingAnims[this.facing][this.state][this.action][this.angle].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y, 2);
+        else this.animations[this.facing][this.state][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y, 2);
         if (PARAMS.DEBUG) {
             //ctx.beginPath();
             //ctx.ellipse(this.x + this.FIRE_OFFSET_X, this.y + this.FIRE_OFFSET_STANDING_Y, 40, 25, 0, 0, this.angleRads);
@@ -639,8 +639,8 @@ class Megaman {
             var ellipsePoint = findEllipsePoint(40 + this.LASER_WIDTH/2, 25 + this.LASER_HEIGHT/2, this.angleRads);
 
             ctx.beginPath();
-            ctx.fillRect(this.x + this.FIRE_OFFSET_X - 2, this.y + this.FIRE_OFFSET_Y - 2, 4, 4);
-            ctx.fillRect(this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2 + ellipsePoint.x - 1, this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y - 1, 2, 2);
+            ctx.fillRect(this.x + this.FIRE_OFFSET_X - 2-this.game.camera.x, this.y + this.FIRE_OFFSET_Y - 2, 4, 4);
+            ctx.fillRect(this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2  + ellipsePoint.x - 1-this.game.camera.x, this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y - 1, 2, 2);
         }
       
     };
