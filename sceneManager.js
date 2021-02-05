@@ -3,7 +3,7 @@ class SceneManager {
         this.game = game;
         this.game.camera = this;
         this.x = 0;
-        this.megaman = new Megaman(game, 100, 20);
+        this.megaman = new Megaman(game, 800, 20);
 
         game.addEntity(new Gordo(game, 400, 380, 1, 0));
         game.addEntity(new Gordo(game, 400, 380, 0, 1));
@@ -141,6 +141,10 @@ class SceneManager {
         this.game.addEntity(new Tile(this.game, 929, 736, 9, 0));
         this.game.addEntity(new Tile(this.game, 961, 736, 9, 0));
         this.game.addEntity(new Tile(this.game, 993, 736, 9, 0));
+        this.game.addEntity(new Tile(this.game, 801, 500, 9, 0));
+        this.game.addEntity(new Tile(this.game, 833, 500, 9, 0));
+        this.game.addEntity(new Tile(this.game, 865, 500, 9, 0));
+        this.game.addEntity(new Tile(this.game, 897, 500, 9, 0));
 
         ///////////////////////////////////////////////////////////// second testing map end
 
