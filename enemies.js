@@ -341,13 +341,8 @@ class Bulldozer {
                     //console.log(entity.BB.right);
                     //console.log("collision");
 
-                    if (that.facing == 1 && that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
-                        that.velocity.x = -that.velocity.x;
-                        that.facing = (that.facing == 1 ? 0 : 1);
-                    } else if (that.facing == 0 && that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE >= entity.BB.right) {
-                        that.velocity.x = -that.velocity.x;
-                        that.facing = (that.facing == 1 ? 0 : 1);
-                    }
+                    that.velocity.x = -that.velocity.x;
+                    that.facing = (that.facing == 1 ? 0 : 1);
                     that.turnTimer = that.game.timer.gameTime;
                     that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                 }
@@ -554,8 +549,8 @@ class HammerBro {
                     }
                 }
 
-                this.x += 3 * this.velocity.x * this.game.clockTick * PARAMS.SCALE;
-                this.y += 3 * this.velocity.y * this.game.clockTick * PARAMS.SCALE;
+                this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
+                this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
             }
         } this.updateBB();
         
@@ -592,8 +587,8 @@ class HammerBro {
                 }
                 
                 else if (entity !== that && !(entity instanceof Pellet)) {//!(entity instanceof Megaman)
-                    console.log(that.x);
-                    console.log(entity.BB.right);
+                    //console.log(that.x);
+                    //console.log(entity.BB.right);
                     //console.log("collision");
                     that.facing = (that.facing == 1 ? 0 : 1);
                     that.velocity.x = -that.velocity.x;
@@ -601,8 +596,10 @@ class HammerBro {
                     that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                 } that.updateBB();
             }
-            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 250) {
+            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 250 && !that.state) {
                 that.state = 1;
+                that.velocity.x *= 3;
+                that.velocity.y *= 3;
             } 
         });
     }
