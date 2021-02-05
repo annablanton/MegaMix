@@ -1,5 +1,4 @@
 class Tile {
-
     constructor(game, x, y, col, row) {
         Object.assign(this, {game, x, y, col, row});
         const TILE_COLUMNS = 24;
@@ -35,7 +34,7 @@ class Tile {
 
     draw(ctx) {
         try {
-            this.tileSheet[this.col][this.row].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+            this.tileSheet[this.col][this.row].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y, 2);
         }
         catch (error) {
             if(this.row > 10) {
@@ -50,7 +49,7 @@ class Tile {
         }
         if (PARAMS.DEBUG) {
             ctx.fillStyle = "Red";
-            ctx.strokeRect(this.BB.x, this.BB.y, this.BB.width, this.BB.height);
+            ctx.strokeRect(this.BB.x- this.game.camera.x, this.BB.y, this.BB.width, this.BB.height);
         }
     }
 }

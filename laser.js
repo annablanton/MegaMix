@@ -23,7 +23,7 @@ class Laser {
                     if (length < that.laserLength) that.laserLength = length;
                 } else if ((entity instanceof HammerBro || entity instanceof Barba
                     || entity instanceof BigBoo || entity instanceof Wheelie || entity instanceof Met
-                    || entity instanceof ArmorKnight || entity instanceof Bulldozer
+                    || entity instanceof ArmorKnight || entity instanceof Bulldozer || entity instanceof Gordo
                     || entity instanceof Carock)) possibleHits.push(entity);
             }
         });
@@ -57,8 +57,8 @@ class Laser {
         ctx.drawImage(this.spritesheet, 22, 25, 512, 16, this.x + 38 + 14 * -Math.abs(Math.sin(this.angle)), this.y - 8, this.laserLength, 32);
         ctx.restore();
         if (PARAMS.DEBUG) {
-            ctx.fillRect(this.x - 5, this.y - 5, 10, 10)
-            ctx.fillRect(this.laserOriginX - 2, this.laserOriginY - 2, 4, 4);
+            ctx.fillRect(this.x - 5-this.game.camera.x, this.y - 5, 10, 10)
+            ctx.fillRect(this.laserOriginX - 2-this.game.camera.x, this.laserOriginY - 2, 4, 4);
         }
     }
 }

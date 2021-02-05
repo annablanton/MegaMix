@@ -28,7 +28,7 @@ class Barba {
     }
 
     draw(ctx) {
-        this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+        this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y, 2);
         this.child.draw(ctx);
     }
 }
@@ -65,7 +65,7 @@ class BarbaBody {
     }
 
     draw(ctx) {
-        this.animations[this.facing].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+        this.animations[this.facing].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y, 2);
         if (this.child) {
             this.child.draw(ctx);
         }

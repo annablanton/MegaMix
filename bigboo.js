@@ -29,6 +29,6 @@ class BigBoo {
     }
 
     draw(ctx) {
-        this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+        this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y, 2);
     }
 }
