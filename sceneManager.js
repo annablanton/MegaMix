@@ -20,10 +20,14 @@ class SceneManager {
         game.addEntity(new Barba(game, 600, 100));
         game.addEntity(new BigBoo(game, 600, 600));
         game.addEntity(new Pellet(game, 16, 16, Math.PI / 8));
+        game.addEntity(new Mushroom(game, 800, 600, 1));
+        game.addEntity(new Mushroom(game, 900, 600, 0));
+        game.addEntity(new HealthMeter(game, 975, 25));
 
         this.loadLevelOne();
         game.addEntity(this.megaman);
         game.addEntity(this);
+        
     };
 
     clearEntities() {
