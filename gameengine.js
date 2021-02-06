@@ -13,7 +13,7 @@ class GameEngine {
         this.click=false;   //for mouse
         this.mouse = false;
         this.qReleased = true;
-        this.revertControl = false;
+        this.flipControl = false;
     };
 
     init(ctx) {
@@ -77,7 +77,7 @@ class GameEngine {
         })
 
         this.ctx.canvas.addEventListener("keydown", function (e) {
-            if (that.revertControl) {
+            if (that.flipControl) {
                 switch (e.code) {
                     case "ArrowLeft":
                     case "KeyA":
@@ -141,7 +141,7 @@ class GameEngine {
         }, false);
 
         this.ctx.canvas.addEventListener("keyup", function (e) {
-            if (that.revertControl) {
+            if (that.flipControl) {
                 switch (e.code) {
                     case "ArrowLeft":
                     case "KeyA":

@@ -263,10 +263,10 @@ class Megaman {
 
       if (this.state == 1){
         this.poisonedTimer++;
-        this.game.revertControl = true;
+        this.game.flipControl = true;
         if (this.poisonedTimer > 150) {
           this.state = 0;
-          this.game.revertControl = false;
+          this.game.flipControl = false;
         }
     }
 
