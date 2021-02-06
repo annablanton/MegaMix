@@ -3,7 +3,9 @@ class SceneManager {
         this.game = game;
         this.game.camera = this;
         this.x = 0;
-        this.megaman = new Megaman(game, 800, 20);
+
+        this.megaman = new Megaman(game, 500, 500);
+
 
         game.addEntity(new Gordo(game, 400, 380, 1, 0));
         game.addEntity(new Gordo(game, 400, 380, 0, 1));
@@ -232,6 +234,7 @@ class SceneManager {
         //     this.x = this.megaman.x - midpoint;
         // } 
         this.x = this.megaman.x - midpoint;
+        this.y = this.megaman.y - 665;
     };
 
     draw(ctx) {
