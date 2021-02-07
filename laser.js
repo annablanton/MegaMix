@@ -50,7 +50,6 @@ class Laser {
 
     draw(ctx) {
         ctx.save();
-
         ctx.translate(this.x - this.game.camera.x, this.y- this.game.camera.y);
         ctx.rotate(this.angle);
         ctx.translate(-this.x + this.game.camera.x, -this.y+ this.game.camera.y);
