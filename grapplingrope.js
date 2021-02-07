@@ -35,7 +35,9 @@ class GrapplingHook {
         if (!this.retracting) { //extend hook
             this.x += this.SPEED * Math.cos(this.angle) * this.game.clockTick * PARAMS.SCALE;
             this.y += this.SPEED * Math.sin(this.angle) * this.game.clockTick * PARAMS.SCALE;
-            var dist = distance(this.megaman.x + this.megaman.FIRE_OFFSET_X + ellipsePoint.x - this.game.camera.x, this.megaman.y + this.megaman.FIRE_OFFSET_Y + ellipsePoint.y- this.game.camera.y, this.x - this.game.camera.x, this.y- this.game.camera.y) ;
+
+            var dist = distance(this.megaman.x + this.megaman.FIRE_OFFSET_X + ellipsePoint.x - this.game.camera.x, this.megaman.y + this.megaman.FIRE_OFFSET_Y + ellipsePoint.y, this.x - this.game.camera.x, this.y) ;
+
             if (dist >= this.MAX_LENGTH) { //start retracting
                 this.x -= (dist - this.MAX_LENGTH) * Math.cos(this.angle);
                 this.y -= (dist - this.MAX_LENGTH) * Math.sin(this.angle);
@@ -73,6 +75,7 @@ class GrapplingHook {
     }
 
     draw(ctx) {
+
         ctx.drawImage(this.rotatedHook, this.x - this.game.camera.x, this.y- this.game.camera.y);
         this.rope.draw(ctx);
     }
@@ -178,6 +181,7 @@ class GrapplingRope {
 
     draw(ctx) {
         ctx.save();
+
         ctx.translate(this.ropeOriginX - this.game.camera.x, this.ropeOriginY- this.game.camera.y);
         ctx.rotate(this.angle);
         ctx.translate(-this.ropeOriginX + this.game.camera.x, -this.ropeOriginY+ this.game.camera.y);

@@ -3,6 +3,7 @@ class SceneManager {
         this.game = game;
         this.game.camera = this;
         this.x = 0;
+
         this.y = 0;
         
         this.megaman = new Megaman(game, 100, 500);
@@ -24,6 +25,7 @@ class SceneManager {
         // game.addEntity(new Mushroom(game, 900, 600, 0));
         game.addEntity(new HealthMeter(game, 975, 25));
         game.addEntity(new Pellet(game, 16, 16, Math.PI / 8));
+
         this.loadLevelOne();
         game.addEntity(this.megaman);
         game.addEntity(this);
@@ -49,6 +51,8 @@ class SceneManager {
         this.game.addEntity(new Tile(this.game, 1000,570,3,2)); 
         this.game.addEntity(new Tile(this.game, 1032,570,3,2)); 
         this.game.addEntity(new Tile(this.game, 1064,570,3,2)); 
+
+
 
 
         for (var i =0 ; i< 50; i ++){
