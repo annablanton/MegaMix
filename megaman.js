@@ -436,7 +436,7 @@ class Megaman {
                 this.firingState = 1;
                 var mouseX = this.game.mouse.x;
                 var mouseY = this.game.mouse.y;
-                var vector = new Vector(mouseX - (this.x + this.FIRE_OFFSET_X), mouseY - (this.y + this.FIRE_OFFSET_Y));
+                var vector = new Vector(mouseX - (this.x + this.FIRE_OFFSET_X - this.game.camera.x), mouseY - (this.y + this.FIRE_OFFSET_Y));
                 vector.normalize();
                 this.angleRads = getAngle(vector);
                 //console.log(this.angleRads);
@@ -615,7 +615,7 @@ class Megaman {
             if (!(this.firingState == 2)) {
                 this.firingState = 2;
 
-                var vector = new Vector(mouseX - (this.x + 46), mouseY - (this.y + 46));
+                var vector = new Vector(mouseX - (this.x + 46 - this.game.camera.x), mouseY - (this.y + 46));
                 vector.normalize();
                 this.angleRads = getAngle(vector);
                 //console.log(this.angleRads);
