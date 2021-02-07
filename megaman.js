@@ -246,9 +246,9 @@ class Megaman {
       const DEC_SLIDING = 365;  
       const MAX_SLIDING = 153.75;
  
-      const STOP_FALL = 1575;
-      const WALK_FALL = 1800;
-      const RUN_FALL = 2025;
+      const STOP_FALL = 800;
+      const WALK_FALL = 1100;
+      const RUN_FALL = 1000;
       const MAX_FALL = 270; 
 
       const STOP_FALL_SPACE = 450;
@@ -370,8 +370,8 @@ class Megaman {
         this.game.entities.forEach(function (entity) {
             if (entity.BB && that.BB.collide(entity.BB)) {
                 if (that.velocity.y > 0) { // falling and landing on the block
-                    if (entity instanceof Tile && (that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE) <= entity.BB.top) { // was above last tick
-                        that.y = entity.BB.top - 72;
+                    if (entity instanceof Tile && (that.lastBB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE) <= entity.BB.top) { // was above last tick
+                        that.y = entity.BB.top - 72.5;
                         that.velocity.y = 0;
                         if (that.action == 2) that.action = 0;
                         that.updateBB();
@@ -436,7 +436,9 @@ class Megaman {
                 this.firingState = 1;
                 var mouseX = this.game.mouse.x;
                 var mouseY = this.game.mouse.y;
-                var vector = new Vector(mouseX - (this.x + this.FIRE_OFFSET_X - this.game.camera.x), mouseY - (this.y + this.FIRE_OFFSET_Y));
+
+                var vector = new Vector(mouseX - (this.x + this.FIRE_OFFSET_X - this.game.camera.x), mouseY - (this.y + this.FIRE_OFFSET_Y-this.game.camera.y));
+
                 vector.normalize();
                 this.angleRads = getAngle(vector);
                 //console.log(this.angleRads);
@@ -615,7 +617,8 @@ class Megaman {
             if (!(this.firingState == 2)) {
                 this.firingState = 2;
 
-                var vector = new Vector(mouseX - (this.x + 46 - this.game.camera.x), mouseY - (this.y + 46));
+
+                var vector = new Vector(mouseX - (this.x + 46 - this.game.camera.x), mouseY - (this.y + 46- this.game.camera.y));
                 vector.normalize();
                 this.angleRads = getAngle(vector);
                 //console.log(this.angleRads);
@@ -690,8 +693,8 @@ class Megaman {
 
          
       draw(ctx) {
-        if (this.firingState) this.firingAnims[this.facing][this.state][this.action][this.angle].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y, 2);
-        else this.animations[this.facing][this.state][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y, 2);
+        if (this.firingState) this.firingAnims[this.facing][this.state][this.action][this.angle].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y- this.game.camera.y, 2);
+        else this.animations[this.facing][this.state][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y- this.game.camera.y, 2);
         if (PARAMS.DEBUG) {
             //ctx.beginPath();
             //ctx.ellipse(this.x + this.FIRE_OFFSET_X, this.y + this.FIRE_OFFSET_STANDING_Y, 40, 25, 0, 0, this.angleRads);
@@ -699,8 +702,8 @@ class Megaman {
             var ellipsePoint = findEllipsePoint(40 + this.LASER_WIDTH/2, 25 + this.LASER_HEIGHT/2, this.angleRads);
 
             ctx.beginPath();
-            ctx.fillRect(this.x + this.FIRE_OFFSET_X - 2-this.game.camera.x, this.y + this.FIRE_OFFSET_Y - 2, 4, 4);
-            ctx.fillRect(this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2  + ellipsePoint.x - 1-this.game.camera.x, this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y - 1, 2, 2);
+            ctx.fillRect(this.x + this.FIRE_OFFSET_X - 2-this.game.camera.x, this.y + this.FIRE_OFFSET_Y - 2- this.game.camera.y, 4, 4);
+            ctx.fillRect(this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2  + ellipsePoint.x - 1-this.game.camera.x, this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y - 1- this.game.camera.y, 2, 2);
         }
         this.healthBar.draw(ctx);
       

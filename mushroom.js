@@ -47,12 +47,13 @@ class Mushroom {
 
     draw(ctx) {
         if (this.type == 0) {
-            ctx.drawImage(this.spritesheet, 0, 0, 227, 227, this.x - this.game.camera.x, this.y, this.SPRITE_WIDTH, this.SPRITE_HEIGHT);
+
+            ctx.drawImage(this.spritesheet, 0, 0, 227, 227, this.x - this.game.camera.x, this.y - this.game.camera.y, this.SPRITE_WIDTH, this.SPRITE_HEIGHT);
         } else {
-            ctx.drawImage(this.spritesheet, 228, 0, 227, 227, this.x - this.game.camera.x, this.y, this.SPRITE_WIDTH, this.SPRITE_HEIGHT);
+            ctx.drawImage(this.spritesheet, 228, 0, 227, 227, this.x - this.game.camera.x, this.y- this.game.camera.y, this.SPRITE_WIDTH, this.SPRITE_HEIGHT);
         }
         if (PARAMS.DEBUG) {
-            ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y, this.BB.width, this.BB.height);
+            ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y- this.game.camera.y, this.BB.width, this.BB.height);
         }
     }
 }
