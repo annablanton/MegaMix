@@ -113,9 +113,9 @@ class Met {
     }
 
     draw(ctx) {
-        this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y, 2);
+        this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y- this.game.camera.y, 2);
         if (PARAMS.DEBUG) {
-            ctx.strokeRect(this.BB.x- this.game.camera.x, this.BB.y, this.BB.width, this.BB.height);
+            ctx.strokeRect(this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y, this.BB.width, this.BB.height);
             ctx.font = "25px Arial";
             
             if (this.state == 0) {
@@ -123,7 +123,7 @@ class Met {
             } else {
                 ctx.fillStyle = "Red";
             }
-            ctx.fillText(" • ", this.BB.x- this.game.camera.x, this.BB.y);
+            ctx.fillText(" • ", this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y);
         }
         //this.animations[0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 2);
         //this.animations[0][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 5, 2);
@@ -242,20 +242,20 @@ class Carock {
     }
 
     draw(ctx) {
-        this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y, 2);
+        this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y- this.game.camera.y, 2);
         //this.animations[0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 2);
         //this.animations[1][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16, 2);
 
         //this.animations[0][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 10, 2);
         //this.animations[1][1].drawFrame(this.game.clockTick, ctx, 16+16*5, 16 + 16 * 10, 2);
         if (PARAMS.DEBUG) {
-            ctx.strokeRect(this.BB.x- this.game.camera.x, this.BB.y, this.BB.width, this.BB.height);
+            ctx.strokeRect(this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y, this.BB.width, this.BB.height);
             if (this.state == 0) {
                 ctx.fillStyle = "Lightgreen";
             } else {
                 ctx.fillStyle = "Red";
             }
-            ctx.fillText(" • ", this.BB.x- this.game.camera.x, this.BB.y);
+            ctx.fillText(" • ", this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y);
         }
         
     }
@@ -360,7 +360,7 @@ class Bulldozer {
     }
 
     draw(ctx) {
-        this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y, 2);
+        this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y- this.game.camera.y, 2);
 
         //console.log(this.animations[0][0][0]);
         //this.animations[0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 2);
@@ -371,13 +371,13 @@ class Bulldozer {
         //this.animations[1][2].drawFrame(this.game.clockTick, ctx, 16 + 16 * 7, 16 + 16 * 20, 2);
 
         if (PARAMS.DEBUG) {
-            ctx.strokeRect(this.BB.x- this.game.camera.x, this.BB.y, this.BB.width, this.BB.height);
+            ctx.strokeRect(this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y, this.BB.width, this.BB.height);
             if (this.state == 0) {
                 ctx.fillStyle = "Lightgreen";
             } else {
                 ctx.fillStyle = "Red";
             }
-            ctx.fillText(" • ", this.BB.x- this.game.camera.x, this.BB.y);
+            ctx.fillText(" • ", this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y);
         }
     }
 }
@@ -484,15 +484,15 @@ class ArmorKnight {
     }
 
     draw(ctx) {
-        this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y, 2.25);
+        this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y- this.game.camera.y, 2.25);
         if (PARAMS.DEBUG) {
-            ctx.strokeRect(this.BB.x- this.game.camera.x, this.BB.y, this.BB.width, this.BB.height);
+            ctx.strokeRect(this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y, this.BB.width, this.BB.height);
             if (this.state == 0) {
                 ctx.fillStyle = "Lightgreen";
             } else {
                 ctx.fillStyle = "Red";
             }
-            ctx.fillText(" • ", this.BB.x- this.game.camera.x, this.BB.y);
+            ctx.fillText(" • ", this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y);
         }
         //this.animations[0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 2);
         //this.animations[0][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 5, 2);
@@ -609,15 +609,15 @@ class HammerBro {
     }
 
     draw(ctx) {
-        this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y, 2.5);
+        this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y- this.game.camera.y, 2.5);
         if (PARAMS.DEBUG) {
-            ctx.strokeRect(this.BB.x- this.game.camera.x, this.BB.y, this.BB.width, this.BB.height);
+            ctx.strokeRect(this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y, this.BB.width, this.BB.height);
             if (this.state == 0) {
                 ctx.fillStyle = "Lightgreen";
             } else {
                 ctx.fillStyle = "Red";
             }
-            ctx.fillText(" • ", this.BB.x- this.game.camera.x, this.BB.y);
+            ctx.fillText(" • ", this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y);
         }
     }
 }
@@ -681,9 +681,9 @@ class Gordo {
     }
 
     draw(ctx) {
-        this.animation.drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y, 3);
+        this.animation.drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y- this.game.camera.y, 3);
         if (PARAMS.DEBUG) {
-            ctx.strokeRect(this.BB.x- this.game.camera.x, this.BB.y, this.BB.width, this.BB.height);
+            ctx.strokeRect(this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y, this.BB.width, this.BB.height);
         }
     }
 }
@@ -805,15 +805,15 @@ class Wheelie {
     }
 
     draw(ctx) {
-        this.animations[this.facing][this.state][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y, 3);
+        this.animations[this.facing][this.state][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y- this.game.camera.y, 3);
         if (PARAMS.DEBUG) {
-            ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y, this.BB.width, this.BB.height);
+            ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y- this.game.camera.y, this.BB.width, this.BB.height);
             if (this.state == 0) {
                 ctx.fillStyle = "Lightgreen";
             } else {
                 ctx.fillStyle = "Red";
             }
-            ctx.fillText(" • ", this.BB.x - this.game.camera.x, this.BB.y);
+            ctx.fillText(" • ", this.BB.x - this.game.camera.x, this.BB.y- this.game.camera.y);
         }
         //this.animations[0][0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 3);
         //this.animations[1][0][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16, 3);

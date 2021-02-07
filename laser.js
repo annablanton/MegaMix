@@ -50,15 +50,15 @@ class Laser {
 
     draw(ctx) {
         ctx.save();
-        ctx.translate(this.x, this.y);
+        ctx.translate(this.x - this.game.camera.x, this.y- this.game.camera.y);
         ctx.rotate(this.angle);
-        ctx.translate(-this.x, -this.y);
+        ctx.translate(-this.x + this.game.camera.x, -this.y+ this.game.camera.y);
         
-        ctx.drawImage(this.spritesheet, 22, 25, 512, 16, this.x + 38 + 14 * -Math.abs(Math.sin(this.angle)), this.y - 8, this.laserLength, 32);
+        ctx.drawImage(this.spritesheet, 22, 25, 512, 16, this.x + 38 + 14 * -Math.abs(Math.sin(this.angle)) - this.game.camera.x, this.y - 8- this.game.camera.y, this.laserLength, 32);
         ctx.restore();
         if (PARAMS.DEBUG) {
-            ctx.fillRect(this.x - 5-this.game.camera.x, this.y - 5, 10, 10)
-            ctx.fillRect(this.laserOriginX - 2-this.game.camera.x, this.laserOriginY - 2, 4, 4);
+            ctx.fillRect(this.x - 5-this.game.camera.x, this.y - 5- this.game.camera.y, 10, 10)
+            ctx.fillRect(this.laserOriginX - 2 - this.game.camera.x, this.laserOriginY - 2- this.game.camera.y, 4, 4);
         }
     }
 }

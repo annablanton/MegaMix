@@ -13,6 +13,7 @@ class GameEngine {
         this.click=false;   //for mouse
         this.mouse = false;
         this.qReleased = true;
+        this.flipControl = false;
     };
 
     init(ctx) {
@@ -76,64 +77,128 @@ class GameEngine {
         })
 
         this.ctx.canvas.addEventListener("keydown", function (e) {
-            switch (e.code) {
-                case "ArrowLeft":
-                case "KeyA":
-                    that.left = true;
-                    break;
-                case "ArrowRight":
-                case "KeyD":
-                    that.right = true;
-                    break;
-                case "ArrowUp":
-                case "KeyW":
-                    that.up = true;
-                    break;
-                case "ArrowDown":
-                case "KeyS":
-                    that.down = true;
-                    break;
-                case "Space":
-                    e.preventDefault();
-                    that.space = true;
-                    break;
-                case "ShiftLeft":
-                    that.shift = true;
-                    break;
-                case "KeyQ":
-                    that.q = true;
-                    break;
+            if (that.flipControl) {
+                switch (e.code) {
+                    case "ArrowLeft":
+                    case "KeyA":
+                        that.right = true;
+                        break;
+                    case "ArrowRight":
+                    case "KeyD":
+                        that.left = true;
+                        break;
+                    case "ArrowUp":
+                    case "KeyW":
+                        that.down = true;
+                        break;
+                    case "ArrowDown":
+                    case "KeyS":
+                        that.up = true;
+                        break;
+                    case "Space":
+                        e.preventDefault();
+                        that.space = true;
+                        break;
+                    case "ShiftLeft":
+                        that.shift = true;
+                        break;
+                    case "KeyQ":
+                        that.q = true;
+                        break;
+                }
+            } else {
+                switch (e.code) {
+                    case "ArrowLeft":
+                    case "KeyA":
+                        that.left = true;
+                        break;
+                    case "ArrowRight":
+                    case "KeyD":
+                        that.right = true;
+                        break;
+                    case "ArrowUp":
+                    case "KeyW":
+                        that.up = true;
+                        break;
+                    case "ArrowDown":
+                    case "KeyS":
+                        that.down = true;
+                        break;
+                    case "Space":
+                        e.preventDefault();
+                        that.space = true;
+                        break;
+                    case "ShiftLeft":
+                        that.shift = true;
+                        break;
+                    case "KeyQ":
+                        that.q = true;
+                        break;
+                }
             }
+            
+           
         }, false);
 
         this.ctx.canvas.addEventListener("keyup", function (e) {
-            switch (e.code) {
-                case "ArrowLeft":
-                case "KeyA":
-                    that.left = false;
-                    break;
-                case "ArrowRight":
-                case "KeyD":
-                    that.right = false;
-                    break;
-                case "ArrowUp":
-                case "KeyW":
-                    that.up = false;
-                    break;
-                case "ArrowDown":
-                case "KeyS":
-                    that.down = false;
-                    break;
-                case "Space":
-                    that.space = false;
-                    break;
-                case "ShiftLeft":
-                    that.shift = false;
-                    break;
-                case "KeyQ":
-                    that.q = false;
-                    break;
+            if (that.flipControl) {
+                switch (e.code) {
+                    case "ArrowLeft":
+                    case "KeyA":
+                        that.right = false;
+                        break;
+                    case "ArrowRight":
+                    case "KeyD":
+                        that.left = false;
+                        break;
+                    case "ArrowUp":
+                    case "KeyW":
+                        that.down = false;
+                        break;
+                    case "ArrowDown":
+                    case "KeyS":
+                        that.up = false;
+                        break;
+                    case "Space":
+                        that.space = false;
+                        break;
+                    case "ShiftLeft":
+                        that.shift = false;
+                        break;
+                    case "KeyQ":
+                        that.q = false;
+                        break;
+                }
+            } else {
+                switch (e.code) {
+                    case "ArrowLeft":
+                    case "KeyA":
+                        that.left = false;
+                        break;
+                    case "ArrowRight":
+                    case "KeyD":
+                        that.right = false;
+                        break;
+                    case "ArrowUp":
+                    case "KeyW":
+                        that.up = false;
+                        break;
+                    case "ArrowDown":
+                    case "KeyS":
+                        that.down = false;
+                        break;
+                    case "Space":
+                        that.space = false;
+                        break;
+                    case "ShiftLeft":
+                        that.shift = false;
+                        break;
+                    case "KeyQ":
+                        that.q = false;
+                        break;
+                }
             }
+            
         }, false);
     };
 
