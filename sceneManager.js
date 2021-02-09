@@ -65,6 +65,8 @@ class SceneManager {
         this.game.addEntity(new ArmorKnight(this.game, 1000, 600));
         this.game.addEntity(new Wheelie(this.game, 600, 550));
         this.game.addEntity(new Bulldozer(this.game, 2000, 543));
+        this.game.addEntity(new Met(this.game, 2500, 543));
+        this.game.addEntity(new Carock(this.game, 2300, 543));
 
         this.game.addEntity(new Tile(this.game, 3400,704,3,0)); 
         for (var i =0 ; i< 30; i ++){
