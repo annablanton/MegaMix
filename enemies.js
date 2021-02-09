@@ -59,6 +59,7 @@ class Met {
                         this.turnTimer = this.game.timer.gameTime;
                         this.facing = (this.facing == 1 ? 0 : 1);
                         this.velocity.x = -this.velocity.x;
+                        console.log("random met turn");
                     } else {
                         //console.log("check failed");
                     }
@@ -81,6 +82,7 @@ class Met {
                 if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
                     that.y = entity.BB.top - that.SPRITE_HEIGHT * 2;
                     that.velocity.y = 0;
+                    that.updateBB();
                 } else if (entity !== that && !(entity instanceof Pellet)) { //&& !(entity instanceof Megaman)
 
                     //console.log(that.x);
@@ -92,11 +94,15 @@ class Met {
                         that.facing = (that.facing == 1 ? 0 : 1);
                         that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                         that.turnTimer = that.game.timer.gameTime;
+                        console.log("met collision turn");
+                        console.log(entity);
                     } else if (that.facing == 0 && that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE >= entity.BB.right) {
                         that.velocity.x = -that.velocity.x;
                         that.facing = (that.facing == 1 ? 0 : 1);
                         that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                         that.turnTimer = that.game.timer.gameTime;
+                        console.log("met collision turn");
+                        console.log(entity);
                     }
                 }
             }
