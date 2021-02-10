@@ -16,6 +16,11 @@ class Laser {
             //this first one determines the first tile that the laser hits, then the second one determines which enemies are between megaman and the tile
             if (entity.BB && that.collide(entity.BB)) {
                 //console.log(entity.BB);
+                if (entity instanceof ArmorKnightShield || entity instanceof Bulldozer) {
+                    var length = lineAndBoxIntersect(that.laserOriginX, that.laserOriginY, that.angle, that.laserLength, entity.BB);
+                    if (entity instanceof ArmorKnightShield && length < that.laserLength && length < lineAndBoxIntersect(that.laserOriginX, that.laserOriginY, that.angle, that.laserLength, entity.armorKnight.BB)) that.laserLength = length;
+                    if (entity instanceof Bulldozer && length < that.laserLength && length < lineAndBoxIntersect(that.laserOriginX, that.laserOriginY, that.angle, that.laserLength, entity.met.BB)) that.laserLength = length;
+                }
                 if (entity instanceof Tile) {
                     console.log("tile collision");
                     var length = lineAndBoxIntersect(that.laserOriginX, that.laserOriginY, that.angle, that.laserLength, entity.BB);
@@ -23,7 +28,7 @@ class Laser {
                     if (length < that.laserLength) that.laserLength = length;
                 } else if ((entity instanceof HammerBro || entity instanceof Barba
                     || entity instanceof BigBoo || entity instanceof Wheelie || entity instanceof Met
-                    || entity instanceof ArmorKnight || entity instanceof Bulldozer || entity instanceof Gordo
+                    || entity instanceof ArmorKnight || entity instanceof BulldozerMet || entity instanceof Gordo
                     || entity instanceof Carock)) possibleHits.push(entity);
             }
         });
@@ -31,7 +36,11 @@ class Laser {
 
         possibleHits.forEach(function (entity) {
             //console.log("a");
-            if (entity.BB && that.collide(entity.BB)) entity.removeFromWorld = true;
+            if (entity.BB && that.collide(entity.BB)) {
+                entity.removeFromWorld = true;
+                if (entity instanceof ArmorKnight) entity.shield.removeFromWorld = true;
+                if (entity instanceof BulldozerMet) entity.bulldozer.removeFromWorld = true;
+            }
         });
     }
 
