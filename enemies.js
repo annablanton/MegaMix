@@ -1,4 +1,5 @@
 this.TURN_CHANCE_ADJUST = 30;
+this.fallAcc = 562.5;
 
 class Met {
     constructor(game, x, y) {
@@ -35,6 +36,7 @@ class Met {
         this.updateBB();
     }
     update() {
+        this.velocity.y += fallAcc * this.game.clockTick * PARAMS.SCALE;
         // console.log(1/this.game.clockTick);
         
         if (this.state == 0) {
@@ -48,9 +50,6 @@ class Met {
                         //console.log("check failed");
                     }
                 }
-
-                this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
-                this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
             }
         } else if (this.state == 1) {
             // Todo: Aggressive state
@@ -60,16 +59,15 @@ class Met {
                         this.turnTimer = this.game.timer.gameTime;
                         this.facing = (this.facing == 1 ? 0 : 1);
                         this.velocity.x = -this.velocity.x;
+                        console.log("random met turn");
                     } else {
                         //console.log("check failed");
                     }
                 }
-
-                this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
-                this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
             }
         }
-
+        this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
+        this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
         this.updateBB();
 
         var that = this;
@@ -78,15 +76,15 @@ class Met {
             //console.log(entity.BB);
             if (entity.BB && that.BB.collide(entity.BB)) {
                 //console.log(entity.BB);
-                if((entity instanceof Pellet)){
+                if ((entity instanceof Pellet)) {
                     //update lose life
                 }
                 if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
-                    that.y = entity.BB.top - SPRITE_HEIGHT;
+                    that.y = entity.BB.top - that.SPRITE_HEIGHT * 2;
                     that.velocity.y = 0;
                     that.updateBB();
-                } else if (entity !== that &&!(entity instanceof Pellet)) { //&& !(entity instanceof Megaman)
-                    
+                } else if (entity !== that && !(entity instanceof Pellet)) { //&& !(entity instanceof Megaman)
+
                     //console.log(that.x);
                     //console.log(entity.BB.right);
                     //console.log("collision");
@@ -94,18 +92,25 @@ class Met {
                     if (that.facing == 1 && that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
                         that.velocity.x = -that.velocity.x;
                         that.facing = (that.facing == 1 ? 0 : 1);
+                        that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
+                        that.turnTimer = that.game.timer.gameTime;
+                        console.log("met collision turn");
+                        console.log(entity);
                     } else if (that.facing == 0 && that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE >= entity.BB.right) {
                         that.velocity.x = -that.velocity.x;
                         that.facing = (that.facing == 1 ? 0 : 1);
+                        that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
+                        that.turnTimer = that.game.timer.gameTime;
+                        console.log("met collision turn");
+                        console.log(entity);
                     }
-                    that.turnTimer = that.game.timer.gameTime;
-                    that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                 }
             }
-            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 250) {
+            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH / 2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT / 2 - that.y) ** 2) < 250) {
                 that.state = 1;
             }
         });
+        this.updateBB();
     }
 
     updateBB() {
@@ -169,8 +174,7 @@ class Carock {
         this.updateBB();
     }
     update() {
-        
-
+        this.velocity.y += fallAcc * this.game.clockTick * PARAMS.SCALE;
         if (this.state == 0) {
             if (this.action == 0) {
                 if (this.game.timer.gameTime - this.turnTimer >= 2) {
@@ -180,9 +184,6 @@ class Carock {
                         this.velocity.x = -this.velocity.x;
                     }
                 }
-
-                this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
-                this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
             }
         } else if (this.state == 1) {
             // Todo: Aggressive state
@@ -194,11 +195,11 @@ class Carock {
                         this.velocity.x = -this.velocity.x;
                     }
                 }
-
-                this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
-                this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
             }
         }
+
+        this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
+        this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
         this.updateBB();
 
         var that = this;
@@ -211,10 +212,10 @@ class Carock {
                 }
                 //console.log(entity.BB);
                 if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
-                    that.y = entity.BB.top - SPRITE_HEIGHT;
+                    that.y = entity.BB.top - that.SPRITE_HEIGHT * 2;
                     that.velocity.y = 0;
                     that.updateBB();
-                } else if (entity !== that &&!(entity instanceof Pellet)) { //&& !(entity instanceof Megaman)
+                } else if (entity !== that && !(entity instanceof Pellet)) { //&& !(entity instanceof Megaman)
                     
                     //console.log(that.x);
                     //console.log(entity.BB.right);
@@ -223,18 +224,21 @@ class Carock {
                     if (that.facing == 1 && that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
                         that.velocity.x = -that.velocity.x;
                         that.facing = (that.facing == 1 ? 0 : 1);
+                        that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
+                        that.turnTimer = that.game.timer.gameTime;
                     } else if (that.facing == 0 && that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE >= entity.BB.right) {
                         that.velocity.x = -that.velocity.x;
                         that.facing = (that.facing == 1 ? 0 : 1);
+                        that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
+                        that.turnTimer = that.game.timer.gameTime;
                     }
-                    that.turnTimer = that.game.timer.gameTime;
-                    that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                 }
             }
             if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 250) {
                 that.state = 1;
             }
         });
+        this.updateBB();
     }
 
     updateBB() {
@@ -291,6 +295,7 @@ class Bulldozer {
         this.updateBB();
     }
     update() {
+        this.velocity.y += fallAcc * this.game.clockTick * PARAMS.SCALE;
         if (this.state == 0) {
             if (this.action == 0) {
                 if (this.game.timer.gameTime - this.turnTimer >= 2) {
@@ -300,9 +305,6 @@ class Bulldozer {
                         this.velocity.x = -this.velocity.x;
                     }
                 }
-
-                this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
-                this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
             }
         } else if (this.state == 1) {
             // Todo: Aggressive state
@@ -314,11 +316,11 @@ class Bulldozer {
                         this.velocity.x = -this.velocity.x;
                     }
                 }
-
-                this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
-                this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
             }
         }
+
+        this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
+        this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
 
         this.updateBB();
 
@@ -332,7 +334,7 @@ class Bulldozer {
                 }
                 //console.log(entity.BB);
                 if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
-                    that.y = entity.BB.top - SPRITE_HEIGHT;
+                    that.y = entity.BB.top - that.SPRITE_HEIGHT * 2;
                     that.velocity.y = 0;
                     that.updateBB();
                 } else if (entity !== that &&!(entity instanceof Pellet)) { //&& !(entity instanceof Megaman)
@@ -341,10 +343,17 @@ class Bulldozer {
                     //console.log(entity.BB.right);
                     //console.log("collision");
 
-                    that.velocity.x = -that.velocity.x;
-                    that.facing = (that.facing == 1 ? 0 : 1);
-                    that.turnTimer = that.game.timer.gameTime;
-                    that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
+                    if (that.facing == 1 && that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
+                        that.velocity.x = -that.velocity.x;
+                        that.facing = (that.facing == 1 ? 0 : 1);
+                        that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
+                        that.turnTimer = that.game.timer.gameTime;
+                    } else if (that.facing == 0 && that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE >= entity.BB.right) {
+                        that.velocity.x = -that.velocity.x;
+                        that.facing = (that.facing == 1 ? 0 : 1);
+                        that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
+                        that.turnTimer = that.game.timer.gameTime;
+                    }
                 }
             }
 
@@ -352,6 +361,7 @@ class Bulldozer {
                 that.state = 1;
             }
         });
+        this.updateBB();
 
     }
 
@@ -410,6 +420,9 @@ class ArmorKnight {
         this.updateBB();
     }
     update() {
+
+        this.velocity.y += fallAcc * this.game.clockTick * PARAMS.SCALE;
+
         if (this.state == 0) {
             if (this.action == 0) {
                 if (this.game.timer.gameTime - this.turnTimer >= 2) {
@@ -420,9 +433,6 @@ class ArmorKnight {
                         this.velocity.x = -this.velocity.x;
                     }
                 }
-
-                this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
-                this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
             }
         } else if (this.state == 1) {
             if (this.action == 0) {
@@ -434,12 +444,11 @@ class ArmorKnight {
                         this.velocity.x = -this.velocity.x;
                     }
                 }
-
-                this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
-                this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
             }
         }
 
+        this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
+        this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
         this.updateBB();
 
         var that = this;
@@ -452,7 +461,7 @@ class ArmorKnight {
                 }
                 //console.log(entity.BB);
                 if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
-                    that.y = entity.BB.top - SPRITE_HEIGHT;
+                    that.y = entity.BB.top - that.SPRITE_HEIGHT * 2.25;
                     that.velocity.y = 0;
                     that.updateBB();
                 }                 
@@ -465,18 +474,21 @@ class ArmorKnight {
                     if (that.facing == 1 && that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
                         that.velocity.x = -that.velocity.x;
                         that.facing = (that.facing == 1 ? 0 : 1);
+                        that.turnTimer = that.game.timer.gameTime;
+                        that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                     } else if (that.facing == 0 && that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE >= entity.BB.right) {
                         that.velocity.x = -that.velocity.x;
                         that.facing = (that.facing == 1 ? 0 : 1);
+                        that.turnTimer = that.game.timer.gameTime;
+                        that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                     }
-                    that.turnTimer = that.game.timer.gameTime;
-                    that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                 }
             }
             if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 250) {
                 that.state = 1;
             }
         });
+        this.updateBB();
     }
 
     updateBB() {
@@ -525,6 +537,8 @@ class HammerBro {
         this.updateBB();
     }
     update() {
+        this.velocity.y += fallAcc * this.game.clockTick * PARAMS.SCALE;
+
         if (this.state == 0) {
             if (this.action == 0) {
                 if (this.game.timer.gameTime - this.turnTimer >= 2) {
@@ -534,9 +548,6 @@ class HammerBro {
                         this.velocity.x = -this.velocity.x;
                     }
                 }
-
-                this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
-                this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
             }
         } else if (this.state == 1) {
             // Todo: Aggressive state
@@ -548,12 +559,11 @@ class HammerBro {
                         this.velocity.x = -this.velocity.x;
                     }
                 }
-
-                this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
-                this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
             }
-        } this.updateBB();
-        
+        }
+        this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
+        this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
+        this.updateBB();
 
         var that = this;
         this.game.entities.forEach(function (entity) {
@@ -562,11 +572,11 @@ class HammerBro {
             if (entity.BB && that.BB.collide(entity.BB)) {
                 //console.log(entity.BB);
                 if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
-                    that.y = entity.BB.top - SPRITE_HEIGHT;
+                    that.y = entity.BB.top - that.SPRITE_HEIGHT * 2.25;
                     that.velocity.y = 0;
                     that.updateBB();
-                } 
-                if((entity instanceof Pellet)){
+                }
+                if ((entity instanceof Pellet)) {
                     //update lose life
                 }
                 if (entity instanceof Tile && that.BB.collide(entity.topBB) && that.BB.collide(entity.bottomBB)) {
@@ -585,8 +595,8 @@ class HammerBro {
                     }
                     that.updateBB();
                 }
-                
-                else if (entity !== that && !(entity instanceof Pellet)&&!(entity instanceof Megaman)) {//!(entity instanceof Megaman)
+
+                else if (entity !== that && !(entity instanceof Pellet) && !(entity instanceof Megaman)) {//!(entity instanceof Megaman)
                     //console.log(that.x);
                     //console.log(entity.BB.right);
                     //console.log("collision");
@@ -596,13 +606,15 @@ class HammerBro {
                     that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                 } that.updateBB();
             }
-            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 250 && !that.state) {
+            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH / 2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT / 2 - that.y) ** 2) < 250 && !that.state) {
                 that.state = 1;
                 that.velocity.x *= 3;
                 that.velocity.y *= 3;
-            } 
+            }
         });
     }
+
+
 
     updateBB() {
         this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH * 2.5, this.SPRITE_HEIGHT * 2.5)
@@ -639,41 +651,42 @@ class Gordo {
 
     }
     update() {
+        //console.log(this.BB);
+
+
         this.x += this.velocity.x * this.movementScaleX * this.game.clockTick * PARAMS.SCALE;
         this.y += this.velocity.y * this.movementScaleY * this.game.clockTick * PARAMS.SCALE;
-
         this.updateBB();
-        //console.log(this.BB);
 
         var that = this;
         this.game.entities.forEach(function (entity) {
             //console.log(entity);
             //console.log(entity.BB);
             if (entity.BB && that.BB.collide(entity.BB)) {
-                if((entity instanceof Pellet)){
+                if ((entity instanceof Pellet)) {
                     //update lose life
                 }
-                if (!(entity instanceof Gordo) &&!(entity instanceof Pellet)) { //&& !(entity instanceof Megaman)
+                if (!(entity instanceof Pellet)) { //&& !(entity instanceof Megaman)
                     //console.log("collided with " + entity.constructor.name);
                     if (that.BB.right - that.velocity.x * that.movementScaleX * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
                         that.velocity.x = -that.velocity.x;
-                        that.x += that.velocity.x * that.game.clockTick * that.movementScaleX * PARAMS.SCALE;
+                        that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                     } else if (that.BB.left - that.velocity.x * that.movementScaleX * that.game.clockTick * PARAMS.SCALE >= entity.BB.right) {
-                        that.x += (entity.BB.right - that.BB.left) * 2;
                         that.velocity.x = -that.velocity.x;
-                        that.x += that.velocity.x * that.game.clockTick * that.movementScaleX * PARAMS.SCALE;
+                        that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                     }
 
                     if (that.BB.bottom - that.velocity.y * that.movementScaleY * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
                         that.velocity.y = -that.velocity.y;
-                        that.y += (that.velocity.y * that.game.clockTick * that.movementScaleY * PARAMS.SCALE);
+                        that.y += that.velocity.y * that.game.clockTick * PARAMS.SCALE;
                     } else if (that.BB.top - that.velocity.y * that.movementScaleY * that.game.clockTick * PARAMS.SCALE >= entity.BB.bottom) {
                         that.velocity.y = -that.velocity.y;
-                        that.y += (that.velocity.y * that.game.clockTick * that.movementScaleY * PARAMS.SCALE);
+                        that.y += that.velocity.y * that.game.clockTick * PARAMS.SCALE;
                     }
                 }
             }
         });
+        this.updateBB();
     }
 
     updateBB() {
@@ -717,7 +730,8 @@ class Wheelie {
 
     }
     update() {
-        this.lastX = this.x;
+        this.velocity.y += fallAcc * this.game.clockTick * PARAMS.SCALE;
+
         if (this.state == 0) {
             if (this.action == 0) {
                 if (this.game.timer.gameTime - this.turnTimer >= 2) {
@@ -727,9 +741,6 @@ class Wheelie {
                         this.velocity.x = -this.velocity.x;
                     }
                 }
-
-                this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
-                this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
             }
         } else if (this.state == 1) {
             if (this.action == 0) {
@@ -740,12 +751,11 @@ class Wheelie {
                         this.velocity.x = -this.velocity.x;
                     }
                 }
-
-                this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
-                this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
             }
         }
 
+        this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
+        this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
         this.updateBB();
 
         var that = this;
@@ -753,46 +763,40 @@ class Wheelie {
             //console.log(entity);
             //console.log(entity.BB);
             if (entity.BB && that.BB.collide(entity.BB)) {
-                if((entity instanceof Pellet)){
+                if ((entity instanceof Pellet)) {
                     //update lose life
                 }
                 //console.log(entity.BB);
                 if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
-                    that.y = entity.BB.top - SPRITE_HEIGHT;
+                    that.y = entity.BB.top - that.SPRITE_HEIGHT * 3;
                     that.velocity.y = 0;
                     that.updateBB();
                 }
                 //added for side hit of tiles 
-                if (entity instanceof Tile && that.BB.collide(entity.topBB)&&that.BB.collide(entity.bottomBB)) {
+                if (entity instanceof Tile && that.BB.collide(entity.topBB) && that.BB.collide(entity.bottomBB)) {
                     if (that.BB.collide(entity.leftBB)) {
                         that.facing = (that.facing == 1 ? 0 : 1);
                         that.velocity.x = -that.velocity.x;
                         that.turnTimer = that.game.timer.gameTime;
-                        that.turnTimer = that.game.timer.gameTime;
-                        that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                     } else if (that.BB.collide(entity.rightBB)) {
                         that.facing = (that.facing == 1 ? 0 : 1);
                         that.velocity.x = -that.velocity.x;
                         that.turnTimer = that.game.timer.gameTime;
-                        that.turnTimer = that.game.timer.gameTime;
-                        that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                     }
                     that.updateBB();
                 }
 
-                else if (entity !== that &&!(entity instanceof Pellet)&& !(entity instanceof Tile)) { //&& !(entity instanceof Megaman)
+                else if (entity !== that && !(entity instanceof Pellet) && !(entity instanceof Tile)) { //&& !(entity instanceof Megaman)
                     console.log(entity.constructor.name);
                     //console.log(entity.BB.right);
                     //console.log("collision");
                     that.facing = (that.facing == 1 ? 0 : 1);
                     that.velocity.x = -that.velocity.x;
                     that.turnTimer = that.game.timer.gameTime;
-                    that.turnTimer = that.game.timer.gameTime;
-                    that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                 }
-                
+
             }
-            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 250 && that.state == 0) {
+            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH / 2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT / 2 - that.y) ** 2) < 250 && that.state == 0) {
                 that.state = 1;
                 that.velocity.x *= 5;
                 that.velocity.y *= 5;
