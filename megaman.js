@@ -11,6 +11,7 @@ class Megaman {
         this.LASER_WIDTH = 1024;
         this.LASER_HEIGHT = 1024;
         this.FULL_HEALTH_POINT = 28;
+        this.MAX_GRAPPLE_SPEED = 1000;
 
         this.facing = 0;                    //0=left 1=right
         this.state =0;                      // 0 = normal 1 = poison
@@ -19,6 +20,7 @@ class Megaman {
         this.healthPoint = this.FULL_HEALTH_POINT;
         this.poisonedTimer = 0;
         this.healthBar = new HealthMeter(this);
+        this.landed = 0;
 
         this.angle = 0;                     //in radians: 0=[0, pi/8)U[15pi/8, 2pi), 1=[pi/8, 3pi/8), 2=[3pi/8, pi/2), 3=[pi/2, 5pi/8), 
         this.angleRads = 0;                 //4=[5pi/8, 7pi/8), 5=[7pi/8, 9pi/8), 6=[9pi/8, 3pi/2), 7=[3pi/2, 15pi/16)
@@ -33,6 +35,7 @@ class Megaman {
 
         this.velocity = {x: 0, y: 0};
         this.fallAcc = 562.5;
+        this.grapplingHook = null;
 
         this.animations = [];
         this.firingAnims = [];
@@ -252,7 +255,7 @@ class Megaman {
       const MAX_FALL = 270; 
 
       const STOP_FALL_SPACE = 450;
-      const RUN_FALL_SPACE = 562.5;
+        const RUN_FALL_SPACE = 562.5;
   
       if (this.weaponTimer > 0) {
           this.weaponTimer -= (this.weaponTimer <= this.game.clockTick ? this.weaponTimer : this.game.clockTick);
@@ -260,7 +263,11 @@ class Megaman {
 
       if (this.invulnTimer > 0) {
           this.invulnTimer -= (this.invulnTimer <= this.game.clockTick ? this.invulnTimer : this.game.clockTick);
-      }
+        }
+
+        if (this.grapplingHook && this.grapplingHook.pulling == 1) {
+            this.landed = 0;
+        }
 
       if (this.state == 1){
         this.poisonedTimer++;
@@ -269,94 +276,127 @@ class Megaman {
           this.state = 0;
           this.game.flipControl = false;
         }
-    }
+        }
+
+        if (this.grapplingHook && this.grapplingHook.removeFromWorld && this.firingState == 2) {
+            this.firingState = 0;
+        }
 
 
       //2 facing (0=left | 1=right) 0= idle, 1 = walk/run 2 = jump 3=sliding  
       //Ground moving to left and right
-      if(this.action !== 2){  //no jumping
-       //stopped and starting
-        if ( Math.abs(this.velocity.x)< MIN_MOVING){   
-          this.velocity.x = 0;
-          this.action = 0;
-          if(this.game.right){
-            this.velocity.x += MIN_MOVING;         
-          }
-          if(this.game.left){
-            this.velocity.x -= MIN_MOVING;
-          } 
-        } 
-        //moving to right
-        else if (Math.abs(this.velocity.x) >= MIN_MOVING) {
-          if(this.facing === 1){
-            if(this.game.right && !this.game.left){
-              //when user click shft for sliding
-              if(this.game.shift){
-                this.velocity.x += ACC_SLIDING * TICK;
-              } //when user just keep moving 
-              else this.velocity.x += ACC_MOVING * TICK;           
-            } // when user click left button during moving to right 
-            else if (this.game.left && !this.game.right) {
-                this.velocity.x -= ACC_SLIDING * TICK;
-            } // when user doesn't put any key during run to right side 
-            else {
-              this.velocity.x -= DEC_MOVING *TICK;
-            }
-          }
-          // For left facing
-          if (this.facing === 0) {
-            if(this.game.left && !this.game.right){
-              if(this.game.shift){
-                this.velocity.x -= ACC_SLIDING *TICK;
-              } else
-              this.velocity.x -= ACC_MOVING *TICK;
-            } else if (this.game.right && !this.game.left){
-                this.velocity.x += DEC_SLIDING *TICK;
+        if (!(this.firingState == 2 && this.grapplingHook.pulling == 1)) {
+            if (this.action !== 2) {  //no jumping
+                //stopped and starting
+                if (Math.abs(this.velocity.x) < MIN_MOVING) {
+                    this.velocity.x = 0;
+                    this.action = 0;
+                    if (this.game.right) {
+                        this.velocity.x += MIN_MOVING;
+                    }
+                    if (this.game.left) {
+                        this.velocity.x -= MIN_MOVING;
+                    }
+                }
+                //moving to right
+                else if (Math.abs(this.velocity.x) >= MIN_MOVING) {
+                    if (this.facing === 1) {
+                        if (this.game.right && !this.game.left) {
+                            //when user click shft for sliding
+                            if (this.game.shift) {
+                                this.velocity.x += ACC_SLIDING * TICK;
+                            } //when user just keep moving 
+                            else this.velocity.x += ACC_MOVING * TICK;
+                        } // when user click left button during moving to right 
+                        else if (this.game.left && !this.game.right) {
+                            this.velocity.x -= ACC_SLIDING * TICK;
+                        } // when user doesn't put any key during run to right side 
+                        else {
+                            this.velocity.x -= DEC_MOVING * TICK;
+                        }
+                    }
+                    // For left facing
+                    if (this.facing === 0) {
+                        if (this.game.left && !this.game.right) {
+                            if (this.game.shift) {
+                                this.velocity.x -= ACC_SLIDING * TICK;
+                            } else
+                                this.velocity.x -= ACC_MOVING * TICK;
+                        } else if (this.game.right && !this.game.left) {
+                            this.velocity.x += DEC_SLIDING * TICK;
+                        } else {
+                            this.velocity.x += DEC_MOVING * TICK;
+                        }
+                    }
+                }
+
+                this.velocity.y += this.fallAcc * TICK;
+
+                //for jumping
+                if (this.game.space) {
+                    if (Math.abs(this.velocity.x) < 16) {
+                        this.velocity.y = -240;
+                        this.fallAcc = STOP_FALL;
+                    } else if (Math.abs(this.velocity.x) < 40) {
+                        this.velocity.y = -240;
+                        this.fallAcc = WALK_FALL;
+                    } else {
+                        this.velocity.y = -300;
+                        this.fallAcc = RUN_FALL;
+                    }
+                    this.action = 2;
+                }
             } else {
-              this.velocity.x += DEC_MOVING*TICK;
+                //vertical phycis
+                if (this.velocity.y < 0 && this.game.space) {
+                    if (this.fallacc === STOP_FALL) this.velocity.y -= (STOP_FALL - STOP_FALL_SPACE) * TICK;
+                    if (this.fallacc === RUN_FALL) this.velocity.y -= (RUN_FALL - RUN_FALL_SPACE) * TICK;
+                }
+                this.velocity.y += this.fallAcc * TICK;
+
+                //horizontal phycis
+                if (this.game.right && !this.game.left) {
+                    this.velocity.x += ACC_MOVING * TICK;
+                } else if (this.game.left && !this.game.right) {
+                    this.velocity.x -= ACC_MOVING * TICK;
+                }
             }
-          }
+            // setting maximum
+            if (this.velocity.y >= MAX_FALL) this.velocity.y = MAX_FALL;
+            if (this.velocity.y <= -MAX_FALL) this.velocity.y = -MAX_FALL;
+
+            if (this.velocity.x >= MAX_SLIDING) this.velocity.x = MAX_SLIDING;
+            if (this.velocity.x <= -MAX_SLIDING) this.velocity.x = -MAX_SLIDING;
+            if (this.velocity.x >= MAX_MOVING && !this.game.shift) this.velocity.x = MAX_MOVING;
+            if (this.velocity.x <= -MAX_MOVING && !this.game.shift) this.velocity.x = -MAX_MOVING;
+        } else {
+            if (this.game.shift) {
+                this.firingState = 0;
+                this.grapplingHook.removeFromWorld = true;
+                this.grapplingHook.pulling = 0;
+                this.grapplingHook.retracting = 0;
+            } else {
+                var megamanAngle = Math.atan2(this.grapplingHook.y - (this.y + this.FIRE_OFFSET_Y), this.grapplingHook.x - (this.x + this.FIRE_OFFSET_X));
+                if (megamanAngle < 0) megamanAngle = Math.PI * 2 + megamanAngle;
+                this.angleRads = megamanAngle;
+                if ((this.angleRads >= 0 && this.angleRads < Math.PI / 8) || (this.angleRads >= 15 * Math.PI / 8)) this.angle = 0;
+                else if (this.angleRads < Math.PI / 2) this.angle = 1;
+                else if (this.angleRads < 7 * Math.PI / 8) this.angle = 2;
+                else if (this.angleRads < 9 * Math.PI / 8) this.angle = 3;
+                else if (this.angleRads < 11 * Math.PI / 8) this.angle = 4;
+                else if (this.angleRads < 3 * Math.PI / 2) this.angle = 5;
+                else if (this.angleRads < 13 * Math.PI / 8) this.angle = 6;
+                else this.angle = 7;
+                this.action = 2;
+                this.velocity.x += (this.grapplingHook.SPEED * Math.cos(megamanAngle) * this.game.clockTick * PARAMS.SCALE);
+                this.velocity.y += (this.grapplingHook.SPEED * Math.sin(megamanAngle) * this.game.clockTick * PARAMS.SCALE);
+                var speed = distance(this.velocity.x, this.velocity.y, 0, 0);
+                if (speed > this.MAX_GRAPPLE_SPEED) {
+                    this.velocity.x *= MAX_SPEED / speed;
+                    this.velocity.y *= MAX_SPEED / speed;
+                }
+            }
         }
-
-      this.velocity.y += this.fallAcc * TICK;
-
-      //for jumping
-        if(this.game.space){
-          if(Math.abs(this.velocity.x) < 16) {
-           this.velocity.y = -240;
-           this.fallAcc = STOP_FALL;
-         } else if(Math.abs(this.velocity.x)< 40){
-            this.velocity.y = -240;
-            this.fallAcc = WALK_FALL;
-          } else{
-            this.velocity.y = -300;
-            this.fallAcc = RUN_FALL;
-          }
-           this.action = 2;
-          }
-      } else {
-      //vertical phycis
-      if(this.velocity.y < 0 && this.game.space){
-        if(this.fallacc === STOP_FALL) this.velocity.y -=(STOP_FALL-STOP_FALL_SPACE)*TICK;
-        if(this.fallacc === RUN_FALL) this.velocity.y -= (RUN_FALL-RUN_FALL_SPACE)*TICK;
-      }
-      this.velocity.y += this.fallAcc *TICK;
-
-      //horizontal phycis
-      if(this.game.right && !this.game.left){
-        this.velocity.x += ACC_MOVING * TICK;
-      } else if (this.game.left && !this.game.right){
-        this.velocity.x -= ACC_MOVING * TICK;
-      }
-    }     
-     // setting maximum
-     if(this.velocity.y >= MAX_FALL) this.velocity.y = MAX_FALL;
-     if(this.velocity.y <= -MAX_FALL) this.velocity.y = -MAX_FALL;
-     
-     if (this.velocity.x >= MAX_SLIDING) this.velocity.x = MAX_SLIDING;
-     if (this.velocity.x <= -MAX_SLIDING) this.velocity.x = -MAX_SLIDING;
-     if (this.velocity.x >= MAX_MOVING && !this.game.shift) this.velocity.x = MAX_MOVING;
-     if (this.velocity.x <= -MAX_MOVING && !this.game.shift) this.velocity.x = -MAX_MOVING;
        
       
       //update x and y
@@ -364,17 +404,20 @@ class Megaman {
       this.y += this.velocity.y * TICK * PARAMS.SCALE;
       this.updateBB();
       
-      
+
         //collision for megaman
         var that = this;
         this.game.entities.forEach(function (entity) {
             if (entity.BB && that.BB.collide(entity.BB)) {
                 if (that.velocity.y > 0) { // falling and landing on the block
-                    if (entity instanceof Tile && (that.lastBB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE) <= entity.BB.top) { // was above last tick
+                    if (entity instanceof Tile && (that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE) <= entity.BB.top) { // was above last tick
                         that.y = entity.BB.top - 72.5;
                         that.velocity.y = 0;
                         if (that.action == 2) that.action = 0;
                         that.updateBB();
+                        if (!that.grapplingHook || that.grapplingHook.pulling != 1) {
+                            that.landed = 1;
+                        }
                     }
                     //that.velocity.y === 0;
                 }
@@ -384,11 +427,19 @@ class Megaman {
                 if (entity instanceof Tile && (that.BB.top - that.velocity.y * that.game.clockTick * PARAMS.SCALE) >= entity.BB.bottom // was below last tick
                     && that.BB.collide(entity.leftBB) && that.BB.collide(entity.rightBB)) { // collide with the center point of the brick
                     that.velocity.y = 0;
+                    if (that.firingState == 2) {
+                        that.grapplingHook.removeFromWorld = true;
+                        that.firingState = 0;
+                        that.grapplingHook.pulling = 0;
+                        that.grapplingHook.retracting = 0;
+                    }
+                    
                 }
             }
             //Hit left or right side of tile
             if (entity instanceof Tile
                 && that.BB.collide(entity.topBB) && that.BB.collide(entity.bottomBB)) {
+                console.log("side collision");
                 if (that.BB.collide(entity.leftBB)) {
                     that.x = entity.BB.left - 72;
                     if (that.velocity.x > 0) that.velocity.x = 0;
@@ -612,7 +663,7 @@ class Megaman {
             this.rightClickReleased = false;
             var mouseX = this.game.mouse.x;
             var mouseY = this.game.mouse.y;
-            if (!(this.firingState == 2)) {
+            if (!(this.firingState == 2 || this.landed == 0)) {
                 this.firingState = 2;
 
                 var vector = new Vector(mouseX - (this.x + 46 - this.game.camera.x), mouseY - (this.y + 46- this.game.camera.y));
@@ -630,37 +681,45 @@ class Megaman {
                 if (this.action != 3) {
                     if (this.angleRads >= Math.PI / 5 && this.angleRads <= Math.PI / 2) {
                         var ellipsePoint = findEllipsePoint(40 + this.PELLET_WIDTH / 2, 25 + this.PELLET_HEIGHT / 2, Math.PI / 5);
-                        this.game.addEntity(new GrapplingHook(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y - 14, Math.PI / 5, this));
+                        this.grapplingHook = new GrapplingHook(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y - 14, Math.PI / 5, this);
+                        this.game.addEntity(this.grapplingHook);
                     } else if (this.angleRads >= Math.PI / 2 && this.angleRads <= 4 * Math.PI / 5) {
                         var ellipsePoint = findEllipsePoint(40 + this.PELLET_WIDTH / 2, 25 + this.PELLET_HEIGHT / 2, 4 * Math.PI / 5);
-                        this.game.addEntity(new GrapplingHook(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y - 14, 4 * Math.PI / 5, this));
+                        this.grapplingHook = new GrapplingHook(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y - 14, 4 * Math.PI / 5, this);
+                        this.game.addEntity(this.grapplingHook);
 
                     } else {
                         var ellipsePoint = findEllipsePoint(40 + this.PELLET_WIDTH / 2, 25 + this.PELLET_HEIGHT / 2, this.angleRads);
-                        this.game.addEntity(new GrapplingHook(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y - 14, this.angleRads, this));
+                        this.grapplingHook = new GrapplingHook(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y - 14, this.angleRads, this);
+                        this.game.addEntity(this.grapplingHook);
                     }
                 } else if (this.facing == 1) {
                     if (this.angleRads >= Math.PI / 5 && this.angleRads < 11 * Math.PI / 12) {
                         var ellipsePoint = findEllipsePoint(40 + this.PELLET_WIDTH / 2, 25 + this.PELLET_HEIGHT / 2, Math.PI / 5);
-                        this.game.addEntity(new GrapplingHook(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y - 14, Math.PI / 5, this));
+                        this.grapplingHook = new GrapplingHook(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y - 14, Math.PI / 5, this);
+                        this.game.addEntity(this.grapplingHook);
                     } else if (this.angleRads >= 11 * Math.PI / 12 && this.angleRads <= 3 * Math.PI / 2) {
                         var ellipsePoint = findEllipsePoint(40 + this.PELLET_WIDTH / 2, 25 + this.PELLET_HEIGHT / 2, 3 * Math.PI / 2);
-                        this.game.addEntity(new GrapplingHook(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y - 14, 3 * Math.PI / 2, this));
+                        this.game.addEntity(this.grapplingHook);
 
                     } else {
                         var ellipsePoint = findEllipsePoint(40 + this.PELLET_WIDTH / 2, 25 + this.PELLET_HEIGHT / 2, this.angleRads);
-                        this.game.addEntity(new GrapplingHook(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y - 14, this.angleRads, this));
+                        this.grapplingHook = new GrapplingHook(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y - 14, this.angleRads, this);
+                        this.game.addEntity(this.grapplingHook);
                     }
                 } else {
                     if (this.angleRads <= 4 * Math.PI / 5 && this.angleRads > Math.PI / 12) {
                         var ellipsePoint = findEllipsePoint(40 + this.PELLET_WIDTH / 2, 25 + this.PELLET_HEIGHT / 2, 4 * Math.PI / 5);
-                        this.game.addEntity(new GrapplingHook(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y - 14, 4 * Math.PI / 5, this));
+                        this.grapplingHook = new GrapplingHook(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y - 14, 4 * Math.PI / 5, this);
+                        this.game.addEntity(this.grapplingHook);
                     } else if ((this.angleRads <= Math.PI / 12 && this.angleRads >= 0) || (this.angleRads >= 3 * Math.PI / 2 && this.angleRads <= 2 * Math.PI)) {
                         var ellipsePoint = findEllipsePoint(40 + this.PELLET_WIDTH / 2, 25 + this.PELLET_HEIGHT / 2, 3 * Math.PI / 2);
-                        this.game.addEntity(new GrapplingHook(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y - 14, 3 * Math.PI / 2, this));
+                        this.grapplingHook = new GrapplingHook(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y - 14, 3 * Math.PI / 2, this);
+                        this.game.addEntity(this.grapplingHook);
                     } else {
                         var ellipsePoint = findEllipsePoint(40 + this.PELLET_WIDTH / 2, 25 + this.PELLET_HEIGHT / 2, this.angleRads);
-                        this.game.addEntity(new GrapplingHook(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y - 14, this.angleRads, this));
+                        this.grapplingHook = new GrapplingHook(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y - 14, this.angleRads, this);
+                        this.game.addEntity(this.grapplingHook);
                     }
                 }
             }
@@ -675,11 +734,11 @@ class Megaman {
       }
 
       //action updates
-      if (this.action !== 2) {
-      if ((Math.abs(this.velocity.x) >= MIN_MOVING)&& !this.game.shift) this.action = 1;
-      else if ((Math.abs(this.velocity.x) >= MIN_MOVING)&& this.game.shift) this.action=3;
-      else this.action = 0;
-      }        
+        if (this.action !== 2) {
+            if ((Math.abs(this.velocity.x) >= MIN_MOVING) && !this.game.shift) this.action = 1;
+            else if ((Math.abs(this.velocity.x) >= MIN_MOVING) && this.game.shift) this.action = 3;
+            else this.action = 0;
+        }
 
       // direction updates
         if (this.velocity.x < 0) this.facing = 0;

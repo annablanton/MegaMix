@@ -38,7 +38,7 @@ class Pellet {
             }
 
             if ((entity instanceof Wheelie ||
-                entity instanceof Gordo || entity instanceof HammerBro || entity instanceof Carock || entity instanceof Met) && that.BB.collide(entity.BB)) {
+                entity instanceof HammerBro || entity instanceof Carock || entity instanceof Met) && that.BB.collide(entity.BB)) {
                 entity.removeFromWorld = true;
             }
         });
