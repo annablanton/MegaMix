@@ -8,6 +8,7 @@ class GrapplingHook {
         this.HOOK_WIDTH = 9;
         this.HOOK_HEIGHT = 14;
         this.retracting = 0;
+        this.pulling = 0;
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/projectiles.png");
         this.rotatedHook = rotationCanvas(this.spritesheet, 3, 42, this.HOOK_WIDTH, this.HOOK_HEIGHT, this.angle, 2);
         this.rope = new GrapplingRope(game, this.megaman, this);
@@ -20,40 +21,46 @@ class GrapplingHook {
     update() {
         var megamanAngle = Math.atan2(this.y - (this.megaman.y + this.megaman.FIRE_OFFSET_Y), this.x - (this.megaman.x + this.megaman.FIRE_OFFSET_X));
         if (megamanAngle < 0) megamanAngle = Math.PI * 2 + megamanAngle;
-        console.log(megamanAngle);
-        this.megaman.angleRads = megamanAngle;
-        if ((this.megaman.angleRads >= 0 && this.megaman.angleRads < Math.PI / 8) || (this.megaman.angleRads >= 15 * Math.PI / 8)) this.megaman.angle = 0;
-        else if (this.megaman.angleRads < Math.PI / 2) this.megaman.angle = 1;
-        else if (this.megaman.angleRads < 7 * Math.PI / 8) this.megaman.angle = 2;
-        else if (this.megaman.angleRads < 9 * Math.PI / 8) this.megaman.angle = 3;
-        else if (this.megaman.angleRads < 11 * Math.PI / 8) this.megaman.angle = 4;
-        else if (this.megaman.angleRads < 3 * Math.PI / 2) this.megaman.angle = 5;
-        else if (this.megaman.angleRads < 13 * Math.PI / 8) this.megaman.angle = 6;
-        else this.megaman.angle = 7;
-        console.log(this.megaman.angle);
+        //this.megaman.angleRads = megamanAngle;
+        //if ((this.megaman.angleRads >= 0 && this.megaman.angleRads < Math.PI / 8) || (this.megaman.angleRads >= 15 * Math.PI / 8)) this.megaman.angle = 0;
+        //else if (this.megaman.angleRads < Math.PI / 2) this.megaman.angle = 1;
+        //else if (this.megaman.angleRads < 7 * Math.PI / 8) this.megaman.angle = 2;
+        //else if (this.megaman.angleRads < 9 * Math.PI / 8) this.megaman.angle = 3;
+        //else if (this.megaman.angleRads < 11 * Math.PI / 8) this.megaman.angle = 4;
+        //else if (this.megaman.angleRads < 3 * Math.PI / 2) this.megaman.angle = 5;
+        //else if (this.megaman.angleRads < 13 * Math.PI / 8) this.megaman.angle = 6;
+        //else this.megaman.angle = 7;
+        //console.log(this.megaman.angle);
         var ellipsePoint = findEllipsePoint(40, 25, this.angle);
-        if (!this.retracting) { //extend hook
+        if (!this.retracting && !this.pulling) { //extend hook
             this.x += this.SPEED * Math.cos(this.angle) * this.game.clockTick * PARAMS.SCALE;
             this.y += this.SPEED * Math.sin(this.angle) * this.game.clockTick * PARAMS.SCALE;
-            var dist = distance(this.megaman.x + this.megaman.FIRE_OFFSET_X + ellipsePoint.x - this.game.camera.x, this.megaman.y + this.megaman.FIRE_OFFSET_Y + ellipsePoint.y- this.game.camera.y, this.x - this.game.camera.x, this.y- this.game.camera.y) ;
+            var dist = distance(this.megaman.x + this.megaman.FIRE_OFFSET_X + ellipsePoint.x - this.game.camera.x, this.megaman.y + this.megaman.FIRE_OFFSET_Y + ellipsePoint.y - this.game.camera.y, this.x - this.game.camera.x, this.y - this.game.camera.y);
             if (dist >= this.MAX_LENGTH) { //start retracting
                 this.x -= (dist - this.MAX_LENGTH) * Math.cos(this.angle);
                 this.y -= (dist - this.MAX_LENGTH) * Math.sin(this.angle);
                 this.retracting = 1;
             }
-        } else { //retract hook
-            
+        } else if (this.retracting) { //retract hook
+
             this.x -= this.SPEED * Math.cos(megamanAngle) * this.game.clockTick * PARAMS.SCALE;
             this.y -= this.SPEED * Math.sin(megamanAngle) * this.game.clockTick * PARAMS.SCALE;
         }
+        //else { //pull megaman
+        //    this.megaman.action = 2;
+        //    this.megaman.velocity.x += (this.SPEED * Math.cos(megamanAngle) * this.game.clockTick * PARAMS.SCALE); 
+        //    this.megaman.velocity.y += (this.SPEED * Math.sin(megamanAngle) * this.game.clockTick * PARAMS.SCALE);
+        //}
         this.updateBB();
 
         var that = this;
         this.game.entities.forEach(function (entity) {
             if (entity.BB && that.BB.collide(entity.BB)) {
-                if (entity instanceof Megaman && that.retracting) {
+                if (entity instanceof Megaman && (that.retracting || that.pulling)) {
                     that.removeFromWorld = true;
-                    entity.firingState = 0;
+                    that.retracting = 0;
+                    that.pulling = 0;
+                    //entity.firingState = 0;
                 }
 
                 if ((entity instanceof Wheelie || entity instanceof Bulldozer ||
@@ -64,7 +71,7 @@ class GrapplingHook {
 
                 if (entity instanceof Tile && !that.retracting) {
                     //code to pull megaman to grappling spot goes here
-                    that.retracting = 1;
+                    that.pulling = 1;
                 }
             }
         });

@@ -276,6 +276,8 @@ class Bulldozer {
         this.facing = 0; //0=left, 1=right
         this.velocity = { x: -25, y: 0 };
         this.turnTimer = this.game.timer.gameTime;
+        this.met = new BulldozerMet(this.game, this);
+        this.game.addEntity(this.met);
 
         this.SPRITE_WIDTH = 40;
         this.SPRITE_HEIGHT = 64;
@@ -366,7 +368,11 @@ class Bulldozer {
     }
 
     updateBB() {
-        this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH * 2, this.SPRITE_HEIGHT * 2)
+        if (this.facing == 0) {
+            this.BB = new BoundingBox(this.x + 25, this.y + 48, this.SPRITE_WIDTH * 2 - 10 - 25, this.SPRITE_HEIGHT * 2 - 48)
+        } else {
+            this.BB = new BoundingBox(this.x + 10, this.y + 48, this.SPRITE_WIDTH * 2 - 10 - 25, this.SPRITE_HEIGHT * 2 - 48)
+        }
     }
 
     draw(ctx) {
@@ -387,7 +393,45 @@ class Bulldozer {
             } else {
                 ctx.fillStyle = "Red";
             }
-            ctx.fillText(" • ", this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y);
+            ctx.strokeRect(this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y, this.BB.width, this.BB.height);
+        }
+    }
+}
+
+class BulldozerMet {
+    constructor(game, bulldozer) {
+        Object.assign(this, { game, bulldozer });
+        this.MET_WIDTH = 46;
+        this.MET_HEIGHT = 48;
+        if (this.bulldozer.facing == 0) {
+            this.x = this.bulldozer.x + 10 + 14;
+            this.y = this.bulldozer.y;
+        } else {
+            this.x = this.bulldozer.x + 10;
+            this.y = this.bulldozer.y;
+        }
+        this.updateBB();
+    }
+
+    update() {
+        if (this.bulldozer.facing == 0) {
+            this.x = this.bulldozer.x + 10 + 14;
+            this.y = this.bulldozer.y;
+        } else {
+            this.x = this.bulldozer.x + 10;
+            this.y = this.bulldozer.y;
+        }
+        this.updateBB();
+    }
+
+    updateBB() {
+        this.BB = new BoundingBox(this.x, this.y, this.MET_WIDTH, this.MET_HEIGHT);
+    }
+
+    draw(ctx) {
+        if (PARAMS.DEBUG) {
+            ctx.fillStyle = "Red";
+            ctx.strokeRect(this.x - this.game.camera.x, this.y - this.game.camera.y, this.MET_WIDTH, this.MET_HEIGHT);
         }
     }
 }
@@ -407,6 +451,7 @@ class ArmorKnight {
         this.SPRITE_WIDTH_WALK = 24;
         this.SPRITE_WIDTH_ATTACK = 39;
         this.SPRITE_HEIGHT = 32;
+        this.SPEAR_LENGTH = 17;
 
         this.animations = [];
         for (var i = 0; i < 2; i++) { //two directions
@@ -418,9 +463,10 @@ class ArmorKnight {
         this.animations[1][0] = new Animator(this.spritesheet, 229, 65, this.SPRITE_WIDTH_WALK, this.SPRITE_HEIGHT, 3, 0.09 * 3, 2, false, true); // walk
         this.animations[1][1] = new Animator(this.spritesheet, 188, 65, this.SPRITE_WIDTH_ATTACK, this.SPRITE_HEIGHT, 1, 0.09 * 3, 0, false, true); //spear attack
         this.updateBB();
+        this.shield = new ArmorKnightShield(this.game, this)
+        this.game.addEntity(this.shield);
     }
     update() {
-
         this.velocity.y += fallAcc * this.game.clockTick * PARAMS.SCALE;
 
         if (this.state == 0) {
@@ -492,24 +538,76 @@ class ArmorKnight {
     }
 
     updateBB() {
-        this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH_WALK * 2.25, this.SPRITE_HEIGHT * 2.25)
+        if (this.facing == 0) {
+            this.BB = new BoundingBox(this.x + this.SPEAR_LENGTH, this.y, this.SPRITE_WIDTH_WALK * 2.25 - this.SPEAR_LENGTH, this.SPRITE_HEIGHT * 2.25)
+        } else {
+            this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH_WALK * 2.25 - this.SPEAR_LENGTH, this.SPRITE_HEIGHT * 2.25)
+        }
     }
 
     draw(ctx) {
         this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y- this.game.camera.y, 2.25);
         if (PARAMS.DEBUG) {
+            //ctx.strokeRect(this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y, this.BB.width, this.BB.height);
+            ctx.fillStyle = "Red";
             ctx.strokeRect(this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y, this.BB.width, this.BB.height);
-            if (this.state == 0) {
-                ctx.fillStyle = "Lightgreen";
-            } else {
-                ctx.fillStyle = "Red";
-            }
-            ctx.fillText(" • ", this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y);
         }
+        //this.shield.draw(ctx);
         //this.animations[0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 2);
         //this.animations[0][1].drawFrame(this.game.clockTick, ctx, 16, 16 + 16 * 5, 2);
         //this.animations[1][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16, 2);
         //this.animations[1][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 5, 2);
+        this.shield.draw(ctx);
+    }
+}
+
+class ArmorKnightShield {
+    constructor(game, armorKnight) {
+        Object.assign(this, { game, armorKnight });
+        this.WIDTH = 5;
+        this.HEIGHT = 45;
+        if (this.armorKnight.facing == 0) {
+            this.x = this.armorKnight.x + 15;
+        } else {
+            this.x = this.armorKnight.x + this.armorKnight.SPRITE_WIDTH_WALK - 15- this.WIDTH;
+        }
+        this.y = this.armorKnight.y + 20;
+        if (this.armorKnight.action == 0) {
+            this.shieldUp = true;
+        } else if (this.armorKnight.action == 1) {
+            this.shieldUp = false;
+        }
+        this.updateBB();
+    }
+
+    update() {
+        if (this.armorKnight.facing == 0) {
+            this.x = this.armorKnight.x + 15;
+        } else {
+            this.x = this.armorKnight.x + this.armorKnight.SPRITE_WIDTH_WALK * 2.25 - 15 - this.WIDTH;
+        }
+        this.y = this.armorKnight.y + 20;
+        if (this.armorKnight.action == 0) {
+            this.shieldUp = true;
+        } else if (this.armorKnight.action == 1) {
+            this.shieldUp = false;
+        }
+        this.updateBB();
+    }
+
+    updateBB() {
+        if (this.shieldUp) {
+            this.BB = new BoundingBox(this.x, this.y, this.WIDTH, this.HEIGHT);
+        } else {
+            this.BB = null;
+        }
+    }
+
+    draw(ctx) {
+        if (PARAMS.DEBUG) {
+            ctx.fillStyle = "Red";
+            ctx.strokeRect(this.x - this.game.camera.x, this.y - this.game.camera.y, this.WIDTH, this.HEIGHT);
+        }
     }
 }
 
