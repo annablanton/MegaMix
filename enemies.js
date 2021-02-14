@@ -744,13 +744,9 @@ class Gordo {
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megamix_enemies.png");
 
-<<<<<<< HEAD
         this.animation = new Animator(this.spritesheet, 146, 255, 16, 16, 2, 0.09 * 3, 4, true, true);
         this.updateBB();
 
-=======
-        this.animations = [];
->>>>>>> parent of bab577c... Added Wheelie animations
     }
     update() {
         //console.log(this.BB);
@@ -810,6 +806,8 @@ class Wheelie {
         this.SPRITE_WIDTH = 16;
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megamix_enemies.png");
+        console.log(this.spritesheet);
+
 
         this.state = 0; //0=idle, 1=aggressive, 2=dead
         this.action = 0; //0=walk, 1=firing
@@ -818,7 +816,6 @@ class Wheelie {
         this.turnTimer = this.game.timer.gameTime;
 
         this.animations = [];
-<<<<<<< HEAD
         for (var i = 0; i < 2; i++) { //two directions (left right)
             this.animations.push([]);
             this.animations[i].push([]);
@@ -831,8 +828,6 @@ class Wheelie {
         this.updateBB();
 
 
-=======
->>>>>>> parent of bab577c... Added Wheelie animations
     }
     update() {
         this.velocity.y += fallAcc * this.game.clockTick * PARAMS.SCALE;
@@ -914,7 +909,6 @@ class Wheelie {
     }
 
     draw(ctx) {
-<<<<<<< HEAD
         this.animations[this.facing][this.state][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y- this.game.camera.y, 3);
         if (PARAMS.DEBUG) {
             ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y- this.game.camera.y, this.BB.width, this.BB.height);
@@ -958,8 +952,6 @@ class Wheelie {
         this.animations[1][2][0] = new Animator(this.spritesheet, 247, 102, 16, 16, 1, 0.09, 4, false, true);
         this.animations[0][2][1] = new Animator(this.spritesheet, 107, 102, 16, 16, 1, 0.09, 4, false, true);
         this.animations[1][2][1] = new Animator(this.spritesheet, 247, 102, 16, 16, 1, 0.09, 4, false, true);
-=======
->>>>>>> parent of bab577c... Added Wheelie animations
 
     }
 }
