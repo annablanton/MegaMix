@@ -2,25 +2,18 @@
 class GameEngine {
     constructor() {
         this.entities = [];
-        // this.showOutlines = false;
-        // this.surfaceWidth = null;
-        // this.surfaceHeight = null;
-
         this.ctx = null;
-        //direction
-        this.left=false;
+        this.left=false; //direction
         this.right=false;
         this.up=false;
         this.down=false;
-        //jump, slide and weapon 
-        this.space =false;
-        this.shift=false;
-        this.q=false;
-        //mouse
-        this.click=false;
-        this.mouse=false;
-        this.contextmenu =false;
-
+        this.space =false;  //jumping
+        this.shift=false;   //sliding
+        this.q=false;       //weapon switching 
+        this.click=false;   //for mouse
+        this.mouse = false;
+        this.qReleased = true;
+        this.flipControl = false;
     };
 
     init(ctx) {
@@ -29,6 +22,7 @@ class GameEngine {
         this.surfaceHeight = this.ctx.canvas.height;
         this.startInput();
         this.timer = new Timer();
+
     };
 
     start() {
@@ -49,93 +43,169 @@ class GameEngine {
         }
 
         this.ctx.canvas.addEventListener("mousemove", function (e) {
-            console.log(getXandY(e));
+            //console.log(getXandY(e));
             that.mouse = getXandY(e);
         }, false);
 
-        this.ctx.canvas.addEventListener("click", function (e) {
-            console.log(getXandY(e)+"left click");
-            that.click = getXandY(e);
-            that.click = true;
-        }, false);
-
         this.ctx.canvas.addEventListener("contextmenu", function (e) {
-            console.log(getXandY(e)+"right click");
-            that.rightclick = getXandY(e);
-            that.contextmenu = true;
             e.preventDefault();
         }, false);
 
-
-
-
-        this.ctx.canvas.addEventListener("keydown", function (e) {
-            switch (e.code) {
-                case "ArrowLeft":
-                case "KeyA":
-                    that.left = true;
-                    console.log("left");
+        this.ctx.canvas.addEventListener("mousedown", function (e) {
+            //console.log("mouse click");
+            switch (event.button) {
+                case 0:
+                    that.click = true;
                     break;
-                case "ArrowRight":
-                case "KeyD":
-                    that.right = true;
-                    console.log("right");
-                    break;
-                case "ArrowUp":
-                case "KeyW":
-                    that.up = true;
-                    console.log("upupup");
-                    break;
-                case "ArrowDown":
-                case "KeyS":
-                    that.down = true;
-                    break;
-                case "Space":
-                    that.space = true;
-                    console.log("jump");
-                    break;
-                case "ShiftLeft":
-                    that.shift = true;
-                    console.log("slide");
-                    break;
-                case "KeyQ":
-                    that.q = true;
-                    console.log("weapon change");
+                case 2:
+                    that.rightclick = true;
+                    e.preventDefault();
                     break;
             }
+        });
+
+        this.ctx.canvas.addEventListener("onclick", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        });
+
+        this.ctx.canvas.addEventListener("mouseup", function (e) {
+            switch (event.button) {
+                case 0:
+                    //console.log("left mouse up");
+                    that.click = false;
+                    break;
+                case 2:
+                    //console.log("right mouse up");
+                    that.rightclick = false;
+                    break;
+            }
+        })
+
+        this.ctx.canvas.addEventListener("keydown", function (e) {
+            if (that.flipControl) {
+                switch (e.code) {
+                    case "ArrowLeft":
+                    case "KeyA":
+                        that.right = true;
+                        break;
+                    case "ArrowRight":
+                    case "KeyD":
+                        that.left = true;
+                        break;
+                    case "ArrowUp":
+                    case "KeyW":
+                        that.down = true;
+                        break;
+                    case "ArrowDown":
+                    case "KeyS":
+                        that.up = true;
+                        break;
+                    case "Space":
+                        e.preventDefault();
+                        that.space = true;
+                        break;
+                    case "ShiftLeft":
+                        that.shift = true;
+                        break;
+                    case "KeyQ":
+                        that.q = true;
+                        break;
+                }
+            } else {
+                switch (e.code) {
+                    case "ArrowLeft":
+                    case "KeyA":
+                        that.left = true;
+                        break;
+                    case "ArrowRight":
+                    case "KeyD":
+                        that.right = true;
+                        break;
+                    case "ArrowUp":
+                    case "KeyW":
+                        that.up = true;
+                        break;
+                    case "ArrowDown":
+                    case "KeyS":
+                        that.down = true;
+                        break;
+                    case "Space":
+                        e.preventDefault();
+                        that.space = true;
+                        break;
+                    case "ShiftLeft":
+                        that.shift = true;
+                        break;
+                    case "KeyQ":
+                        that.q = true;
+                        break;
+                }
+            }
+            
+           
         }, false);
 
         this.ctx.canvas.addEventListener("keyup", function (e) {
-            switch (e.code) {
-                case "ArrowLeft":
-                case "KeyA":
-                    that.left = false;
-                    break;
-                case "ArrowRight":
-                case "KeyD":
-                    that.right = false;
-                    break;
-                case "ArrowUp":
-                case "KeyW":
-                    that.up = false;
-                    break;
-                case "ArrowDown":
-                case "KeyS":
-                    that.down = false;
-                    break;
-                case "Space":
-                    that.space = false;
-                    console.log("jump");
-                    break;
-                case "ShiftLeft":
-                    that.shift = false;
-                    console.log("slide");
-                    break;
-                case "KeyQ":
-                    that.q = false;
-                    console.log("weapon change");
-                    break;
+            if (that.flipControl) {
+                switch (e.code) {
+                    case "ArrowLeft":
+                    case "KeyA":
+                        that.right = false;
+                        break;
+                    case "ArrowRight":
+                    case "KeyD":
+                        that.left = false;
+                        break;
+                    case "ArrowUp":
+                    case "KeyW":
+                        that.down = false;
+                        break;
+                    case "ArrowDown":
+                    case "KeyS":
+                        that.up = false;
+                        break;
+                    case "Space":
+                        that.space = false;
+                        break;
+                    case "ShiftLeft":
+                        that.shift = false;
+                        break;
+                    case "KeyQ":
+                        that.q = false;
+                        break;
+                }
+            } else {
+                switch (e.code) {
+                    case "ArrowLeft":
+                    case "KeyA":
+                        that.left = false;
+                        break;
+                    case "ArrowRight":
+                    case "KeyD":
+                        that.right = false;
+                        break;
+                    case "ArrowUp":
+                    case "KeyW":
+                        that.up = false;
+                        break;
+                    case "ArrowDown":
+                    case "KeyS":
+                        that.down = false;
+                        break;
+                    case "Space":
+                        that.space = false;
+                        break;
+                    case "ShiftLeft":
+                        that.shift = false;
+                        break;
+                    case "KeyQ":
+                        that.q = false;
+                        break;
+                }
             }
+            
         }, false);
     };
 
@@ -146,7 +216,7 @@ class GameEngine {
     draw() {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         for (var i = 0; i < this.entities.length; i++) {
-            this.entities[i].draw(this.ctx);
+            this.entities[i].draw(this.ctx);            
         }
     };
 
