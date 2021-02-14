@@ -6,7 +6,6 @@ class SceneManager {
         this.y = 0;
         
         this.megaman = new Megaman(game, 100, 500);
-
         // game.addEntity(new Gordo(game, 400, 380, 1, 0));
         // game.addEntity(new Gordo(game, 400, 380, 0, 1));
         // game.addEntity(new Gordo(game, 400, 380, -1, 0));
@@ -27,7 +26,6 @@ class SceneManager {
         this.loadLevelOne();
         game.addEntity(this.megaman);
         game.addEntity(this);
-        
     };
 
     clearEntities() {
