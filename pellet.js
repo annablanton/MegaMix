@@ -1,6 +1,6 @@
 class Pellet {
-    constructor(game, x, y, angle, momentumX) {
-        Object.assign(this, { game, x, y, angle });
+    constructor(game, x, y, angle, momentumX, size) {
+        Object.assign(this, { game, x, y, angle, size });
         this.x = x
         this.y = y
         this.SPEED = 100;
@@ -17,6 +17,8 @@ class Pellet {
     }
 
     update() {
+        this.PELLET_WIDTH = 8 * this.size;
+        this.PELLET_HEIGHT = 6 * this.size;
         this.lifetime -= this.game.clockTick;
         if (this.lifetime <= 0) {
             this.removeFromWorld = true;
