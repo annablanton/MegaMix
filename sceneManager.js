@@ -36,6 +36,15 @@ class SceneManager {
 
     loadLevelOne() {
         this.x = 0;
+
+        this.game.addEntity(new Background(this.game, -2818,-312));
+        this.game.addEntity(new Background(this.game, -897,-312));
+        this.game.addEntity(new Background(this.game, 1024,-312));
+        this.game.addEntity(new Background(this.game, 2945,-312));
+        this.game.addEntity(new Background(this.game, 4866,-312));
+        this.game.addEntity(new Background(this.game, 6787,-312));
+        this.game.addEntity(new Background(this.game, 8708,-312));
+        this.game.addEntity(new Background(this.game, 10629,-312));
         for (var i =0 ; i< 50; i ++){
             this.game.addEntity(new Tile(this.game, 0+i*32,736,2,2)); 
         }
@@ -62,9 +71,12 @@ class SceneManager {
         }
         this.game.addEntity(new Gordo(this.game, 1700, 450, 1, 0));
         this.game.addEntity(new Gordo(this.game, 1800, 450, -1, 0));
+        // this.game.addEntity(new Bulldozer(this.game, 900, 543));
+        this.game.addEntity(new ArmorKnight(this.game, 900, 600));
         this.game.addEntity(new ArmorKnight(this.game, 1000, 600));
+
         this.game.addEntity(new Wheelie(this.game, 600, 550));
-        this.game.addEntity(new Bulldozer(this.game, 2000, 543));
+        this.game.addEntity(new Bulldozer(this.game, 2400, 543));
         this.game.addEntity(new Met(this.game, 2500, 543));
         this.game.addEntity(new Carock(this.game, 3000, 543));
         this.game.addEntity(new HammerBro(this.game, 3300, 543));
