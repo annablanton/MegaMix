@@ -59,9 +59,16 @@ class GameEngine {
                     break;
                 case 2:
                     that.rightclick = true;
+                    e.preventDefault();
                     break;
             }
-        })
+        });
+
+        this.ctx.canvas.addEventListener("onclick", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        });
 
         this.ctx.canvas.addEventListener("mouseup", function (e) {
             switch (event.button) {
