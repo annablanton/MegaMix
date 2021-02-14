@@ -136,15 +136,9 @@ function findEllipsePoint(minorAxis, majorAxis, angle) {
 }
 // add global parameters here
 
-<<<<<<< HEAD
 var PARAMS = {
     SCALE: 3,
     DEBUG: false,
     CANVAS_WIDTH: 1024,
     CANVAS_HEIGHT: 768
 };
-=======
-//var params = {
-// 
-//};
->>>>>>> parent of bab577c... Added Wheelie animations

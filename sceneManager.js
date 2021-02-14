@@ -66,8 +66,6 @@ class SceneManager {
         this.game.addEntity(new Met(this.game, 2500, 543));
         this.game.addEntity(new Carock(this.game, 3000, 543));
         this.game.addEntity(new HammerBro(this.game, 3300, 543));
-        this.game.addEntity(new Powerup(this.game, 400, 500));
-        this.game.addEntity(new Mushroom(this.game, 300, 500, 0));
 
         this.game.addEntity(new Tile(this.game, 3400,704,3,0)); 
         for (var i =0 ; i< 30; i ++){
