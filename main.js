@@ -12,7 +12,7 @@ ASSET_MANAGER.queueDownload("./sprites/bigboo.png");
 ASSET_MANAGER.queueDownload("./sprites/projectiles.png");
 ASSET_MANAGER.queueDownload("./sprites/mushrooms.png");
 ASSET_MANAGER.queueDownload("./sprites/healthmeter.png")
-
+ASSET_MANAGER.queueDownload("./sprites/bg1.png")
 
 ASSET_MANAGER.downloadAll(function () {
 	var canvas = document.getElementById('gameWorld');
@@ -22,6 +22,5 @@ ASSET_MANAGER.downloadAll(function () {
 	gameEngine.init(ctx);
 
 	new SceneManager(gameEngine);
-	
 	gameEngine.start();
 });

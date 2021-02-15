@@ -13,7 +13,7 @@ class Mushroom {
         this.BB = new BoundingBox(this.x, this.y, 32, 32);
     }
     update() {
-        const FALL_ACCELERATION = 1000;
+        const FALL_ACCELERATION = 750;
 
         this.velocity.y += FALL_ACCELERATION * this.game.clockTick;
         this.x += this.game.clockTick * this.velocity.x * PARAMS.SCALE;

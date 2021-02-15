@@ -401,7 +401,6 @@ class Bulldozer {
                 }
             }
         } else if (this.state == 1) {
-            // Todo: Aggressive state
             if (this.action == 0) {
                 if (this.game.timer.gameTime - this.turnTimer >= 2) {
                     if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
@@ -431,7 +430,7 @@ class Bulldozer {
                     that.y = entity.BB.top - that.SPRITE_HEIGHT * 2;
                     that.velocity.y = 0;
                     that.updateBB();
-                } else if (entity !== that &&!(entity instanceof Pellet)) { //&& !(entity instanceof Megaman)
+                } else if (entity !== that &&!(entity instanceof Pellet)&& !(entity instanceof Megaman)) { //
 
                     //console.log(that.x);
                     //console.log(entity.BB.right);
@@ -451,9 +450,29 @@ class Bulldozer {
                 }
             }
 
-            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 250) {
+            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 300) {
                 that.state = 1;
+                that.action = 1;
+                if(that.facing==0){
+                    that.velocity.x = -180
+                } else if(that.facing==1){
+                    that.velocity.x = 180
+                } 
+            }else if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) > 150){
+                that.state = 1;
+                that.action = 0;
+                if(that.facing==0){
+                    that.velocity.x = -24
+                } else if(that.facing==1){
+                    that.velocity.x = 24
+                }
+            } else{
+                that.state = 0;
+                that.action = 0;
             }
+
+
+
         });
         this.updateBB();
 
@@ -539,6 +558,7 @@ class ArmorKnight {
         this.facing = 0; //0=left, 1=right
         this.velocity = { x: -25, y: 0 };
         this.turnTimer = this.game.timer.gameTime;
+        this.attackTimer = 0;
 
         this.SPRITE_WIDTH_WALK = 24;
         this.SPRITE_WIDTH_ATTACK = 39;
@@ -560,7 +580,6 @@ class ArmorKnight {
     }
     update() {
         this.velocity.y += fallAcc * this.game.clockTick * PARAMS.SCALE;
-
         if (this.state == 0) {
             if (this.action == 0) {
                 if (this.game.timer.gameTime - this.turnTimer >= 2) {
@@ -572,7 +591,7 @@ class ArmorKnight {
                     }
                 }
             }
-        } else if (this.state == 1) {
+        } else if (this.state == 1) {           
             if (this.action == 0) {
                 if (this.game.timer.gameTime - this.turnTimer >= 2) {
                     if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
@@ -603,7 +622,7 @@ class ArmorKnight {
                     that.velocity.y = 0;
                     that.updateBB();
                 }                 
-                else if (entity !== that&&!(entity instanceof Pellet)) { // && !(entity instanceof Megaman)
+                else if (entity !== that&&!(entity instanceof Pellet) && !(entity instanceof Megaman)) { // )
                     
                     // console.log(that.x);
                     // console.log(entity.BB.right);
@@ -622,27 +641,59 @@ class ArmorKnight {
                     }
                 }
             }
-            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 250) {
+            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 100) { 
                 that.state = 1;
-            }
+                that.action = 1;
+                if(that.facing==0){
+                    that.velocity.x = -100
+                } else if(that.facing==1){
+                    that.velocity.x = 100
+                }
+            } 
+            else if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) > 70){
+                that.state = 0;
+                that.action = 0;
+                if(that.facing==0){
+                    that.velocity.x = -24
+                } else if(that.facing==1){
+                    that.velocity.x = 24
+                }
+            } 
         });
         this.updateBB();
     }
 
     updateBB() {
         if (this.facing == 0) {
-            this.BB = new BoundingBox(this.x + this.SPEAR_LENGTH, this.y, this.SPRITE_WIDTH_WALK * 2.25 - this.SPEAR_LENGTH, this.SPRITE_HEIGHT * 2.25)
-        } else {
-            this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH_WALK * 2.25 - this.SPEAR_LENGTH, this.SPRITE_HEIGHT * 2.25)
+            if(this.action ==1){
+                this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH_WALK * 2.25 - this.SPEAR_LENGTH, this.SPRITE_HEIGHT * 2.25)
+            } else{
+                this.BB = new BoundingBox(this.x + this.SPEAR_LENGTH, this.y, this.SPRITE_WIDTH_WALK * 2.25 - this.SPEAR_LENGTH, this.SPRITE_HEIGHT * 2.25)
+            }
+        } else if (this.facing ==1){
+            if(this.action ==1){
+                this.BB = new BoundingBox(this.x + this.SPEAR_LENGTH*3, this.y, this.SPRITE_WIDTH_WALK * 2.25 - this.SPEAR_LENGTH, this.SPRITE_HEIGHT * 2.25)
+            } else{
+                this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH_WALK * 2.25 - this.SPEAR_LENGTH, this.SPRITE_HEIGHT * 2.25)
+            }
         }
+    
     }
 
     draw(ctx) {
         this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y- this.game.camera.y, 2.25);
         if (PARAMS.DEBUG) {
             //ctx.strokeRect(this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y, this.BB.width, this.BB.height);
-            ctx.fillStyle = "Red";
-            ctx.strokeRect(this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y, this.BB.width, this.BB.height);
+            // ctx.fillStyle = "Red";
+            // ctx.strokeRect(this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y, this.BB.width, this.BB.height);
+            // ctx.fillStyle = "Lightgreen";
+            ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y- this.game.camera.y, this.BB.width, this.BB.height);
+            if (this.state == 0) {
+                ctx.fillStyle = "Lightgreen";
+            } else {
+                ctx.fillStyle = "Red";
+            }
+            ctx.fillText(" • ", this.BB.x - this.game.camera.x, this.BB.y- this.game.camera.y);
         }
         //this.shield.draw(ctx);
         //this.animations[0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 2);
@@ -659,7 +710,7 @@ class ArmorKnightShield {
         this.WIDTH = 5;
         this.HEIGHT = 45;
         if (this.armorKnight.facing == 0) {
-            this.x = this.armorKnight.x + 15;
+            this.x = this.armorKnight.x - this.armorKnight.SPRITE_WIDTH_WALK+ 15 + this.WIDTH;
         } else {
             this.x = this.armorKnight.x + this.armorKnight.SPRITE_WIDTH_WALK - 15- this.WIDTH;
         }
@@ -668,7 +719,7 @@ class ArmorKnightShield {
             this.shieldUp = true;
         } else if (this.armorKnight.action == 1) {
             this.shieldUp = false;
-        }
+        } 
         this.updateBB();
     }
 
@@ -691,14 +742,14 @@ class ArmorKnightShield {
         if (this.shieldUp) {
             this.BB = new BoundingBox(this.x, this.y, this.WIDTH, this.HEIGHT);
         } else {
-            this.BB = null;
+            this.BB = new BoundingBox(0, 0, 0, 0);
         }
     }
 
     draw(ctx) {
         if (PARAMS.DEBUG) {
             ctx.fillStyle = "Red";
-            ctx.strokeRect(this.x - this.game.camera.x, this.y - this.game.camera.y, this.WIDTH, this.HEIGHT);
+            ctx.fillRect(this.x - this.game.camera.x, this.y - this.game.camera.y, this.WIDTH, this.HEIGHT);
         }
     }
 }
@@ -898,6 +949,8 @@ class Wheelie {
         this.SPRITE_WIDTH = 16;
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megamix_enemies.png");
+        console.log(this.spritesheet);
+
 
         this.state = 0; //0=idle, 1=aggressive, 2=dead
         this.action = 0; //0=walk, 1=firing
