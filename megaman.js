@@ -453,7 +453,7 @@ class Megaman {
             //collision with enemies
             if ((entity instanceof Wheelie || entity instanceof Bulldozer ||
                 entity instanceof Gordo || entity instanceof HammerBro ||
-                entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met) && (that.BB.collide(entity.BB)) && !that.invulnTimer) {
+                entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met || entity instanceof CarockBeam || entity instanceof MetProjectile) && (that.BB.collide(entity.BB)) && !that.invulnTimer) {
                 that.action = 2;
                 that.velocity.y = -180;
                 that.healthPoint -= 3; // Can have different damage depends on the enemy
@@ -466,7 +466,11 @@ class Megaman {
                 }
                 that.invulnTimer = 1.5;
                 //console.log(that.velocity.y);
-            }that.updateBB();
+            } that.updateBB();
+
+            if ((entity instanceof CarockBeam || entity instanceof MetProjectile) && !that.invulnTimer && that.BB.collide(entity.BB)) {
+                entity.removeFromWorld = true;
+            }
 
         });
 

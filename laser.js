@@ -21,13 +21,13 @@ class Laser {
                     if (entity instanceof ArmorKnightShield && length < that.laserLength && length < lineAndBoxIntersect(that.laserOriginX, that.laserOriginY, that.angle, that.laserLength, entity.armorKnight.BB)) that.laserLength = length;
                     if (entity instanceof Bulldozer && length < that.laserLength && length < lineAndBoxIntersect(that.laserOriginX, that.laserOriginY, that.angle, that.laserLength, entity.met.BB)) that.laserLength = length;
                 }
-                if (entity instanceof Tile || entity instanceof Gordo) {
+                if (entity instanceof Tile || entity instanceof Gordo || (entity instanceof Met && entity.action == 3)) {
                     console.log("tile collision");
                     var length = lineAndBoxIntersect(that.laserOriginX, that.laserOriginY, that.angle, that.laserLength, entity.BB);
                     console.log(length);
                     if (length < that.laserLength) that.laserLength = length;
                 } else if ((entity instanceof HammerBro || entity instanceof Barba
-                    || entity instanceof BigBoo || entity instanceof Wheelie || entity instanceof Met
+                    || entity instanceof BigBoo || entity instanceof Wheelie || (entity instanceof Met && entity.action != 3)
                     || entity instanceof ArmorKnight || entity instanceof BulldozerMet
                     || entity instanceof Carock)) possibleHits.push(entity);
             }
