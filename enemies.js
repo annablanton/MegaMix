@@ -857,6 +857,8 @@ class Wheelie {
         this.SPRITE_WIDTH = 16;
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megamix_enemies.png");
+        console.log(this.spritesheet);
+
 
         this.state = 0; //0=idle, 1=aggressive, 2=dead
         this.action = 0; //0=walk, 1=firing
