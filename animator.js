@@ -42,4 +42,8 @@ class Animator {
     isDone() {
         return (this.elapsedTime >= this.totalTime);
     };
+
+    isDoneNextFrame(tick) {
+        return (this.elapsedTime + tick >= this.totalTime);
+    } 
 };

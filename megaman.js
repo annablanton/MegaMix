@@ -412,7 +412,7 @@ class Megaman {
             if (entity.BB && that.BB.collide(entity.BB)) {
                 if (that.velocity.y > 0) { // falling and landing on the block
                     if (entity instanceof Tile && (that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE) <= entity.BB.top) { // was above last tick
-                        that.y = entity.BB.top - 72.5;
+                        that.y = entity.BB.top - 72.3;
                         that.velocity.y = 0;
                         if (that.action == 2) that.action = 0;
                         that.updateBB();
@@ -423,10 +423,10 @@ class Megaman {
                     //that.velocity.y === 0;
                 }
             }
-            //jumping and cit bottome of tile
+            //jumping and Hit bottome of tile
             if (that.velocity.y < 0) {
-                if (entity instanceof Tile && (that.BB.top - that.velocity.y * that.game.clockTick * PARAMS.SCALE) >= entity.BB.bottom // was below last tick
-                    && that.BB.collide(entity.leftBB) && that.BB.collide(entity.rightBB)) { // collide with the center point of the brick
+                if (entity instanceof Tile && (that.BB.top - that.velocity.y * that.game.clockTick * PARAMS.SCALE) >= entity.BB.bottom 
+                    && that.BB.collide(entity.leftBB) && that.BB.collide(entity.rightBB)) { 
                     that.velocity.y = 0;
                     if (that.firingState == 2) {
                         that.grapplingHook.removeFromWorld = true;
@@ -442,7 +442,7 @@ class Megaman {
                 && that.BB.collide(entity.topBB) && that.BB.collide(entity.bottomBB)) {
                 console.log("side collision");
                 if (that.BB.collide(entity.leftBB)) {
-                    that.x = entity.BB.left - 72;
+                    that.x = entity.BB.left - 71.8;
                     if (that.velocity.x > 0) that.velocity.x = 0;
                 } else if (that.BB.collide(entity.rightBB)) {
                     that.x = entity.BB.right - 22;
@@ -454,7 +454,7 @@ class Megaman {
             //collision with enemies
             if ((entity instanceof Wheelie || entity instanceof Bulldozer ||
                 entity instanceof Gordo || entity instanceof HammerBro ||
-                entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met) && (that.BB.collide(entity.BB)) && !that.invulnTimer) {
+                entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met || entity instanceof CarockBeam || entity instanceof MetProjectile) && (that.BB.collide(entity.BB)) && !that.invulnTimer) {
                 that.action = 2;
                 that.velocity.y = -180;
                 that.healthPoint -= 3; // Can have different damage depends on the enemy
@@ -467,7 +467,11 @@ class Megaman {
                 }
                 that.invulnTimer = 1.5;
                 //console.log(that.velocity.y);
-            }that.updateBB();
+            } that.updateBB();
+
+            if ((entity instanceof CarockBeam || entity instanceof MetProjectile) && !that.invulnTimer && that.BB.collide(entity.BB)) {
+                entity.removeFromWorld = true;
+            }
 
         });
 
@@ -762,7 +766,6 @@ class Megaman {
             //ctx.ellipse(this.x + this.FIRE_OFFSET_X, this.y + this.FIRE_OFFSET_STANDING_Y, 40, 25, 0, 0, this.angleRads);
             //ctx.stroke();
             var ellipsePoint = findEllipsePoint(40 + this.LASER_WIDTH/2, 25 + this.LASER_HEIGHT/2, this.angleRads);
-
             ctx.beginPath();
             ctx.fillRect(this.x + this.FIRE_OFFSET_X - 2-this.game.camera.x, this.y + this.FIRE_OFFSET_Y - 2- this.game.camera.y, 4, 4);
             ctx.fillRect(this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2  + ellipsePoint.x - 1-this.game.camera.x, this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y - 1- this.game.camera.y, 2, 2);
