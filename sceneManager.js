@@ -5,9 +5,8 @@ class SceneManager {
         this.x = 0;
         this.y = 0;
         
-        this.megaman = new Megaman(game, 100, 100);
         this.megaman = new Megaman(game, 100, 500);
-
+        
         // game.addEntity(new Gordo(game, 400, 380, 1, 0));
         // game.addEntity(new Gordo(game, 400, 380, 0, 1));
         // game.addEntity(new Gordo(game, 400, 380, -1, 0));
@@ -49,6 +48,8 @@ class SceneManager {
 
         this.game.addEntity(new Mushroom(this.game, 230,300,1))
         this.game.addEntity(new Mushroom(this.game, -185,0,0))
+
+
         
         for (var i =0 ; i< 4; i ++){
             for(var j=0; j<4; j++){
@@ -265,10 +266,30 @@ class SceneManager {
         this.game.addEntity(new Tile(this.game, 3718+i*32, -288 ,3,2));}    
         
         for(var i =0; i<50; i++){        
-            this.game.addEntity(new Tile(this.game, 4480+i*32, 736 ,3,2));}    
+            this.game.addEntity(new Tile(this.game, 4480+i*32, 736 ,3,2));
+        }    
+        
+        // Boss session preparation
+        this.game.addEntity(new Tile(this.game, 4900,300,11,0))
+        this.game.addEntity(new Tile(this.game, 4932,268,11,0))
+        this.game.addEntity(new Tile(this.game, 4964,236,11,0))
+        this.game.addEntity(new Tile(this.game, 5000,168,11,0))
+        this.game.addEntity(new Tile(this.game, 5352,168,11,0))
+        for(var i = 0; i < 12; i++) {
+            this.game.addEntity(new Tile(this.game, 5000+i*32, 200,12 + i%4,0))
+        }
+        for(var i = 0; i<4; i++){
+            this.game.addEntity(new Mushroom(this.game, 5032+i*64, 100, 0));
+        }
 
+        for(var i = 0; i<17; i++){
+            this.game.addEntity(new Tile(this.game, 5352, 200 + i*32, 11, 0))
+        }
+        this.game.addEntity(new Wheelie(this.game, 5310,130))
 
-            this.game.addEntity(new BigBoo(this.game, 6000, 600));
+        // Bosses
+        this.game.addEntity(new Barba(this.game, 5800, 600));
+        this.game.addEntity(new BigBoo(this.game, 6000, 600));
     };
 
     update() {
