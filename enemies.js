@@ -622,7 +622,13 @@ class HammerBro {
         this.state = 0; //0=idle, 1=aggressive
         this.action = 0; //0=walk, 1=attacking
         this.facing = 0; //0=left, 1=right
-        this.velocity = { x: -25, y: 0 };
+        this.velocity = { x: -15, y: 0 };
+        this.fireTimer = 1;
+        this.jumpTimer = 2;
+        this.hasJump = false;
+        this.hasFired = false;
+        
+
 
         this.animations = [];
         for (var i = 0; i < 2; i++) {
@@ -637,28 +643,39 @@ class HammerBro {
     update() {
         this.velocity.y += fallAcc * this.game.clockTick * PARAMS.SCALE;
 
-        if (this.state == 0) {
-            if (this.action == 0) {
-                if (this.game.timer.gameTime - this.turnTimer >= 2) {
-                    if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
-                        this.turnTimer = this.game.timer.gameTime;
-                        this.facing = (this.facing == 1 ? 0 : 1);
-                        this.velocity.x = -this.velocity.x;
-                    }
-                }
-            }
-        } else if (this.state == 1) {
-            // Todo: Aggressive state
-            if (this.action == 0) {
-                if (this.game.timer.gameTime - this.turnTimer >= 2) {
-                    if (Math.random() >= 0.5 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
-                        this.turnTimer = this.game.timer.gameTime;
-                        this.facing = (this.facing == 1 ? 0 : 1);
-                        this.velocity.x = -this.velocity.x;
-                    }
+        if (this.state == 0) {     
+            if (this.game.timer.gameTime - this.turnTimer >= 2) {
+                if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
+                    this.turnTimer = this.game.timer.gameTime;
+                    this.facing = (this.facing == 1 ? 0 : 1);
+                    this.velocity.x = -this.velocity.x;
                 }
             }
         }
+        if (this.state == 1) {
+            if (this.jumpTimer > 0) {
+                this.jumpTimer -= this.game.clockTick;
+                if (this.hasJump == false) {
+                    this.velocity.y = -30;
+                    this.hasJump = true;
+                }
+            } else {
+                this.jumpTimer = 2;
+                this.hasJump = false;
+            }
+            if (this.fireTimer > 0) {
+                this.fireTimer -= this.game.clockTick;
+                if (this.hasFired == false) {
+                    this.game.addEntity(new HammerBroHammer(this.game, this.x, this.y, this.facing));
+                    this.velocity.y -= 300;
+                    this.hasFired = true;
+                }
+            } else {
+                this.fireTimer = 1.0;
+                this.hasFired = false;
+            }
+        }
+
         this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
         this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
         this.updateBB();
@@ -668,50 +685,55 @@ class HammerBro {
             //console.log(entity);
             //console.log(entity.BB);
             if (entity.BB && that.BB.collide(entity.BB)) {
-                //console.log(entity.BB);
-                if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
-                    that.y = entity.BB.top - that.SPRITE_HEIGHT * 2.25;
-                    that.velocity.y = 0;
-                    that.updateBB();
-                }
                 if ((entity instanceof Pellet)) {
                     //update lose life
                 }
+                //console.log(entity.BB);
+                if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
+                    that.y = entity.BB.top - that.SPRITE_HEIGHT * 2.5;
+                    that.velocity.y = 0;
+                    that.updateBB();
+                }
+                //added for side hit of tiles 
                 if (entity instanceof Tile && that.BB.collide(entity.topBB) && that.BB.collide(entity.bottomBB)) {
                     if (that.BB.collide(entity.leftBB)) {
                         that.facing = (that.facing == 1 ? 0 : 1);
                         that.velocity.x = -that.velocity.x;
                         that.turnTimer = that.game.timer.gameTime;
-                        that.turnTimer = that.game.timer.gameTime;
-                        that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                     } else if (that.BB.collide(entity.rightBB)) {
                         that.facing = (that.facing == 1 ? 0 : 1);
                         that.velocity.x = -that.velocity.x;
                         that.turnTimer = that.game.timer.gameTime;
-                        that.turnTimer = that.game.timer.gameTime;
-                        that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                     }
                     that.updateBB();
                 }
 
-                else if (entity !== that && !(entity instanceof Pellet) && !(entity instanceof Megaman)) {//!(entity instanceof Megaman)
-                    //console.log(that.x);
+                else if (entity !== that && !(entity instanceof Pellet) && !(entity instanceof Tile) && !(entity instanceof HammerBroHammer)) { //&& !(entity instanceof Megaman)
+                    console.log(entity.constructor.name);
                     //console.log(entity.BB.right);
                     //console.log("collision");
                     that.facing = (that.facing == 1 ? 0 : 1);
                     that.velocity.x = -that.velocity.x;
                     that.turnTimer = that.game.timer.gameTime;
-                    that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
-                } that.updateBB();
+                }
+
+
             }
-            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH / 2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT / 2 - that.y) ** 2) < 250 && !that.state) {
+            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH / 2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT / 2 - that.y) ** 2) < 300) {
                 that.state = 1;
-                that.velocity.x *= 3;
-                that.velocity.y *= 3;
+                if (entity.x < that.x) {
+                    that.facing = 0;
+                    that.velocity.x = -20;
+                   
+                }
+                if (entity.x > that.x) {
+                    that.facing = 1;
+                    that.velocity.x = 20;
+                }
+                
             }
         });
     }
-
 
 
     updateBB() {
@@ -813,6 +835,8 @@ class Wheelie {
         this.action = 0; //0=walk, 1=firing
         this.facing = 0; //0=left, 1=right
         this.velocity = { x: -25, y: 0 };
+        this.isTurning = false;
+        this.turningTimer = 2;
         this.turnTimer = this.game.timer.gameTime;
 
         this.animations = [];
@@ -842,17 +866,8 @@ class Wheelie {
                     }
                 }
             }
-        } else if (this.state == 1) {
-            if (this.action == 0) {
-                if (this.game.timer.gameTime - this.turnTimer >= 2) {
-                    if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
-                        this.turnTimer = this.game.timer.gameTime;
-                        this.facing = (this.facing == 1 ? 0 : 1);
-                        this.velocity.x = -this.velocity.x;
-                    }
-                }
-            }
         }
+
 
         this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
         this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
@@ -900,6 +915,24 @@ class Wheelie {
                 that.state = 1;
                 that.velocity.x *= 5;
                 that.velocity.y *= 5;
+                if (entity.x < that.x) {
+                    if (that.facing == 1 && that.velocity.x > 0) {
+                        that.facing = 0;
+                        that.velocity.x = -that.velocity.x;
+                    }
+                    
+                    // that.facing = 0;
+                    // this.velocity.x = -this.velocity.x;
+                } else if (entity.x > that.x) {
+                    if (that.facing == 0 && that.velocity.x < 0) {
+                        that.facing = 1;
+                        that.velocity.x = -that.velocity.x;
+                    }
+                }
+            } else if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH / 2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT / 2 - that.y) ** 2) > 350 && that.state == 1) {
+                that.state = 0;
+                that.velocity.x /= 5;
+                that.velocity.y /= 5;    
             }
         });
     }
