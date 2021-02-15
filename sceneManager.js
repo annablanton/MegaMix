@@ -147,16 +147,16 @@ class SceneManager {
         this.game.addEntity(new Tile(this.game, 3240,704, 3,2)); 
         this.game.addEntity(new Tile(this.game, 3496,704, 3,2)); 
 
-        this.game.addEntity(new Met(this.game, 3600, 0));
-        this.game.addEntity(new Met(this.game, 3700, 150));
-        this.game.addEntity(new Met(this.game, 3900, 350));
-        this.game.addEntity(new Met(this.game, 4000, 350));
-        this.game.addEntity(new Met(this.game, 4200, 350));
-        this.game.addEntity(new Met(this.game, 3600, 400));
-        this.game.addEntity(new Met(this.game, 3800, 500));
-        this.game.addEntity(new Met(this.game, 3800, 630));
-        this.game.addEntity(new Met(this.game, 3900, 630));
-        this.game.addEntity(new Met(this.game, 4100, 630));
+        this.game.addEntity(new Met(this.game, 3600, 0, 0));
+        this.game.addEntity(new Met(this.game, 3700, 150, 1));
+        this.game.addEntity(new Met(this.game, 3900, 350, 1));
+        this.game.addEntity(new Met(this.game, 4000, 350, 0));
+        this.game.addEntity(new Met(this.game, 4200, 350, 0));
+        this.game.addEntity(new Met(this.game, 3600, 400, 1));
+        this.game.addEntity(new Met(this.game, 3800, 500, 1));
+        this.game.addEntity(new Met(this.game, 3800, 630, 0));
+        this.game.addEntity(new Met(this.game, 3900, 630, 0));
+        this.game.addEntity(new Met(this.game, 4100, 630, 0));
 
 
 
