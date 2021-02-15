@@ -12,7 +12,7 @@ class Tile {
         for (let i = 0; i <= TILE_COLUMNS; i++) {
             this.tileSheet.push([]);
         }
-        for (let j = 0; j <= TILE_ROWS; j++) {
+        for (let j = 0; j <= TILE_COLUMNS; j++) {
             for (let k = 0; k < 11; k++) {
                 this.tileSheet[j][k] = new Animator(this.spritesheet, (j * TILE_GAP) + 1, (k * TILE_GAP) + 1, TILE_DIMENSION, TILE_DIMENSION, 1, 1, 0, false, true);
             }
