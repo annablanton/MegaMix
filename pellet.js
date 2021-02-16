@@ -32,7 +32,10 @@ class Pellet {
             if ((entity instanceof Tile||entity instanceof Wheelie || entity instanceof Bulldozer||
                 entity instanceof Gordo || entity instanceof HammerBro || entity instanceof Carock
                 || entity instanceof Met || entity instanceof ArmorKnightShield) && that.BB.collide(entity.BB)) {
-                that.removeFromWorld= true;   
+                that.removeFromWorld = true;
+                if (entity instanceof ArmorKnightShield || entity instanceof Bulldozer) {
+                    that.game.addEntity(new Clank(that.game, that.x, that.y));
+                }
             }
 
             if ((entity instanceof ArmorKnight || entity instanceof BulldozerMet) && that.BB.collide(entity.BB)) {

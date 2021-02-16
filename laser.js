@@ -29,7 +29,7 @@ class Laser {
                 } else if ((entity instanceof HammerBro || entity instanceof Barba
                     || entity instanceof BigBoo || entity instanceof Wheelie || (entity instanceof Met && entity.action != 3)
                     || entity instanceof ArmorKnight || entity instanceof BulldozerMet
-                    || entity instanceof Carock)) possibleHits.push(entity);
+                    || entity instanceof Carock) && (entity.x - that.game.camera.x <= 1024 && entity.x - that.game.camera.x >= 0 && entity.y - that.game.camera.y <= 768 && entity.y - that.game.camera.y >= 0)) possibleHits.push(entity);
             }
         });
 

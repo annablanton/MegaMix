@@ -98,41 +98,49 @@ class GrapplingRope {
             this.ropeOriginY = this.megaman.y + 21 * 2;
             this.hookX = this.hook.x + 5;
             this.hookY = this.hook.y + 10;
+            this.initHookAngle = 0;
         } else if (this.megaman.angle == 1) {
             this.ropeOriginX = this.megaman.x + 40 * 2;
             this.ropeOriginY = this.megaman.y + 28 * 2;
             this.hookX = this.hook.x + 10;
             this.hookY = this.hook.y + 5;
+            this.initHookAngle = 1;
         } else if (this.megaman.angle == 2) {
             this.ropeOriginX = this.megaman.x + 8 * 2;
             this.ropeOriginY = this.megaman.y + 32 * 2;
             this.hookX = this.hook.x + 22;
             this.hookY = this.hook.y + 12;
+            this.initHookAngle = 2;
         } else if (this.megaman.angle == 3) {
             this.ropeOriginX = this.megaman.x + 3 * 2;
             this.ropeOriginY = this.megaman.y + 25 * 2;
             this.hookX = this.hook.x + 23;
             this.hookY = this.hook.y + 17;
+            this.initHookAngle = 3;
         } else if (this.megaman.angle == 4) {
             this.ropeOriginX = this.megaman.x + 6 * 2;
             this.ropeOriginY = this.megaman.y + 18 * 2;
             this.hookX = this.hook.x + 18;
             this.hookY = this.hook.y + 23;
+            this.initHookAngle = 4
         } else if (this.megaman.angle == 5) {
             this.ropeOriginX = this.megaman.x + 16 * 2;
             this.ropeOriginY = this.megaman.y + 11 * 2;
             this.hookX = this.hook.x + 10;
             this.hookY = this.hook.y + 22;
+            this.initHookAngle = 5;
         } else if (this.megaman.angle == 6) {
             this.ropeOriginX = this.megaman.x + 26 * 2;
             this.ropeOriginY = this.megaman.y + 12 * 2;
             this.hookX = this.hook.x + 10;
             this.hookY = this.hook.y + 22;
+            this.initHookAngle = 6;
         } else {
             this.ropeOriginX = this.megaman.x + 37 * 2;
             this.ropeOriginY = this.megaman.y + 14 * 2;
             this.hookX = this.hook.x + 6;
             this.hookY = this.hook.y + 20;
+            this.initHookAngle = 7;
         }
         this.angle = Math.atan2(this.hookY - this.ropeOriginY, this.hook.x - this.ropeOriginX);
         this.length = distance(this.ropeOriginX, this.ropeOriginY, this.hookX, this.hookY);
@@ -141,41 +149,51 @@ class GrapplingRope {
         if (this.megaman.angle == 0) {
             this.ropeOriginX = this.megaman.x + 41 * 2;
             this.ropeOriginY = this.megaman.y + 21 * 2;
-            this.hookX = this.hook.x + 5;
-            this.hookY = this.hook.y + 10;
         } else if (this.megaman.angle == 1) {
             this.ropeOriginX = this.megaman.x + 40 * 2;
             this.ropeOriginY = this.megaman.y + 28 * 2;
-            this.hookX = this.hook.x + 10;
-            this.hookY = this.hook.y + 5;
         } else if (this.megaman.angle == 2) {
             this.ropeOriginX = this.megaman.x + 8 * 2;
             this.ropeOriginY = this.megaman.y + 32 * 2;
-            this.hookX = this.hook.x + 22;
-            this.hookY = this.hook.y + 12;
         } else if (this.megaman.angle == 3) {
             this.ropeOriginX = this.megaman.x + 3 * 2;
             this.ropeOriginY = this.megaman.y + 25 * 2;
-            this.hookX = this.hook.x + 23;
-            this.hookY = this.hook.y + 17;
         } else if (this.megaman.angle == 4) {
             this.ropeOriginX = this.megaman.x + 6 * 2;
             this.ropeOriginY = this.megaman.y + 18 * 2;
-            this.hookX = this.hook.x + 18;
-            this.hookY = this.hook.y + 23;
         } else if (this.megaman.angle == 5) {
             this.ropeOriginX = this.megaman.x + 16 * 2;
             this.ropeOriginY = this.megaman.y + 11 * 2;
-            this.hookX = this.hook.x + 10;
-            this.hookY = this.hook.y + 22;
         } else if (this.megaman.angle == 6) {
             this.ropeOriginX = this.megaman.x + 26 * 2;
             this.ropeOriginY = this.megaman.y + 12 * 2;
-            this.hookX = this.hook.x + 10;
-            this.hookY = this.hook.y + 22;
         } else {
             this.ropeOriginX = this.megaman.x + 37 * 2;
             this.ropeOriginY = this.megaman.y + 14 * 2;
+        }
+
+        if (this.initHookAngle == 0) {
+            this.hookX = this.hook.x + 5;
+            this.hookY = this.hook.y + 10;
+        } else if (this.initHookAngle == 1) {
+            this.hookX = this.hook.x + 10;
+            this.hookY = this.hook.y + 5;
+        } else if (this.initHookAngle == 2) {
+            this.hookX = this.hook.x + 22;
+            this.hookY = this.hook.y + 12;
+        } else if (this.initHookAngle == 3) {
+            this.hookX = this.hook.x + 23;
+            this.hookY = this.hook.y + 17;
+        } else if (this.initHookAngle == 4) {
+            this.hookX = this.hook.x + 18;
+            this.hookY = this.hook.y + 23;
+        } else if (this.initHookAngle == 5) {
+            this.hookX = this.hook.x + 10;
+            this.hookY = this.hook.y + 22;
+        } else if (this.initHookAngle == 6) {
+            this.hookX = this.hook.x + 10;
+            this.hookY = this.hook.y + 22;
+        } else {
             this.hookX = this.hook.x + 6;
             this.hookY = this.hook.y + 20;
         }
