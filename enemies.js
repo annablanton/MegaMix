@@ -2,18 +2,20 @@ this.TURN_CHANCE_ADJUST = 30;
 this.fallAcc = 562.5;
 
 class Met {
-    constructor(game, x, y) {
-        Object.assign(this, { game, x, y });
+    constructor(game, x, y, facing) {
+        Object.assign(this, { game, x, y , facing});
         this.SPRITE_WIDTH = 20;
         this.SPRITE_HEIGHT = 19
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megamix_enemies.png");
 
         this.state = 0; //0=idle, 1=aggressive, 2=dead
-        this.action = 0; //0=walk, 1=stationary/shooting/dead, 2=hide, 3=hidden, 4=unhide
-        this.facing = 0; //0=left, 1=right
-        this.velocity = {x: -15, y: 0}
-        this.turnTimer = this.game.timer.gameTime;
+        this.action = 3; //0=walk, 1=stationary/shooting/dead, 2=hide, 3=hidden, 4=unhide
+        this.velocity = {x: 0, y: 0}
+        this.turnTimer = 2;
+        this.firstFireOccurred = 0;
+        this.hideTimer = 0;
+        this.hasFired = 0;
 
         this.animations = [];
         for (var i = 0; i < 2; i++) { //two directions
@@ -23,46 +25,93 @@ class Met {
 
         this.animations[0][0] = new Animator(this.spritesheet, 138, 36, this.SPRITE_WIDTH, this.SPRITE_HEIGHT, 2, 0.09 * 3, 5, true, true); //walk
         this.animations[0][1] = new Animator(this.spritesheet, 116, 36, this.SPRITE_WIDTH, this.SPRITE_HEIGHT, 1, 0.09 * 3, 5, false, true) //stationary/dead
-        this.animations[0][2] = new Animator(this.spritesheet, 72, 36, this.SPRITE_WIDTH, this.SPRITE_HEIGHT, 3, 0.09 * 3, 4, true, true) //hide
-        this.animations[0][3] = new Animator(this.spritesheet, 72, 36, this.SPRITE_WIDTH, this.SPRITE_HEIGHT, 1, 0.09 * 2, 4, false, true) //hidden
-        this.animations[0][4] = new Animator(this.spritesheet, 72, 36, this.SPRITE_WIDTH, this.SPRITE_HEIGHT, 3, 0.09 * 3, 4, false, true) //unhide
+        this.animations[0][2] = new Animator(this.spritesheet, 72, 36, 18, this.SPRITE_HEIGHT, 3, 0.09 * 3, 4, true, false) //hide
+        this.animations[0][3] = new Animator(this.spritesheet, 72, 36, 18, this.SPRITE_HEIGHT, 1, 0.09 * 2, 4, false, true) //hidden
+        this.animations[0][4] = new Animator(this.spritesheet, 72, 36, 18, this.SPRITE_HEIGHT, 3, 0.09 * 3, 4, false, false) //unhide
 
-        this.animations[1][0] = new Animator(this.spritesheet, 188, 36, this.SPRITE_WIDTH, this.SPRITE_HEIGHT, 2, 0.09 * 3, 5, false, true); //walk
+        this.animations[1][0] = new Animator(this.spritesheet, 187, 36, this.SPRITE_WIDTH, this.SPRITE_HEIGHT, 2, 0.09 * 3, 5, false, true); //walk
         this.animations[1][1] = new Animator(this.spritesheet, 236, 36, this.SPRITE_WIDTH, this.SPRITE_HEIGHT, 1, 0.09 * 3, 5, false, true) //stationary/dead
-        this.animations[1][2] = new Animator(this.spritesheet, 236, 36, this.SPRITE_WIDTH, this.SPRITE_HEIGHT, 3, 0.09 * 3, 4, false, true) //hide
-        this.animations[1][3] = new Animator(this.spritesheet, 280, 36, this.SPRITE_WIDTH, this.SPRITE_HEIGHT, 1, 0.09 * 2, 4, false, true) //hidden
-        this.animations[1][4] = new Animator(this.spritesheet, 236, 36, this.SPRITE_WIDTH, this.SPRITE_HEIGHT, 3, 0.09 * 3, 4, true, true) //unhide
+        this.animations[1][2] = new Animator(this.spritesheet, 236, 36, 18, this.SPRITE_HEIGHT, 3, 0.09 * 3, 4, false, false) //hide
+        this.animations[1][3] = new Animator(this.spritesheet, 280, 36, 18, this.SPRITE_HEIGHT, 1, 0.09 * 2, 4, false, true) //hidden
+        this.animations[1][4] = new Animator(this.spritesheet, 236, 36, 18, this.SPRITE_HEIGHT, 3, 0.09 * 3, 4, true, false) //unhide
 
         this.updateBB();
     }
     update() {
+        //console.log(this.action);
         this.velocity.y += fallAcc * this.game.clockTick * PARAMS.SCALE;
-        // console.log(1/this.game.clockTick);
-        
-        if (this.state == 0) {
-            if (this.action == 0) {
-                if (this.game.timer.gameTime - this.turnTimer >= 2) {
-                    if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
-                        this.turnTimer = this.game.timer.gameTime;
-                        this.facing = (this.facing == 1 ? 0 : 1);
-                        this.velocity.x = -this.velocity.x;
+        if (this.state == 1) {
+            // Todo: Aggressive state
+            if (!this.firstFireOccurred) {
+                this.firstFireOccurred = 1;
+                this.action = 4;
+            } else if (this.action == 4) {
+                if (this.animations[0][4].isDoneNextFrame(this.game.clockTick) || this.animations[1][4].isDoneNextFrame(this.game.clockTick)) {
+                    this.animations[0][4] = new Animator(this.spritesheet, 72, 36, 18, this.SPRITE_HEIGHT, 3, 0.09 * 3, 4, false, false) //unhide
+                    this.animations[1][4] = new Animator(this.spritesheet, 236, 36, 18, this.SPRITE_HEIGHT, 3, 0.09 * 3, 4, true, false) //unhide
+                    this.idleTimer = 0;
+                    this.action = 1;
+                    this.walkTimer = 0.5;
+                    this.hasFired = 0;
+                }
+            } else if (this.action == 1) {
+                if (!this.hasFired) {
+                    this.hasFired = 1;
+                    if (this.facing == 0) {
+                        this.game.addEntity(new MetProjectile(this.game, this.x - 2, this.y + this.SPRITE_HEIGHT, Math.PI));
+                        this.game.addEntity(new MetProjectile(this.game, this.x - 2, this.y + this.SPRITE_HEIGHT, 3 * Math.PI / 4));
+                        this.game.addEntity(new MetProjectile(this.game, this.x - 2, this.y + this.SPRITE_HEIGHT, 5 * Math.PI / 4));
                     } else {
-                        //console.log("check failed");
+                        this.game.addEntity(new MetProjectile(this.game, this.x + 36 + 2, this.y + this.SPRITE_HEIGHT, 0));
+                        this.game.addEntity(new MetProjectile(this.game, this.x + 36 + 2, this.y + this.SPRITE_HEIGHT, Math.PI / 4));
+                        this.game.addEntity(new MetProjectile(this.game, this.x + 36 + 2, this.y + this.SPRITE_HEIGHT, -Math.PI / 4));
                     }
                 }
-            }
-        } else if (this.state == 1) {
-            // Todo: Aggressive state
-            if (this.action == 0) {
-                if (this.game.timer.gameTime - this.turnTimer >= 2) {
+                this.walkTimer -= this.game.clockTick;
+                if (this.walkTimer <= 0) {
+                    this.walkTimer = 0;
+                    this.action = 0;
+                    this.hideTimer = 1;
+                }
+            } else if (this.action == 0) {
+                this.velocity.x = this.facing == 0 ? -15 : 15
+                this.turnTimer -= this.game.clockTick;
+                this.hideTimer -= this.game.clockTick;
+                if (this.hideTimer <= 0) {
+                    this.hideTimer = 0;
+                    if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to hide each 1/30 sec after one second of walking (adjust to framerate using clockTick)
+                        this.action = 2;
+                        this.hiddenTimer = 0.09 * 3;
+                    }
+                }
+                if (this.turnTimer <= 0) {
+                    this.turnTimer = 0;
                     if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
-                        this.turnTimer = this.game.timer.gameTime;
+                        this.turnTimer = 2;
                         this.facing = (this.facing == 1 ? 0 : 1);
                         this.velocity.x = -this.velocity.x;
                         console.log("random met turn");
                     } else {
                         //console.log("check failed");
                     }
+                }
+            } else if (this.action == 2) {
+                this.velocity.x = 0;
+                this.hiddenTimer -= this.game.clockTick;
+                if (this.animations[0][2].isDoneNextFrame(this.game.clockTick) || this.animations[1][2].isDoneNextFrame(this.game.clockTick)) {
+                    this.animations[0][2] = new Animator(this.spritesheet, 72, 36, 18, this.SPRITE_HEIGHT, 3, 0.09 * 3, 4, true, false) //hide
+                    this.animations[1][2] = new Animator(this.spritesheet, 236, 36, 18, this.SPRITE_HEIGHT, 3, 0.09 * 3, 4, false, false) //hide
+                    this.hiddenTimer = 0;
+                    this.action = 3;
+                    this.unhideTimer = 1.5;
+                }
+            } else if (this.action == 3) {
+                this.velocity.x = 0;
+                this.unhideTimer -= this.game.clockTick;
+                if (this.unhideTimer <= 0) {
+                    this.unhideTimer = 0;
+                    this.action = 4;
+                    this.idleTimer = 0.09 * 3;
                 }
             }
         }
@@ -147,17 +196,21 @@ class Met {
 }
 
 class Carock {
-    constructor(game, x, y) {
-        Object.assign(this, { game, x, y });
+    constructor(game, x, y, megaman) {
+        Object.assign(this, { game, x, y, megaman });
 
         this.state = 0; //0=idle, 1=aggressive, 2=dead
-        this.action = 0; //0=walk, 1=firing
+        this.action = 0; //0=walk, 1=firing, 2=stationary
         this.facing = 0; //0=left, 1=right
         this.velocity = { x: -40, y: 0 }
-        this.turnTimer = this.game.timer.gameTime;
+        this.turnTimer = 2;
         this.SPRITE_WIDTH_WALK = 20;
         this.SPRITE_WIDTH_FIRE = 32;
         this.SPRITE_HEIGHT = 47;
+        this.fireTimer = 0;
+        this.walkTimer = 0;
+        this.startFireTimer = 1;
+        this.firstFireOccurred = false;
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megamix_enemies.png");
 
@@ -166,10 +219,13 @@ class Carock {
             this.animations.push([]);
         }
         this.animations[0][0] = new Animator(this.spritesheet, 138, 197, this.SPRITE_WIDTH_WALK, this.SPRITE_HEIGHT, 2, 0.09 * 3, 4, true, true); //walk left
-        this.animations[1][0] = new Animator(this.spritesheet, 188, 197, this.SPRITE_WIDTH_WALK, this.SPRITE_HEIGHT, 2, 0.09 * 3, 4, false, true) //walk right
+        this.animations[1][0] = new Animator(this.spritesheet, 188, 197, this.SPRITE_WIDTH_WALK, this.SPRITE_HEIGHT, 2, 0.09 * 3, 4, false, true); //walk right
 
         this.animations[0][1] = new Animator(this.spritesheet, 102, 197, this.SPRITE_WIDTH_FIRE, this.SPRITE_HEIGHT, 1, 0.09 * 3, 4, false, true);//fire left
         this.animations[1][1] = new Animator(this.spritesheet, 236, 197, this.SPRITE_WIDTH_FIRE, this.SPRITE_HEIGHT, 1, 0.09 * 3, 4, false, true);//fire right
+
+        this.animations[0][2] = new Animator(this.spritesheet, 138, 197, this.SPRITE_WIDTH_WALK, this.SPRITE_HEIGHT, 1, 0.09 * 3, 4, true, true);
+        this.animations[1][2] = new Animator(this.spritesheet, 188, 197, this.SPRITE_WIDTH_WALK, this.SPRITE_HEIGHT, 1, 0.09 * 3, 4, false, true);
 
         this.updateBB();
     }
@@ -177,22 +233,58 @@ class Carock {
         this.velocity.y += fallAcc * this.game.clockTick * PARAMS.SCALE;
         if (this.state == 0) {
             if (this.action == 0) {
-                if (this.game.timer.gameTime - this.turnTimer >= 2) {
+                if (this.turnTimer <= 0) {
                     if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
-                        this.turnTimer = this.game.timer.gameTime;
+                        this.turnTimer = 2;
                         this.facing = (this.facing == 1 ? 0 : 1);
                         this.velocity.x = -this.velocity.x;
                     }
                 }
             }
         } else if (this.state == 1) {
-            // Todo: Aggressive state
-            if (this.action == 0) {
-                if (this.game.timer.gameTime - this.turnTimer >= 2) {
-                    if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
-                        this.turnTimer = this.game.timer.gameTime;
-                        this.facing = (this.facing == 1 ? 0 : 1);
-                        this.velocity.x = -this.velocity.x;
+            if (!this.firstFireOccurred) {
+                this.action = 2;
+                this.fireTimer = 0.5;
+                this.firstFireOccurred = true;
+            } else if (this.action == 2) {
+                if (this.megaman.x < this.x) this.facing = 0;
+                else this.facing = 1;
+                this.velocity.x = 0;
+                this.fireTimer -= this.game.clockTick;
+                if (this.fireTimer <= 0) {
+                    var rand = Math.random();
+                    this.game.addEntity(new CarockBeam(this.game, this.facing == 0 ? this.x - 16 : this.x + this.SPRITE_WIDTH_FIRE * 2, rand < 0.5 ? this.y : this.y + 48, this.facing));
+                    this.action = 1;
+                    this.fireTimer = 0;
+                    this.walkTimer = 0.5;
+                }
+            } else if (this.action == 1) {
+                this.walkTimer -= this.game.clockTick;
+                if (this.walkTimer <= 0) {
+                    this.action = 0;
+                    this.walkTimer = 0;
+                    this.velocity.x = (this.facing == 0 ? -40 : 40);
+                }
+            } else {
+                // Todo: Aggressive state
+                if (this.action == 0) {
+                    this.turnTimer -= this.game.clockTick;
+                    this.startFireTimer -= this.game.clockTick;
+                    if (this.startFireTimer <= 0) {
+                        this.startFireTimer = 0;
+                        if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to start firing each 1/30 sec after one second of waiting
+                            this.startFireTimer = 2;
+                            this.action = 2;
+                            this.fireTimer = 0.5;
+                        }
+                    }
+                    else if (this.turnTimer <= 0) {
+                        this.turnTimer = 0;
+                        if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
+                            this.turnTimer = 2;
+                            this.facing = (this.facing == 1 ? 0 : 1);
+                            this.velocity.x = -this.velocity.x;
+                        }
                     }
                 }
             }
@@ -673,7 +765,13 @@ class HammerBro {
         this.state = 0; //0=idle, 1=aggressive
         this.action = 0; //0=walk, 1=attacking
         this.facing = 0; //0=left, 1=right
-        this.velocity = { x: -25, y: 0 };
+        this.velocity = { x: -15, y: 0 };
+        this.fireTimer = 1;
+        this.jumpTimer = 2;
+        this.hasJump = false;
+        this.hasFired = false;
+        
+
 
         this.animations = [];
         for (var i = 0; i < 2; i++) {
@@ -688,28 +786,39 @@ class HammerBro {
     update() {
         this.velocity.y += fallAcc * this.game.clockTick * PARAMS.SCALE;
 
-        if (this.state == 0) {
-            if (this.action == 0) {
-                if (this.game.timer.gameTime - this.turnTimer >= 2) {
-                    if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
-                        this.turnTimer = this.game.timer.gameTime;
-                        this.facing = (this.facing == 1 ? 0 : 1);
-                        this.velocity.x = -this.velocity.x;
-                    }
-                }
-            }
-        } else if (this.state == 1) {
-            // Todo: Aggressive state
-            if (this.action == 0) {
-                if (this.game.timer.gameTime - this.turnTimer >= 2) {
-                    if (Math.random() >= 0.5 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
-                        this.turnTimer = this.game.timer.gameTime;
-                        this.facing = (this.facing == 1 ? 0 : 1);
-                        this.velocity.x = -this.velocity.x;
-                    }
+        if (this.state == 0) {     
+            if (this.game.timer.gameTime - this.turnTimer >= 2) {
+                if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
+                    this.turnTimer = this.game.timer.gameTime;
+                    this.facing = (this.facing == 1 ? 0 : 1);
+                    this.velocity.x = -this.velocity.x;
                 }
             }
         }
+        if (this.state == 1) {
+            if (this.jumpTimer > 0) {
+                this.jumpTimer -= this.game.clockTick;
+                if (this.hasJump == false) {
+                    this.velocity.y = -30;
+                    this.hasJump = true;
+                }
+            } else {
+                this.jumpTimer = 2;
+                this.hasJump = false;
+            }
+            if (this.fireTimer > 0) {
+                this.fireTimer -= this.game.clockTick;
+                if (this.hasFired == false) {
+                    this.game.addEntity(new HammerBroHammer(this.game, this.x, this.y, this.facing));
+                    this.velocity.y -= 300;
+                    this.hasFired = true;
+                }
+            } else {
+                this.fireTimer = 1.0;
+                this.hasFired = false;
+            }
+        }
+
         this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
         this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
         this.updateBB();
@@ -719,50 +828,55 @@ class HammerBro {
             //console.log(entity);
             //console.log(entity.BB);
             if (entity.BB && that.BB.collide(entity.BB)) {
-                //console.log(entity.BB);
-                if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
-                    that.y = entity.BB.top - that.SPRITE_HEIGHT * 2.25;
-                    that.velocity.y = 0;
-                    that.updateBB();
-                }
                 if ((entity instanceof Pellet)) {
                     //update lose life
                 }
+                //console.log(entity.BB);
+                if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
+                    that.y = entity.BB.top - that.SPRITE_HEIGHT * 2.5;
+                    that.velocity.y = 0;
+                    that.updateBB();
+                }
+                //added for side hit of tiles 
                 if (entity instanceof Tile && that.BB.collide(entity.topBB) && that.BB.collide(entity.bottomBB)) {
                     if (that.BB.collide(entity.leftBB)) {
                         that.facing = (that.facing == 1 ? 0 : 1);
                         that.velocity.x = -that.velocity.x;
                         that.turnTimer = that.game.timer.gameTime;
-                        that.turnTimer = that.game.timer.gameTime;
-                        that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                     } else if (that.BB.collide(entity.rightBB)) {
                         that.facing = (that.facing == 1 ? 0 : 1);
                         that.velocity.x = -that.velocity.x;
                         that.turnTimer = that.game.timer.gameTime;
-                        that.turnTimer = that.game.timer.gameTime;
-                        that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                     }
                     that.updateBB();
                 }
 
-                else if (entity !== that && !(entity instanceof Pellet) && !(entity instanceof Megaman)) {//!(entity instanceof Megaman)
-                    //console.log(that.x);
+                else if (entity !== that && !(entity instanceof Pellet) && !(entity instanceof Tile) && !(entity instanceof HammerBroHammer)) { //&& !(entity instanceof Megaman)
+                    console.log(entity.constructor.name);
                     //console.log(entity.BB.right);
                     //console.log("collision");
                     that.facing = (that.facing == 1 ? 0 : 1);
                     that.velocity.x = -that.velocity.x;
                     that.turnTimer = that.game.timer.gameTime;
-                    that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
-                } that.updateBB();
+                }
+
+
             }
-            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH / 2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT / 2 - that.y) ** 2) < 250 && !that.state) {
+            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH / 2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT / 2 - that.y) ** 2) < 300) {
                 that.state = 1;
-                that.velocity.x *= 3;
-                that.velocity.y *= 3;
+                if (entity.x < that.x) {
+                    that.facing = 0;
+                    that.velocity.x = -20;
+                   
+                }
+                if (entity.x > that.x) {
+                    that.facing = 1;
+                    that.velocity.x = 20;
+                }
+                
             }
         });
     }
-
 
 
     updateBB() {
@@ -864,6 +978,8 @@ class Wheelie {
         this.action = 0; //0=walk, 1=firing
         this.facing = 0; //0=left, 1=right
         this.velocity = { x: -25, y: 0 };
+        this.isTurning = false;
+        this.turningTimer = 2;
         this.turnTimer = this.game.timer.gameTime;
 
         this.animations = [];
@@ -893,17 +1009,8 @@ class Wheelie {
                     }
                 }
             }
-        } else if (this.state == 1) {
-            if (this.action == 0) {
-                if (this.game.timer.gameTime - this.turnTimer >= 2) {
-                    if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to turn around each 1/30 sec after two seconds of walking (adjust to framerate using clockTick)
-                        this.turnTimer = this.game.timer.gameTime;
-                        this.facing = (this.facing == 1 ? 0 : 1);
-                        this.velocity.x = -this.velocity.x;
-                    }
-                }
-            }
         }
+
 
         this.x += this.velocity.x * this.game.clockTick * PARAMS.SCALE;
         this.y += this.velocity.y * this.game.clockTick * PARAMS.SCALE;
@@ -951,6 +1058,24 @@ class Wheelie {
                 that.state = 1;
                 that.velocity.x *= 5;
                 that.velocity.y *= 5;
+                if (entity.x < that.x) {
+                    if (that.facing == 1 && that.velocity.x > 0) {
+                        that.facing = 0;
+                        that.velocity.x = -that.velocity.x;
+                    }
+                    
+                    // that.facing = 0;
+                    // this.velocity.x = -this.velocity.x;
+                } else if (entity.x > that.x) {
+                    if (that.facing == 0 && that.velocity.x < 0) {
+                        that.facing = 1;
+                        that.velocity.x = -that.velocity.x;
+                    }
+                }
+            } else if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH / 2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT / 2 - that.y) ** 2) > 350 && that.state == 1) {
+                that.state = 0;
+                that.velocity.x /= 5;
+                that.velocity.y /= 5;    
             }
         });
     }

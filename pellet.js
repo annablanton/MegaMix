@@ -1,6 +1,6 @@
 class Pellet {
-    constructor(game, x, y, angle, momentumX) {
-        Object.assign(this, { game, x, y, angle });
+    constructor(game, x, y, angle, momentumX, size) {
+        Object.assign(this, { game, x, y, angle, size });
         this.x = x
         this.y = y
         this.SPEED = 100;
@@ -17,6 +17,8 @@ class Pellet {
     }
 
     update() {
+        this.PELLET_WIDTH = 8 * this.size;
+        this.PELLET_HEIGHT = 6 * this.size;
         this.lifetime -= this.game.clockTick;
         if (this.lifetime <= 0) {
             this.removeFromWorld = true;
@@ -30,7 +32,10 @@ class Pellet {
             if ((entity instanceof Tile||entity instanceof Wheelie || entity instanceof Bulldozer||
                 entity instanceof Gordo || entity instanceof HammerBro || entity instanceof Carock
                 || entity instanceof Met || entity instanceof ArmorKnightShield) && that.BB.collide(entity.BB)) {
-                that.removeFromWorld= true;   
+                that.removeFromWorld = true;
+                if (entity instanceof ArmorKnightShield || entity instanceof Bulldozer) {
+                    that.game.addEntity(new Clank(that.game, that.x, that.y));
+                }
             }
 
             if ((entity instanceof ArmorKnight || entity instanceof BulldozerMet) && that.BB.collide(entity.BB)) {
@@ -38,7 +43,7 @@ class Pellet {
             }
 
             if ((entity instanceof Wheelie ||
-                entity instanceof HammerBro || entity instanceof Carock || entity instanceof Met) && that.BB.collide(entity.BB)) {
+                entity instanceof HammerBro || entity instanceof Carock || (entity instanceof Met && entity.action != 3)) && that.BB.collide(entity.BB)) {
                 entity.removeFromWorld = true;
             }
         });
