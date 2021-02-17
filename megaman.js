@@ -409,10 +409,16 @@ class Megaman {
         //collision for megaman
         var that = this;
         this.game.entities.forEach(function (entity) {
+            //Hit left or right side of tile
+//             var horizAdjust = false;
+//             var verticalAdjust = false;
+            
+
             if (entity.BB && that.BB.collide(entity.BB)) {
                 if (that.velocity.y > 0) { // falling and landing on the block
-                    if (entity instanceof Tile && (that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE) <= entity.BB.top) { // was above last tick
-                        that.y = entity.BB.top - 72.1;
+                    if (entity instanceof Tile && (that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE) <= entity.BB.top
+                        && !((that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE) <= entity.BB.left || (that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE) >= entity.BB.right)) { // was above last tick
+                        that.y = entity.BB.top - 72.3;
                         that.velocity.y = 0;
                         if (that.action == 2) that.action = 0;
                         that.updateBB();
@@ -420,13 +426,27 @@ class Megaman {
                             that.landed = 1;
                         }
                     }
-                    //that.velocity.y === 0;
                 }
             }
+            if (entity instanceof Tile
+                && that.BB.collide(entity.BB) && !((that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE) <= entity.BB.top)) {
+                if ((that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE) <= entity.BB.left) {
+//                     horizAdjust = true;
+                    that.x = entity.BB.left - 68.01;
+                    if (that.velocity.x > 0) that.velocity.x = 0;
+                } else if ((that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE) >= entity.BB.right) {
+//                     horizAdjust = true;
+                    console.log(entity);
+                    that.x = entity.BB.right - 25.99;
+                    if (that.velocity.x < 0) that.velocity.x = 0;
+                }
+                that.updateBB();
+            }
+
+
             //jumping and Hit bottome of tile
             if (that.velocity.y < 0) {
-                if (entity instanceof Tile && (that.BB.top - that.velocity.y * that.game.clockTick * PARAMS.SCALE) >= entity.BB.bottom 
-                    && that.BB.collide(entity.BB)) { 
+                if (entity instanceof Tile && (that.BB.top - that.velocity.y * that.game.clockTick * PARAMS.SCALE) >= entity.BB.bottom && that.BB.collide(entity.BB)) {
                     that.velocity.y = 0;
                     that.y = entity.BB.bottom - 24;
                     if (that.firingState == 2) {
@@ -435,22 +455,9 @@ class Megaman {
                         that.grapplingHook.pulling = 0;
                         that.grapplingHook.retracting = 0;
                     }
-                    
+
                 }
-            }
-            //Hit left or right side of tile
-            if (entity instanceof Tile
-                && that.BB.collide(entity.BB)) {
-                console.log("side collision");
-                if ((that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE) <= entity.BB.left) {
-                    that.x = entity.BB.left - 68;
-                    if (that.velocity.x > 0) that.velocity.x = 0;
-                } else if ((that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE) >= entity.BB.right) {
-                    that.x = entity.BB.right - 26;
-                    if (that.velocity.x < 0) that.velocity.x = 0;
-                }
-                that.updateBB();
-            }
+            } that.updateBB();
 
             //collision with enemies
             if ((entity instanceof Wheelie || entity instanceof Bulldozer ||
