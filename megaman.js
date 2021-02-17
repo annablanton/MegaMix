@@ -38,6 +38,8 @@ class Megaman {
         this.fallAcc = 562.5;
         this.grapplingHook = null;
 
+        this.dead = false;
+
         this.animations = [];
         this.firingAnims = [];
         this.loadAnimation();
@@ -236,7 +238,17 @@ class Megaman {
         this.firingAnims[1][1][3][5] = new Animator(this.spritesheet, 1483, 156 + 661, 46, 46, 2, 0.1, 5, false, true);
         this.firingAnims[1][1][3][6] = new Animator(this.spritesheet, 1483, 156 + 661, 46, 46, 2, 0.1, 5, false, true);
         this.firingAnims[1][1][3][7] = new Animator(this.spritesheet, 1483, 207 + 661, 46, 46, 2, 0.1, 5, false, true);
+
+        //pritesheet, xStart, yStart, width, height, frameCount, frameDuration, framePadding, reverse, loop
+        this.rightdeadAnims = new Animator(this.spritesheet, 105, 615, 46, 46, 5, 0.5, 5,true,false);
+        this.leftdeadAnims = new Animator(this.spritesheet, 360, 615, 46, 46, 5, 0.5, 5,false,false);
+        this.rightpoisondeadAnims = new Animator(this.spritesheet, 105, 1276, 46, 46, 4, 0.5, 5, true,false);        
+        this.leftpoisondeadAnims = new Animator(this.spritesheet, 310, 1276, 46, 46, 4, 0.5, 5, false, false);
       };
+
+    die(){
+        this.dead=true;
+    }
 
     update() {
       
@@ -258,6 +270,11 @@ class Megaman {
       const STOP_FALL_SPACE = 450;
         const RUN_FALL_SPACE = 562.5;
   
+        if (this.dead) {
+            // this.velocity.y += RUN_FALL * TICK;
+            // this.y += this.velocity.y * TICK * PARAMS.SCALE;
+        } else{
+            
       if (this.weaponTimer > 0) {
           this.weaponTimer -= (this.weaponTimer <= this.game.clockTick ? this.weaponTimer : this.game.clockTick);
         }
@@ -409,11 +426,7 @@ class Megaman {
         //collision for megaman
         var that = this;
         this.game.entities.forEach(function (entity) {
-            //Hit left or right side of tile
-//             var horizAdjust = false;
-//             var verticalAdjust = false;
-            
-
+            //Hit left or right side of tile          
             if (entity.BB && that.BB.collide(entity.BB)) {
                 if (that.velocity.y > 0) { // falling and landing on the block
                     if (entity instanceof Tile && (that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE) <= entity.BB.top
@@ -431,18 +444,15 @@ class Megaman {
             if (entity instanceof Tile
                 && that.BB.collide(entity.BB) && !((that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE) <= entity.BB.top)) {
                 if ((that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE) <= entity.BB.left) {
-//                     horizAdjust = true;
                     that.x = entity.BB.left - 68.01;
                     if (that.velocity.x > 0) that.velocity.x = 0;
                 } else if ((that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE) >= entity.BB.right) {
-//                     horizAdjust = true;
                     console.log(entity);
                     that.x = entity.BB.right - 25.99;
                     if (that.velocity.x < 0) that.velocity.x = 0;
                 }
                 that.updateBB();
             }
-
 
             //jumping and Hit bottome of tile
             if (that.velocity.y < 0) {
@@ -462,11 +472,22 @@ class Megaman {
             //collision with enemies
             if ((entity instanceof Wheelie || entity instanceof Bulldozer ||
                 entity instanceof Gordo || entity instanceof HammerBro ||
-                entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met || entity instanceof CarockBeam || entity instanceof MetProjectile) && (that.BB.collide(entity.BB)) && !that.invulnTimer) {
+                entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met || entity instanceof CarockBeam 
+                || entity instanceof MetProjectile || entity instanceof HammerBroHammer ) && (that.BB.collide(entity.BB)) && !that.invulnTimer) {
                 that.action = 2;
                 that.velocity.y = -180;
-                that.healthPoint -= 3; // Can have different damage depends on the enemy
-                
+                if(entity instanceof HammerBro ||entity instanceof Wheelie||entity instanceof Gordo||
+                    entity instanceof MetProjectile|| entity instanceof Met  || entity instanceof Carock ){
+                    that.healthPoint -= 1; // Can have different damage depends on the enemy
+                } else if(entity instanceof ArmorKnight|| entity instanceof CarockBeam){
+                    that.healthPoint -= 2;
+                } else if(entity instanceof Bulldozer){
+                    that.healthPoint -= 4;
+                }
+
+                if(that.healthPoint <=0){
+                    that.dead=true;
+                }
                 if (that.facing == 1) {
                     that.velocity.x = -160;
                   }
@@ -478,6 +499,10 @@ class Megaman {
             } that.updateBB();
 
             if ((entity instanceof CarockBeam || entity instanceof MetProjectile) && !that.invulnTimer && that.BB.collide(entity.BB)) {
+                that.healthPoint -=1;
+                if(that.healthPoint <=0){
+                    that.dead=true;
+                }
                 entity.removeFromWorld = true;
             }
 
@@ -763,12 +788,25 @@ class Megaman {
         if (this.velocity.x > 0) this.facing = 1;
 
         //console.log(that.velocity.y);
+       }
     }
 
          
       draw(ctx) {
+          //death animation updates
+        if(this.dead && this.facing == 0 && this.state == 0){ //because collision with enemy cause -x velocity
+            this.rightdeadAnims.drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y- this.game.camera.y+20, 2)    
+        } else if(this.dead && this.facing ==1 && this.state == 0){ //because collision with enemy cause x velocity
+            this.leftdeadAnims.drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y- this.game.camera.y+20, 2)    
+        } else if(this.dead && this.facing ==0 && this.state == 1){ //because collision with enemy cause x velocity
+            this.rightpoisondeadAnims.drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y- this.game.camera.y+20, 2)    
+        } else if(this.dead && this.facing ==1 && this.state == 1){ //because collision with enemy cause x velocity
+            this.leftpoisondeadAnims.drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y- this.game.camera.y+20, 2)    
+        }    
+        else{
         if (this.firingState) this.firingAnims[this.facing][this.state][this.action][this.angle].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y- this.game.camera.y, 2);
         else this.animations[this.facing][this.state][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y- this.game.camera.y, 2);
+        }
         if (PARAMS.DEBUG) {
             //ctx.beginPath();
             //ctx.ellipse(this.x + this.FIRE_OFFSET_X, this.y + this.FIRE_OFFSET_STANDING_Y, 40, 25, 0, 0, this.angleRads);
