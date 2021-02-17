@@ -410,8 +410,8 @@ class Megaman {
         var that = this;
         this.game.entities.forEach(function (entity) {
             //Hit left or right side of tile
-            var horizAdjust = false;
-            var verticalAdjust = false;
+//             var horizAdjust = false;
+//             var verticalAdjust = false;
             
 
             if (entity.BB && that.BB.collide(entity.BB)) {
@@ -431,11 +431,11 @@ class Megaman {
             if (entity instanceof Tile
                 && that.BB.collide(entity.BB) && !((that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE) <= entity.BB.top)) {
                 if ((that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE) <= entity.BB.left) {
-                    horizAdjust = true;
+//                     horizAdjust = true;
                     that.x = entity.BB.left - 68.01;
                     if (that.velocity.x > 0) that.velocity.x = 0;
                 } else if ((that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE) >= entity.BB.right) {
-                    horizAdjust = true;
+//                     horizAdjust = true;
                     console.log(entity);
                     that.x = entity.BB.right - 25.99;
                     if (that.velocity.x < 0) that.velocity.x = 0;
