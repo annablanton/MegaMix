@@ -15,6 +15,8 @@ ASSET_MANAGER.queueDownload("./sprites/healthmeter.png");
 ASSET_MANAGER.queueDownload("./sprites/powerup.png");
 ASSET_MANAGER.queueDownload("./sprites/bg1.png");
 ASSET_MANAGER.queueDownload("./sprites/effects.png");
+ASSET_MANAGER.queueDownload("./sprites/intropage.png");
+
 
 ASSET_MANAGER.downloadAll(function () {
 	var canvas = document.getElementById('gameWorld');

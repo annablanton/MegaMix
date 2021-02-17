@@ -4,7 +4,9 @@ class SceneManager {
         this.game.camera = this;
         this.x = 0;
         this.y = 0;
-        
+        this.title = true;
+
+
         this.megaman = new Megaman(game, 100, 500);
         
         // game.addEntity(new Gordo(game, 400, 380, 1, 0));
@@ -24,7 +26,8 @@ class SceneManager {
         // game.addEntity(new Mushroom(game, 900, 600, 0));
         game.addEntity(new HealthMeter(game, 975, 25));
         game.addEntity(new Pellet(game, 16, 16, Math.PI / 8));
-        this.loadLevelOne();
+        
+        this.loadLevelOne(this.title);
         game.addEntity(this.megaman);
         game.addEntity(this);
         
@@ -34,7 +37,14 @@ class SceneManager {
         this.game.entities = [this];
     };
 
-    loadLevelOne() {
+    // loadTitle(title){
+    //     if (title) {
+
+    //     }
+    // }
+    loadLevelOne(title) {
+        this.title = title;
+       
         this.x = 0;
         //background setting
         this.game.addEntity(new Background(this.game, -2818,-312));
@@ -299,7 +309,9 @@ class SceneManager {
         let midpoint_width = PARAMS.CANVAS_WIDTH/2 - 21;  //486;
         let midpoint_height = PARAMS.CANVAS_HEIGHT/2 - 12;
       
-
+        if(this.title && this.game.space) {
+            this.title = false;
+        }
         this.x = this.megaman.x - midpoint_width;
         if(this.megaman.y < midpoint_height){
         this.y = this.megaman.y - midpoint_height;
@@ -310,6 +322,14 @@ class SceneManager {
     };
 
     draw(ctx) {
+
+        if (this.title) {
+            ctx.drawImage(ASSET_MANAGER.getAsset("./sprites/intropage.png"),0,0);
+            ctx.fillStyle = "White";
+            ctx.font = "30px Verdana";
+            ctx.fillText("PRESS SPACE TO START", 600, 700)
+        }
+        // ctx.drawImage(ASSET_MANAGER.getAsset("./sprites/intropage.png"),0,0);
         ctx.fillStyle = "White";
         ctx.fillText("Megaman", 1.5 * 32, 1 * 32);
         ctx.fillText("Stage 1", 15 * 32, 1 * 32);
