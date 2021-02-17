@@ -645,9 +645,9 @@ class ArmorKnight {
                 that.state = 1;
                 that.action = 1;
                 if(that.facing==0){
-                    that.velocity.x = -100
+                    that.velocity.x = -50
                 } else if(that.facing==1){
-                    that.velocity.x = 100
+                    that.velocity.x = 50
                 }
             } 
             else if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) > 70){

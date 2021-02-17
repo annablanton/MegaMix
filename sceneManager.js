@@ -46,8 +46,10 @@ class SceneManager {
         this.game.addEntity(new Background(this.game, 8708,-312));
         this.game.addEntity(new Background(this.game, 10629,-312));
 
+       
         this.game.addEntity(new Mushroom(this.game, 230,300,1))
-        this.game.addEntity(new Mushroom(this.game, -185,0,0))
+
+        this.game.addEntity(new Powerup(this.game, -170,400))
 
 
         
@@ -137,20 +139,19 @@ class SceneManager {
         this.game.addEntity(new Gordo(this.game, 1700, 450, 1, 0));
         this.game.addEntity(new Gordo(this.game, 1800, 450, -1, 0));
         this.game.addEntity(new ArmorKnight(this.game, 1000, 600));
-        this.game.addEntity(new Wheelie(this.game, 2700, 550));
+
         this.game.addEntity(new Bulldozer(this.game, 2000, 543));
 
         this.game.addEntity(new HammerBro(this.game, 500, 350));
-        this.game.addEntity(new Powerup(this.game, 400, 500));
+        this.game.addEntity(new Mushroom(this.game, 400, 500,1));
         // this.game.addEntity(new Mushroom(this.game, 300, 500, 0));
         // this.game.addEntity(new HammerBroHammer(this.game, 450, 500, 0));
         this.game.addEntity(new Met(this.game, 2500, 543, 0));
-        this.game.addEntity(new Carock(this.game, 3000, 543, this.megaman));
-        this.game.addEntity(new HammerBro(this.game, 3300, 543));
+        this.game.addEntity(new Carock(this.game, 2600, 543, this.megaman));
+        this.game.addEntity(new HammerBro(this.game, 4500, -300));
 
 
-        this.game.addEntity(new Bulldozer(this.game, 3000, 300));
-        this.game.addEntity(new Wheelie(this.game, 2600, 600));
+        this.game.addEntity(new Wheelie(this.game, 4800, -200));
 
 
         this.game.addEntity(new Tile(this.game, 3240,704, 3,2)); 
@@ -231,14 +232,14 @@ class SceneManager {
         for(var i = 0 ; i < 5; i++){
             this.game.addEntity(new Tile(this.game, 3432-i*96, 160,3,2));
         }
-        this.game.addEntity(new Gordo(this.game, 3432, 80, -1, 1));
-        this.game.addEntity(new Gordo(this.game, 3400, 80, 1, -1));
-        this.game.addEntity(new Gordo(this.game, 3380, 60, -1, 1));
+        this.game.addEntity(new Gordo(this.game, 3432, -40, -1, 0));
+        this.game.addEntity(new Gordo(this.game, 3400, 0, 1, 0));
+        this.game.addEntity(new Gordo(this.game, 3380, 60, -1, 0));
         this.game.addEntity(new Gordo(this.game, 3300, 25, 1, 0));
         this.game.addEntity(new Gordo(this.game, 3000, 45, -1, 0));
 
-        this.game.addEntity(new HammerBro(this.game, 3400, -500));
-        this.game.addEntity(new HammerBro(this.game, 3300, -500));
+        this.game.addEntity(new HammerBro(this.game, 5400, -700));
+        this.game.addEntity(new HammerBro(this.game, 5000, -600));
         //next stairs 
         for(var i =0; i<4; i++){
             for(var j=0; j<4-i; j++){
@@ -285,7 +286,7 @@ class SceneManager {
         for(var i = 0; i<17; i++){
             this.game.addEntity(new Tile(this.game, 5352, 200 + i*32, 11, 0))
         }
-        this.game.addEntity(new Wheelie(this.game, 5310,130))
+        this.game.addEntity(new Wheelie(this.game, 5310,-100))
 
         // Bosses
         this.game.addEntity(new Barba(this.game, 5800, 600));

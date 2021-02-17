@@ -30,7 +30,7 @@ class HammerBroHammer {
                 if(entity instanceof Megaman){
                     console.log("hammer clide")
                     that.velocity.x = -that.velocity.x/1.2;
-                    entity.healthPoint -= 3;
+                    entity.healthPoint -= 1;
                     that.stopUpdateBB = 1;
                 }
             }

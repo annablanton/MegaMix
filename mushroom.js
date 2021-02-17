@@ -91,11 +91,12 @@ class Powerup {
                     && (that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE) <= entity.BB.top) {
                     that.y = entity.BB.top - that.SPRITE_HEIGHT;
                     that.velocity.y = 0;
-                    that.updateBB();
+
                 } else if (entity !== that) {
                     that.velocity.x = -that.velocity.x;
                 }
-            };
+                that.updateBB();
+            };                    
         });
         
         if (this.isEffective == true) {
