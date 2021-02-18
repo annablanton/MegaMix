@@ -4,6 +4,7 @@ class Pellet {
         this.x = x
         this.y = y
         this.SPEED = 100;
+        this.Pellet_Damage = 1;
         this.velocity = { x: (this.SPEED) * Math.cos(this.angle) + momentumX, y: this.SPEED * Math.sin(this.angle) };
         this.lifetime = 0.6;
         this.PELLET_WIDTH = 8;
@@ -33,30 +34,45 @@ class Pellet {
                 entity instanceof Gordo || entity instanceof HammerBro || entity instanceof Carock
                 || entity instanceof Met || entity instanceof ArmorKnightShield) && that.BB.collide(entity.BB)) {
                 that.removeFromWorld = true;
+
                 if (entity instanceof ArmorKnightShield || entity instanceof Bulldozer) {
                     that.game.addEntity(new Clank(that.game, that.x, that.y));
                 }
             }
 
             if ((entity instanceof ArmorKnight || entity instanceof BulldozerMet) && that.BB.collide(entity.BB)) {
-                possibleHits.push(entity);
+                    possibleHits.push(entity);
+                
             }
 
-            if ((entity instanceof Wheelie ||
+            if ((entity instanceof Wheelie ||entity instanceof Gordo ||
                 entity instanceof HammerBro || entity instanceof Carock || (entity instanceof Met && entity.action != 3)) && that.BB.collide(entity.BB)) {
-                entity.removeFromWorld = true;
+                    if(entity.HEALTH_POINTS > 1){                        
+                        entity.HEALTH_POINTS -= that.Pellet_Damage 
+                    } if(entity.HEALTH_POINTS <=1){
+                        entity.HEALTH_POINTS -= that.Pellet_Damage
+                    entity.removeFromWorld = true;
+                    }
+
             }
         });
 
         if (!this.removeFromWorld) {
             var i = 0;
             while (i < possibleHits.length) {
-                possibleHits[i].removeFromWorld = true;
-                if (possibleHits[i] instanceof ArmorKnight) {
-                    possibleHits[i].shield.removeFromWorld = true;
-                }
-                if (possibleHits[i] instanceof BulldozerMet) {
-                    possibleHits[i].bulldozer.removeFromWorld = true;
+                if(possibleHits[i].HEALTH_POINTS >1){
+                    possibleHits[i].HEALTH_POINTS -= that.Pellet_Damage;
+                    // console.log(possibleHits[i].HEALTH_POINTS)
+                } else if(possibleHits[i].HEALTH_POINTS<=1){
+                    possibleHits[i].HEALTH_POINTS -= that.Pellet_Damage;
+                    // console.log(possibleHits[i].HEALTH_POINTS)
+                    possibleHits[i].removeFromWorld = true;
+                    if (possibleHits[i] instanceof ArmorKnight) {
+                        possibleHits[i].shield.removeFromWorld = true;
+                    }
+                    if (possibleHits[i] instanceof BulldozerMet) {
+                        possibleHits[i].bulldozer.removeFromWorld = true;
+                    }    
                 }
                 possibleHits.splice(i, 1);
                 i++;

@@ -1,5 +1,6 @@
 class Barba {
     constructor(game, x, y) {
+        this.HEALTH_POINTS = 30;
         this.facing = 0;
         this.centerX = x;
         Object.assign(this, { game, x, y });

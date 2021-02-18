@@ -6,7 +6,7 @@ class Met {
         Object.assign(this, { game, x, y , facing});
         this.SPRITE_WIDTH = 20;
         this.SPRITE_HEIGHT = 19
-
+        this.HEALTH_POINTS = 2;
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megamix_enemies.png");
 
         this.state = 0; //0=idle, 1=aggressive, 2=dead
@@ -207,6 +207,7 @@ class Carock {
         this.SPRITE_WIDTH_WALK = 20;
         this.SPRITE_WIDTH_FIRE = 32;
         this.SPRITE_HEIGHT = 47;
+        this.HEALTH_POINTS = 3;
         this.fireTimer = 0;
         this.walkTimer = 0;
         this.startFireTimer = 1;
@@ -362,7 +363,6 @@ class Bulldozer {
         Object.assign(this, { game, x, y });
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megamix_enemies.png");
-
         this.state = 0; //0=idle, 1=aggressive, 2=dead
         this.action = 0; //0=slow roll, 1=fast roll, 2=stationary/dead
         this.facing = 0; //0=left, 1=right
@@ -450,22 +450,26 @@ class Bulldozer {
                 }
             }
 
-            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 300) {
+            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 400 &&
+            Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) > 350) {
+                that.state=1
+                that.action=0;
+                if(entity.x - that.x <0){
+                    that.facing = 0
+                    that.velocity.x = -30
+                } else if(entity.x - that.x >0){
+                    that.facing=1;
+                    that.velocity.x = 30
+                }
+
+            }else if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) <200 ){
                 that.state = 1;
                 that.action = 1;
                 if(that.facing==0){
-                    that.velocity.x = -180
+                    that.velocity.x = -150
                 } else if(that.facing==1){
-                    that.velocity.x = 180
+                    that.velocity.x = 150
                 } 
-            }else if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) > 150){
-                that.state = 1;
-                that.action = 0;
-                if(that.facing==0){
-                    that.velocity.x = -24
-                } else if(that.facing==1){
-                    that.velocity.x = 24
-                }
             } else{
                 that.state = 0;
                 that.action = 0;
@@ -512,6 +516,7 @@ class Bulldozer {
 class BulldozerMet {
     constructor(game, bulldozer) {
         Object.assign(this, { game, bulldozer });
+        this.HEALTH_POINTS = 6;
         this.MET_WIDTH = 46;
         this.MET_HEIGHT = 48;
         if (this.bulldozer.facing == 0) {
@@ -559,6 +564,7 @@ class ArmorKnight {
         this.velocity = { x: -25, y: 0 };
         this.turnTimer = this.game.timer.gameTime;
         this.attackTimer = 0;
+        this.HEALTH_POINTS = 4;
 
         this.SPRITE_WIDTH_WALK = 24;
         this.SPRITE_WIDTH_ATTACK = 39;
@@ -641,16 +647,28 @@ class ArmorKnight {
                     }
                 }
             }
+            if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 350) { 
+                if(entity.x - that.x <0){
+                    that.facing = 0
+                } else if(entity.x - that.x >0){
+                    that.facing=1;
+                }
+            }
             if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 100) { 
+                if(entity.x - that.x <0){
+                    that.facing = 0
+                } else if(entity.x - that.x >0){
+                    that.facing=1;
+                }
                 that.state = 1;
                 that.action = 1;
                 if(that.facing==0){
-                    that.velocity.x = -50
+                    that.velocity.x = -40
                 } else if(that.facing==1){
-                    that.velocity.x = 50
+                    that.velocity.x = 40
                 }
             } 
-            else if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) > 70){
+            else if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) > 50){
                 that.state = 0;
                 that.action = 0;
                 if(that.facing==0){
@@ -761,7 +779,7 @@ class HammerBro {
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megamix_enemies.png");
         this.SPRITE_WIDTH = 16;
         this.SPRITE_HEIGHT = 24;
-
+        this.HEALTH_POINTS = 3;
         this.state = 0; //0=idle, 1=aggressive
         this.action = 0; //0=walk, 1=attacking
         this.facing = 0; //0=left, 1=right
@@ -903,7 +921,7 @@ class HammerBro {
 class Gordo {
     constructor(game, x, y, movementScaleX, movementScaleY) {
         Object.assign(this, { game, x, y, movementScaleX, movementScaleY });
-
+        this.HEALTH_POINTS = 3;
         this.velocity = { x: 15, y: 15 };
         this.SPRITE_WIDTH = 16;
         this.SPRITE_HEIGHT = 16;
@@ -972,7 +990,8 @@ class Wheelie {
         Object.assign(this, { game, x, y });
         this.SPRITE_HEIGHT = 16;
         this.SPRITE_WIDTH = 16;
-
+        this.HEALTH_POINTS = 3;
+        this.HEALTH_POINTS = 2;
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megamix_enemies.png");
         console.log(this.spritesheet);
 
