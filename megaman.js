@@ -433,7 +433,7 @@ class Megaman {
                 if (that.velocity.y > 0) { // falling and landing on the block
                     if (entity instanceof Tile && (that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE) <= entity.BB.top
                         && !((that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE) <= entity.BB.left || (that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE) >= entity.BB.right)) { // was above last tick
-                        that.y = entity.BB.top - 72.3;
+                        that.y = entity.BB.top - 72.5;
                         that.velocity.y = 0;
                         if (that.action == 2) that.action = 0;
                         that.updateBB();
