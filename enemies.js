@@ -766,10 +766,10 @@ class HammerBro {
         this.action = 0; //0=walk, 1=attacking
         this.facing = 0; //0=left, 1=right
         this.velocity = { x: -15, y: 0 };
-        this.fireTimer = 1;
-        this.jumpTimer = 2;
+        this.fireTimer = 0.15;
+        this.jumpTimer = 0;
         this.hasJump = false;
-        this.hasFired = false;
+        this.hasFired = true;
         
 
 
@@ -799,23 +799,26 @@ class HammerBro {
             if (this.jumpTimer > 0) {
                 this.jumpTimer -= this.game.clockTick;
                 if (this.hasJump == false) {
-                    this.velocity.y = -30;
-                    this.hasJump = true;
+                    this.velocity.y = -300;
+                    this.hasJump = true;        
                 }
+                
             } else {
                 this.jumpTimer = 2;
                 this.hasJump = false;
+                this.action = 0;
             }
             if (this.fireTimer > 0) {
                 this.fireTimer -= this.game.clockTick;
                 if (this.hasFired == false) {
                     this.game.addEntity(new HammerBroHammer(this.game, this.x, this.y, this.facing));
-                    this.velocity.y -= 300;
                     this.hasFired = true;
+                    this.action = 0;
                 }
             } else {
-                this.fireTimer = 1.0;
+                this.fireTimer = 2;
                 this.hasFired = false;
+                this.action = 1;
             }
         }
 
