@@ -4,6 +4,7 @@ class BigBoo {
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/bigboo.png");
         this.facing = 0;
         this.action = 0;
+        this.HEALTH_POINTS = 30;
         this.turnTimer = this.game.timer.gameTime;
         this.actionTimer = this.game.timer.gameTime;
 

@@ -3,6 +3,7 @@ class Laser {
 
         Object.assign(this, { game, x, y, angle, laserOriginX, laserOriginY});
         this.lifetime = 0.25;
+        this.Laser_Damage= 4;
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/projectiles.png");
 
         //the laser should only collide with other entities on the first frame
@@ -26,7 +27,7 @@ class Laser {
                     var length = lineAndBoxIntersect(that.laserOriginX, that.laserOriginY, that.angle, that.laserLength, entity.BB);
                     console.log(length);
                     if (length < that.laserLength) that.laserLength = length;
-                } else if ((entity instanceof HammerBro || entity instanceof Barba
+                } else if ((entity instanceof HammerBro || entity instanceof Barba 
                     || entity instanceof BigBoo || entity instanceof Wheelie || (entity instanceof Met && entity.action != 3)
                     || entity instanceof ArmorKnight || entity instanceof BulldozerMet
                     || entity instanceof Carock) && (entity.x - that.game.camera.x <= 1024 && entity.x - that.game.camera.x >= 0 && entity.y - that.game.camera.y <= 768 && entity.y - that.game.camera.y >= 0)) possibleHits.push(entity);
@@ -37,9 +38,15 @@ class Laser {
         possibleHits.forEach(function (entity) {
             //console.log("a");
             if (entity.BB && that.collide(entity.BB)) {
-                entity.removeFromWorld = true;
-                if (entity instanceof ArmorKnight) entity.shield.removeFromWorld = true;
-                if (entity instanceof BulldozerMet) entity.bulldozer.removeFromWorld = true;
+                that.game.addEntity(new Clank(that.game, entity.x, entity.y));
+                if(entity.HEALTH_POINTS > 1){                        
+                    entity.HEALTH_POINTS -= that.Laser_Damage 
+                } if(entity.HEALTH_POINTS <=1){
+                    entity.HEALTH_POINTS -= that.Laser_Damage
+                    entity.removeFromWorld = true;
+                    if (entity instanceof ArmorKnight) entity.shield.removeFromWorld = true;
+                    if (entity instanceof BulldozerMet) entity.bulldozer.removeFromWorld = true;    
+                }
             }
         });
     }

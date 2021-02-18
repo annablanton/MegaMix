@@ -39,7 +39,7 @@ class Megaman {
         this.grapplingHook = null;
 
         this.dead = false;
-
+        this.updateBB();
         this.animations = [];
         this.firingAnims = [];
         this.loadAnimation();
@@ -246,7 +246,7 @@ class Megaman {
         this.leftpoisondeadAnims = new Animator(this.spritesheet, 310, 1276, 46, 46, 4, 0.5, 5, false, false);
       };
 
-    die(){
+    die(){       
         this.dead=true;
     }
 
@@ -271,8 +271,8 @@ class Megaman {
         const RUN_FALL_SPACE = 562.5;
   
         if (this.dead) {
-            // this.velocity.y += RUN_FALL * TICK;
-            // this.y += this.velocity.y * TICK * PARAMS.SCALE;
+            
+            // this.velocity.y = -800
         } else{
             
       if (this.weaponTimer > 0) {
@@ -421,8 +421,10 @@ class Megaman {
       this.x += this.velocity.x * TICK * PARAMS.SCALE;
       this.y += this.velocity.y * TICK * PARAMS.SCALE;
       this.updateBB();
-      
-
+     
+      if(this.y > 768) {
+        this.die();
+      }
         //collision for megaman
         var that = this;
         this.game.entities.forEach(function (entity) {
