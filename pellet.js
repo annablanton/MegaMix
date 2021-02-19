@@ -32,7 +32,7 @@ class Pellet {
         this.game.entities.forEach(function (entity) {
             if ((entity instanceof Tile||entity instanceof Wheelie || entity instanceof Bulldozer||
                 entity instanceof Gordo || entity instanceof HammerBro || entity instanceof Carock
-                || entity instanceof Met || entity instanceof ArmorKnightShield) && that.BB.collide(entity.BB)) {
+                || entity instanceof Met || entity instanceof ArmorKnightShield || entity instanceof Tower) && that.BB.collide(entity.BB)) {
                 that.removeFromWorld = true;
 
                 if (entity instanceof ArmorKnightShield || entity instanceof Bulldozer) {
@@ -51,10 +51,12 @@ class Pellet {
                         entity.HEALTH_POINTS -= that.Pellet_Damage 
                     } if(entity.HEALTH_POINTS <=1){
                         entity.HEALTH_POINTS -= that.Pellet_Damage
-                    entity.removeFromWorld = true;
+                        entity.removeFromWorld = true;
                     }
 
             }
+
+            if (entity instanceof Tower && that.BB.collide(entity.BB)) entity.HEALTH_POINTS -= that.Pellet_Damage;
         });
 
         if (!this.removeFromWorld) {

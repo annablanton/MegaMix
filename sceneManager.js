@@ -356,6 +356,8 @@ class SceneManager {
             this.game.addEntity(new Tile(this.game, 7552 + i * 32, 736, 3, 2));
         }
 
+        this.game.addEntity(new Tower(this.game, 7936, 428.5));
+
 
     };
 

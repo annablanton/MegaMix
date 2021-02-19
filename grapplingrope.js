@@ -65,7 +65,7 @@ class GrapplingHook {
 
                 if ((entity instanceof Wheelie || entity instanceof Bulldozer ||
                     entity instanceof Gordo || entity instanceof HammerBro ||
-                    entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met) && !that.retracting == 1) {
+                    entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met || entity instanceof Tower) && !that.retracting == 1) {
                     that.retracting = 1;
                 }
 

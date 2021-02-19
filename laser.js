@@ -17,36 +17,43 @@ class Laser {
             //this first one determines the first tile that the laser hits, then the second one determines which enemies are between megaman and the tile
             if (entity.BB && that.collide(entity.BB)) {
                 //console.log(entity.BB);
+                var length = lineAndBoxIntersect(that.laserOriginX, that.laserOriginY, that.angle, that.laserLength, entity.BB);
                 if (entity instanceof ArmorKnightShield || entity instanceof Bulldozer) {
                     var length = lineAndBoxIntersect(that.laserOriginX, that.laserOriginY, that.angle, that.laserLength, entity.BB);
                     if (entity instanceof ArmorKnightShield && length < that.laserLength && length < lineAndBoxIntersect(that.laserOriginX, that.laserOriginY, that.angle, that.laserLength, entity.armorKnight.BB)) that.laserLength = length;
                     if (entity instanceof Bulldozer && length < that.laserLength && length < lineAndBoxIntersect(that.laserOriginX, that.laserOriginY, that.angle, that.laserLength, entity.met.BB)) that.laserLength = length;
                 }
-                if (entity instanceof Tile || entity instanceof Gordo || (entity instanceof Met && entity.action == 3)) {
+                if (entity instanceof Tile || entity instanceof Gordo || (entity instanceof Met && entity.action == 3) || entity instanceof Tower) {
                     console.log("tile collision");
-                    var length = lineAndBoxIntersect(that.laserOriginX, that.laserOriginY, that.angle, that.laserLength, entity.BB);
-                    console.log(length);
+                    if (entity instanceof Tower) possibleHits.push(entity);
                     if (length < that.laserLength) that.laserLength = length;
                 } else if ((entity instanceof HammerBro || entity instanceof Barba 
                     || entity instanceof BigBoo || entity instanceof Wheelie || (entity instanceof Met && entity.action != 3)
                     || entity instanceof ArmorKnight || entity instanceof BulldozerMet
-                    || entity instanceof Carock) && (entity.x - that.game.camera.x <= 1024 && entity.x - that.game.camera.x >= 0 && entity.y - that.game.camera.y <= 768 && entity.y - that.game.camera.y >= 0)) possibleHits.push(entity);
+                    || entity instanceof Carock) && (that.laserOriginX + length.x * Math.cos(that.angle) - that.game.camera.x <= 1024 && that.laserOriginX + length.x * Math.cos(that.angle) - that.game.camera.x >= 0
+                        && that.laserOriginY + length.y * Math.sin(that.angle) - that.game.camera.y <= 768 && that.laserOriginY + length.y * Math.sin(that.angle) - that.game.camera.y >= 0)) possibleHits.push(entity);
+
             }
         });
 
 
         possibleHits.forEach(function (entity) {
             //console.log("a");
+            var intersect = lineAndBoxIntersect(that.laserOriginX, that.laserOriginY, that.angle, that.laserLength, entity.BB);
             if (entity.BB && that.collide(entity.BB)) {
-                that.game.addEntity(new Clank(that.game, entity.x, entity.y));
+                //that.game.addEntity(new Clank(that.game, that.laserOriginX + intersect * Math.cos(that.angle), that.laserOriginY + intersect * Math.sin(that.angle)));
                 if(entity.HEALTH_POINTS > 1){                        
                     entity.HEALTH_POINTS -= that.Laser_Damage 
-                } if(entity.HEALTH_POINTS <=1){
+                } if (entity.HEALTH_POINTS <= 1 && !(entity instanceof Tower)) {
                     entity.HEALTH_POINTS -= that.Laser_Damage
                     entity.removeFromWorld = true;
                     if (entity instanceof ArmorKnight) entity.shield.removeFromWorld = true;
-                    if (entity instanceof BulldozerMet) entity.bulldozer.removeFromWorld = true;    
+                    if (entity instanceof BulldozerMet) entity.bulldozer.removeFromWorld = true;
                 }
+            }
+            if (entity instanceof Tower && intersect == that.laserLength) {
+                entity.HEALTH_POINTS -= that.Laser_Damage;
+                console.log("tower hit");
             }
         });
     }
