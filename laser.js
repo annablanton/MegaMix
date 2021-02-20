@@ -16,6 +16,7 @@ class Laser {
             //we need two passes over the entities list
             //this first one determines the first tile that the laser hits, then the second one determines which enemies are between megaman and the tile
             if (entity.BB && that.collide(entity.BB)) {
+                var intersect = findIntersectPoint(that.laserOriginX, that.laserOriginY, that.angle, that.laserLength, entity.BB);
                 //console.log(entity.BB);
                 var length = lineAndBoxIntersect(that.laserOriginX, that.laserOriginY, that.angle, that.laserLength, entity.BB);
                 if (entity instanceof ArmorKnightShield || entity instanceof Bulldozer) {
@@ -30,8 +31,8 @@ class Laser {
                 } else if ((entity instanceof HammerBro || entity instanceof Barba 
                     || entity instanceof BigBoo || entity instanceof Wheelie || (entity instanceof Met && entity.action != 3)
                     || entity instanceof ArmorKnight || entity instanceof BulldozerMet
-                    || entity instanceof Carock) && (that.laserOriginX + length.x * Math.cos(that.angle) - that.game.camera.x <= 1024 && that.laserOriginX + length.x * Math.cos(that.angle) - that.game.camera.x >= 0
-                        && that.laserOriginY + length.y * Math.sin(that.angle) - that.game.camera.y <= 768 && that.laserOriginY + length.y * Math.sin(that.angle) - that.game.camera.y >= 0)) possibleHits.push(entity);
+                    || entity instanceof Carock) && intersect.x - that.game.camera.x <= 1024 && intersect.x - that.game.camera.x >= 0
+                        && intersect.y - that.game.camera.y <= 768 && intersect.y - that.game.camera.y >= 0) possibleHits.push(entity);
 
             }
         });

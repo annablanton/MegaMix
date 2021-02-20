@@ -62,8 +62,8 @@ function lineAndBoxIntersect(lineX, lineY, angle, length, bb) {
         var lineBBLeftIntersectY = lineY + lineVector.y * (bbLeftX - lineX) / lineVector.x;
         var lineBBRightIntersectY = lineY + lineVector.y * (bbRightX - lineX) / lineVector.x;
     } else if (lineX >= bbLeftX && lineX <= bbRightX) {
-        var distBottom = distance(lineX, lineY, lineX, lineX, bbBottomY)
-        var distTop = distance(lineX, lineY, lineX, lineX, bbTopY)
+        var distBottom = distance(lineX, lineY, lineX, bbBottomY);
+        var distTop = distance(lineX, lineY, lineX, bbTopY);
         if (lineY - bbBottomY < lineY - bbTopY && distBottom < length) return distBottom;
         else if (distTop < length) return distTop;
     } else return length;
@@ -101,6 +101,86 @@ function lineAndBoxIntersect(lineX, lineY, angle, length, bb) {
     }
 
     return closestIntersectionLength;
+}
+
+function findIntersectPoint(lineX, lineY, angle, length, bb) {
+    var lineVector = new Vector(Math.cos(angle), Math.sin(angle));
+    var lineP2X = lineX + 1024 * lineVector.x;
+    var lineP2Y = lineY + 1024 * lineVector.y;
+
+    var lowerLineX = Math.min(lineX, lineP2X);
+    var higherLineX = Math.max(lineX, lineP2X);
+    var lowerLineY = Math.min(lineY, lineP2Y);
+    var higherLineY = Math.max(lineY, lineP2Y);
+    var bbLeftX = bb.left;
+    var bbTopY = bb.top;
+    var bbBottomY = bb.bottom;
+    var bbRightX = bb.right;
+
+    if (lineVector.x != 0) {
+        var lineBBLeftIntersectY = lineY + lineVector.y * (bbLeftX - lineX) / lineVector.x;
+        var lineBBRightIntersectY = lineY + lineVector.y * (bbRightX - lineX) / lineVector.x;
+    } else if (lineX >= bbLeftX && lineX <= bbRightX) {
+        var distBottom = distance(lineX, lineY, lineX, bbBottomY);
+        var distTop = distance(lineX, lineY, lineX, bbTopY);
+        var bottomIntersect = new Point(lineX, bbBottomY);
+        var topIntersect = new Point(lineX, bbTopY);
+        if (lineY - bbBottomY < lineY - bbTopY && distBottom < length) return bottomIntersect;
+        else if (distTop < length) return topIntersect;
+    } else return null;
+
+    if (lineVector.y != 0) {
+        var lineBBBottomIntersectX = lineX + lineVector.x * (bbBottomY - lineY) / lineVector.y;
+        var lineBBTopIntersectX = lineX + lineVector.x * (bbTopY - lineY) / lineVector.y;
+    } else if (lineY >= bbTopY && lineY <= bbBottomY) {
+        var distLeft = distance(lineX, lineY, bbLeftX, lineY);
+        var distRight = distance(lineX, lineY, bbRightX, lineY);
+        var leftIntersect = new Point(bbLeftX, lineY);
+        var rightIntersect = new Point(bbRightX, lineY);
+        if (lineX - bbLeftX < lineX - bbRightX && distLeft < length) return leftIntersect;
+        else if (distRight < length) return rightIntersect;
+    } else return null;
+
+    var closestIntersect = null;
+    var closestIntersectionLength = length;
+    if (lineBBLeftIntersectY >= bbTopY && lineBBLeftIntersectY <= bbBottomY
+        && lineBBLeftIntersectY >= lowerLineY && lineBBLeftIntersectY <= higherLineY) {
+        var intersect = new Point(bbLeftX, lineBBLeftIntersectY);
+        var dist = distance(lineX, lineY, bbLeftX, lineBBLeftIntersectY);
+        if (dist < closestIntersectionLength) {
+            closestIntersect = intersect;
+            closestIntersectionLength = dist;
+        }
+    }
+    if (lineBBRightIntersectY >= bbTopY && lineBBRightIntersectY <= bbBottomY
+        && lineBBRightIntersectY >= lowerLineY && lineBBRightIntersectY <= higherLineY) {
+        var intersect = new Point(bbRightX, lineBBRightIntersectY);
+        var dist = distance(lineX, lineY, bbRightX, lineBBRightIntersectY);
+        if (dist < closestIntersectionLength) {
+            closestIntersect = intersect;
+            closestIntersectionLength = dist;
+        }
+    }
+    if (lineBBBottomIntersectX >= bbLeftX && lineBBBottomIntersectX <= bbRightX
+        && lineBBBottomIntersectX >= lowerLineX && lineBBBottomIntersectX <= higherLineX) {
+        var intersect = new Point(lineBBBottomIntersectX, bbBottomY);
+        var dist = distance(lineX, lineY, lineBBBottomIntersectX, bbBottomY);
+        if (dist < closestIntersectionLength) {
+            closestIntersect = intersect;
+            closestIntersectionLength = dist;
+        }
+    }
+    if (lineBBTopIntersectX >= bbLeftX && lineBBTopIntersectX <= bbRightX
+        && lineBBTopIntersectX >= lowerLineX && lineBBTopIntersectX <= higherLineX) {
+        var intersect = new Point(lineBBTopIntersectX, bbTopY);
+        var dist = distance(lineX, lineY, lineBBTopIntersectX, bbTopY);
+        if (dist < closestIntersectionLength) {
+            closestIntersect = intersect;
+            closestIntersectionLength = dist;
+        }
+    }
+
+    return closestIntersect
 }
 
 function rotationCanvas(spritesheet, sx, sy, sw, sh, rads, scale) {
