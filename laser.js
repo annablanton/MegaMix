@@ -33,7 +33,6 @@ class Laser {
                     || entity instanceof ArmorKnight || entity instanceof BulldozerMet
                     || entity instanceof Carock) && intersect.x - that.game.camera.x <= 1024 && intersect.x - that.game.camera.x >= 0
                         && intersect.y - that.game.camera.y <= 768 && intersect.y - that.game.camera.y >= 0) possibleHits.push(entity);
-
             }
         });
 

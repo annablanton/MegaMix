@@ -212,6 +212,7 @@ class Carock {
         this.walkTimer = 0;
         this.startFireTimer = 1;
         this.firstFireOccurred = false;
+        this.teleporting = false;
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megamix_enemies.png");
 
@@ -247,6 +248,45 @@ class Carock {
                 this.action = 2;
                 this.fireTimer = 0.5;
                 this.firstFireOccurred = true;
+            } else if (this.teleporting) {
+                this.velocity.y = 0;
+                this.velocity.x = 0;
+                this.teleportTimer -= this.game.clockTick;
+                if (this.teleportTimer <= 0) {
+                    this.teleportTimer = 0;
+                    var possibleTeleports = [];
+                    var that = this;
+                    var minX = this.game.camera.megaman.x - 500;
+                    var maxX = this.game.camera.megaman.x + 500;
+                    if (this.game.camera.megaman.landed) {
+                        this.game.entities.forEach(function (entity) {
+                            if (entity instanceof Tile) {
+                                if (entity.y < that.game.camera.megaman.BB.bottom - 5 && entity.y > that.game.camera.megaman.BB.bottom - 37) {
+                                    if (entity.x > minX && entity.x < that.game.camera.megaman.x) minX = entity.x + 16;
+                                    else if (entity.x < maxX && entity.x > that.game.camera.megaman.x) maxX = entity.x - 16;
+                                }
+                            }
+                        });
+                        //console.log(minX);
+                        //console.log(maxX);
+                        console.log(that.game.camera.megaman.y);
+                        this.game.entities.forEach(function (entity) {
+                            if (entity instanceof Tile) {
+                                if (entity.x >= minX && entity.x <= maxX && !(entity.x >= that.game.camera.megaman.x - 50 && entity.x <= that.game.camera.megaman.x + 50) && entity.y >= that.game.camera.megaman.BB.bottom - 5 && entity.y <= that.game.camera.megaman.BB.bottom + 5) {
+                                    possibleTeleports.push(entity);
+                                }
+                            }
+                        });
+                        if (possibleTeleports.length) {
+                            var rand = randomInt(possibleTeleports.length);
+                            this.x = possibleTeleports[rand].x;
+                            this.y = possibleTeleports[rand].y - that.SPRITE_HEIGHT * 2 - 0.5;
+                            that.fireTimer = 0.5;
+                            that.teleporting = false;
+                            that.action = 2;
+                        }
+                    }
+                }
             } else if (this.action == 2) {
                 if (this.megaman.x < this.x) this.facing = 0;
                 else this.facing = 1;
@@ -267,13 +307,16 @@ class Carock {
                     this.velocity.x = (this.facing == 0 ? -40 : 40);
                 }
             } else {
-                // Todo: Aggressive state
                 if (this.action == 0) {
                     this.turnTimer -= this.game.clockTick;
                     this.startFireTimer -= this.game.clockTick;
                     if (this.startFireTimer <= 0) {
                         this.startFireTimer = 0;
                         if (Math.random() >= 0.98 ** (1 / ((1 / this.game.clockTick) / TURN_CHANCE_ADJUST))) { //2% chance to start firing each 1/30 sec after one second of waiting
+                            if (Math.random() > 0.5) {
+                                this.teleporting = true;
+                                this.teleportTimer = 1;
+                            }
                             this.startFireTimer = 2;
                             this.action = 2;
                             this.fireTimer = 0.5;
@@ -335,11 +378,15 @@ class Carock {
     }
 
     updateBB() {
-        this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH_WALK * 2, this.SPRITE_HEIGHT * 2)
+        if (!this.teleporting) this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH_WALK * 2, this.SPRITE_HEIGHT * 2);
+        else this.BB = new BoundingBox(-1000, 2000, 0, 0);
     }
 
     draw(ctx) {
-        this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y- this.game.camera.y, 2);
+        ctx.save();
+        if (this.teleporting) ctx.globalAlpha = Math.max(0, this.teleportTimer - 0.5);
+        this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2);
+        ctx.restore();
         //this.animations[0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 2);
         //this.animations[1][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16, 2);
 
