@@ -51,7 +51,8 @@ class Pellet {
                         entity.HEALTH_POINTS -= that.Pellet_Damage 
                     } if(entity.HEALTH_POINTS <=1){
                         entity.HEALTH_POINTS -= that.Pellet_Damage
-                        entity.removeFromWorld = true;
+                        entity.dead = true;
+                        // entity.removeFromWorld = true;
                     }
 
             }
@@ -68,12 +69,14 @@ class Pellet {
                 } else if(possibleHits[i].HEALTH_POINTS<=1){
                     possibleHits[i].HEALTH_POINTS -= that.Pellet_Damage;
                     // console.log(possibleHits[i].HEALTH_POINTS)
-                    possibleHits[i].removeFromWorld = true;
+                    // possibleHits[i].removeFromWorld = true;
+                    possibleHits[i].dead = true;
                     if (possibleHits[i] instanceof ArmorKnight) {
                         possibleHits[i].shield.removeFromWorld = true;
                     }
                     if (possibleHits[i] instanceof BulldozerMet) {
-                        possibleHits[i].bulldozer.removeFromWorld = true;
+                        // possibleHits[i].bulldozer.removeFromWorld = true;
+                        possibleHits[i].bulldozer.dead = true;
                     }    
                 }
                 possibleHits.splice(i, 1);

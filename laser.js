@@ -47,9 +47,9 @@ class Laser {
                     entity.HEALTH_POINTS -= that.Laser_Damage 
                 } if (entity.HEALTH_POINTS <= 1 && !(entity instanceof Tower)) {
                     entity.HEALTH_POINTS -= that.Laser_Damage
-                    entity.removeFromWorld = true;
+                    entity.dead = true;
                     if (entity instanceof ArmorKnight) entity.shield.removeFromWorld = true;
-                    if (entity instanceof BulldozerMet) entity.bulldozer.removeFromWorld = true;
+                    if (entity instanceof BulldozerMet) entity.bulldozer.dead = true;
                 }
             }
             if (entity instanceof Tower && intersect == that.laserLength) {
