@@ -261,7 +261,7 @@ class Carock {
                     if (this.game.camera.megaman.landed) {
                         this.game.entities.forEach(function (entity) {
                             if (entity instanceof Tile) {
-                                if (entity.y < that.game.camera.megaman.BB.bottom - 5 && entity.y > that.game.camera.megaman.BB.bottom - 37) {
+                                if (entity.y < that.game.camera.megaman.BB.bottom - 5 && entity.y > that.game.camera.megaman.BB.bottom - 5 - that.SPRITE_HEIGHT * 2) {
                                     if (entity.x > minX && entity.x < that.game.camera.megaman.x) minX = entity.x + 16;
                                     else if (entity.x < maxX && entity.x > that.game.camera.megaman.x) maxX = entity.x - 16;
                                 }
@@ -269,7 +269,7 @@ class Carock {
                         });
                         //console.log(minX);
                         //console.log(maxX);
-                        console.log(that.game.camera.megaman.y);
+                        //console.log(that.game.camera.megaman.y);
                         this.game.entities.forEach(function (entity) {
                             if (entity instanceof Tile) {
                                 if (entity.x >= minX && entity.x <= maxX && !(entity.x >= that.game.camera.megaman.x - 50 && entity.x <= that.game.camera.megaman.x + 50) && entity.y >= that.game.camera.megaman.BB.bottom - 5 && entity.y <= that.game.camera.megaman.BB.bottom + 5) {
