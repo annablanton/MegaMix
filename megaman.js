@@ -21,6 +21,7 @@ class Megaman {
         this.poisonedTimer = 0;
         this.healthBar = new HealthMeter(this);
         this.landedTimer = 0.05;
+        this.landed = 0;
 
         this.angle = 0;                     //in radians: 0=[0, pi/8)U[15pi/8, 2pi), 1=[pi/8, 3pi/8), 2=[3pi/8, pi/2), 3=[pi/2, 5pi/8), 
         this.angleRads = 0;                 //4=[5pi/8, 7pi/8), 5=[7pi/8, 9pi/8), 6=[9pi/8, 3pi/2), 7=[3pi/2, 15pi/16)
@@ -285,6 +286,7 @@ class Megaman {
 
         if (this.grapplingHook && this.grapplingHook.pulling == 1) {
             this.landedTimer = 0;
+            this.landed = 0;
         }
 
       if (this.state == 1){
@@ -441,6 +443,7 @@ class Megaman {
                         that.updateBB();
                         if (!that.grapplingHook || that.grapplingHook.pulling != 1) {
                             that.landedTimer = 0.05;
+                            that.landed = 1;
                         }
                     }
                 }
