@@ -698,10 +698,13 @@ class ArmorKnight {
         this.attackTimer = 0;
         this.HEALTH_POINTS = 4;
 
+        this.spear = null;
+
         this.SPRITE_WIDTH_WALK = 24;
         this.SPRITE_WIDTH_ATTACK = 39;
         this.SPRITE_HEIGHT = 32;
         this.SPEAR_LENGTH = 17;
+        this.SPEAR_LENGTH_ATTACK = 45;
 
         this.dead = false;
         this.deadTimer = 0;
@@ -799,7 +802,9 @@ class ArmorKnight {
                         that.facing=1;
                     }
                 }
-                if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) < 100) { 
+
+                if (entity instanceof Megaman && (that.action == 0 && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH / 2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT / 2 - that.y) ** 2) < 100)
+                    || (that.action == 1 && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH / 2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT / 2 - that.y) ** 2) < 100 + (that.SPRITE_WIDTH_ATTACK - that.SPRITE_WIDTH_WALK))) { 
                     if(entity.x - that.x <0){
                         that.facing = 0
                     } else if(entity.x - that.x >0){
@@ -807,15 +812,25 @@ class ArmorKnight {
                     }
                     that.state = 1;
                     that.action = 1;
+                    if (!that.spear) {
+                        that.spear = new ArmorKnightSpear(that.game, that);
+                        if (that.facing) that.x -= (that.SPRITE_WIDTH_ATTACK - that.SPRITE_WIDTH_WALK);
+                        that.updateBB();
+                    }
                     if(that.facing==0){
                         that.velocity.x = -40
                     } else if(that.facing==1){
                         that.velocity.x = 40
                     }
-                } 
+                    that.spear.update();
+                }
                 else if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH/2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT/2 - that.y) ** 2) > 50){
                     that.state = 0;
                     that.action = 0;
+                    if (that.spear) {
+                        that.spear = null;
+                        if (!that.facing) that.x += that.SPEAR_LENGTH_ATTACK;
+                    }
                     if(that.facing==0){
                         that.velocity.x = -24
                     } else if(that.facing==1){
@@ -830,15 +845,15 @@ class ArmorKnight {
     updateBB() {
         if (this.facing == 0) {
             if(this.action ==1){
-                this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH_WALK * 2.25 - this.SPEAR_LENGTH, this.SPRITE_HEIGHT * 2.25)
+                this.BB = new BoundingBox(this.x + this.SPEAR_LENGTH_ATTACK, this.y, this.SPRITE_WIDTH_ATTACK * 2.25 - this.SPEAR_LENGTH_ATTACK, this.SPRITE_HEIGHT * 2.25);
             } else{
-                this.BB = new BoundingBox(this.x + this.SPEAR_LENGTH, this.y, this.SPRITE_WIDTH_WALK * 2.25 - this.SPEAR_LENGTH, this.SPRITE_HEIGHT * 2.25)
+                this.BB = new BoundingBox(this.x + this.SPEAR_LENGTH, this.y, this.SPRITE_WIDTH_WALK * 2.25 - this.SPEAR_LENGTH, this.SPRITE_HEIGHT * 2.25);
             }
         } else if (this.facing ==1){
             if(this.action ==1){
-                this.BB = new BoundingBox(this.x + this.SPEAR_LENGTH*3, this.y, this.SPRITE_WIDTH_WALK * 2.25 - this.SPEAR_LENGTH, this.SPRITE_HEIGHT * 2.25)
+                this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH_ATTACK * 2.25 - this.SPEAR_LENGTH_ATTACK, this.SPRITE_HEIGHT * 2.25);
             } else{
-                this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH_WALK * 2.25 - this.SPEAR_LENGTH, this.SPRITE_HEIGHT * 2.25)
+                this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH_WALK * 2.25 - this.SPEAR_LENGTH, this.SPRITE_HEIGHT * 2.25);
             }
         }
     
@@ -854,7 +869,7 @@ class ArmorKnight {
             this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y- this.game.camera.y, 2.25);
             if (PARAMS.DEBUG) {
                 //ctx.strokeRect(this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y, this.BB.width, this.BB.height);
-                // ctx.fillStyle = "Red";
+                ctx.strokeStyle = "Red";
                 // ctx.strokeRect(this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y, this.BB.width, this.BB.height);
                 // ctx.fillStyle = "Lightgreen";
                 ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y- this.game.camera.y, this.BB.width, this.BB.height);
@@ -872,6 +887,7 @@ class ArmorKnight {
         //this.animations[1][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16, 2);
         //this.animations[1][1].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16 + 16 * 5, 2);
         this.shield.draw(ctx);
+        if (this.spear) this.spear.draw(ctx);
     }
 }
 
@@ -922,6 +938,39 @@ class ArmorKnightShield {
             ctx.fillStyle = "Red";
             ctx.fillRect(this.x - this.game.camera.x, this.y - this.game.camera.y, this.WIDTH, this.HEIGHT);
         }
+    }
+}
+
+class ArmorKnightSpear {
+    constructor(game, parent) {
+        Object.assign(this, { game, parent });
+        if (parent.facing) this.x = parent.x + parent.SPRITE_WIDTH_ATTACK;
+        else this.x = parent.x;
+        this.y = parent.y + 27;
+        this.updateBB();
+    }
+
+    update() {
+        if (this.parent.facing) this.x = this.parent.x + this.parent.SPRITE_WIDTH_ATTACK;
+        else this.x = this.parent.x;
+        this.y = this.parent.y + 27;
+        this.updateBB();
+        if (this.BB.collide(this.game.camera.megaman.BB)) this.game.camera.megaman.damage(2);
+    }
+
+
+    updateBB() {
+        console.log(this.x);
+        this.BB = new BoundingBox(this.x, this.y, this.parent.SPEAR_LENGTH_ATTACK, 11.25);
+
+    }
+
+    draw(ctx) {
+        if (PARAMS.DEBUG) {
+            ctx.strokeStyle = "Red";
+            ctx.strokeRect(this.x - this.game.camera.x, this.y - this.game.camera.y, this.BB.width, this.BB.height);
+        }
+
     }
 }
 

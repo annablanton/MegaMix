@@ -20,7 +20,7 @@ class Megaman {
         this.healthPoint = this.FULL_HEALTH_POINT;
         this.poisonedTimer = 0;
         this.healthBar = new HealthMeter(this);
-        this.landed = 0;
+        this.landedTimer = 0.05;
 
         this.angle = 0;                     //in radians: 0=[0, pi/8)U[15pi/8, 2pi), 1=[pi/8, 3pi/8), 2=[3pi/8, pi/2), 3=[pi/2, 5pi/8), 
         this.angleRads = 0;                 //4=[5pi/8, 7pi/8), 5=[7pi/8, 9pi/8), 6=[9pi/8, 3pi/2), 7=[3pi/2, 15pi/16)
@@ -284,7 +284,7 @@ class Megaman {
         }
 
         if (this.grapplingHook && this.grapplingHook.pulling == 1) {
-            this.landed = 0;
+            this.landedTimer = 0;
         }
 
       if (this.state == 1){
@@ -427,6 +427,8 @@ class Megaman {
       }
         //collision for megaman
         var that = this;
+            this.landedTimer -= this.game.clockTick;
+            if (this.landedTimer < 0) this.landedTimer = 0;
         this.game.entities.forEach(function (entity) {
             //Hit left or right side of tile          
             if (entity.BB && that.BB.collide(entity.BB)) {
@@ -438,7 +440,7 @@ class Megaman {
                         if (that.action == 2) that.action = 0;
                         that.updateBB();
                         if (!that.grapplingHook || that.grapplingHook.pulling != 1) {
-                            that.landed = 1;
+                            that.landedTimer = 0.05;
                         }
                     }
                 }
@@ -480,23 +482,23 @@ class Megaman {
                 that.velocity.y = -180;
                 if(entity instanceof HammerBro ||entity instanceof Wheelie||entity instanceof Gordo||
                     entity instanceof MetProjectile|| entity instanceof Met  || entity instanceof Carock ){
-                    that.healthPoint -= 1; // Can have different damage depends on the enemy
+                    that.damage(1); // Can have different damage depends on the enemy
                 } else if(entity instanceof ArmorKnight|| entity instanceof CarockBeam){
-                    that.healthPoint -= 2;
+                    that.damage(2);
                 } else if(entity instanceof Bulldozer){
-                    that.healthPoint -= 4;
+                    that.damage(4);
                 }
 
-                if(that.healthPoint <=0){
-                    that.dead=true;
-                }
-                if (that.facing == 1) {
-                    that.velocity.x = -160;
-                  }
-                if (that.facing == 0) {
-                    that.velocity.x = +160;
-                }
-                that.invulnTimer = 1.5;
+                //if(that.healthPoint <=0){
+                //    that.dead=true;
+                //}
+                //if (that.facing == 1) {
+                //    that.velocity.x = -160;
+                //  }
+                //if (that.facing == 0) {
+                //    that.velocity.x = +160;
+                //}
+                //that.invulnTimer = 1.5;
                 //console.log(that.velocity.y);
             } that.updateBB();
 
@@ -509,7 +511,7 @@ class Megaman {
             }
 
         });
-
+            if (!this.landedTimer) this.action = 2;
 
       //for clicking q button (weapon toggling)
       if (this.game.q == true) {
@@ -546,40 +548,44 @@ class Megaman {
                         } else {
                             this.pelletSize = 2;
                         }
+                        var momentumX;
+                        if ((this.velocity.x > 0 && vector.x > 0) || (this.velocity.x < 0 && vector.x < 0)) momentumX = this.velocity.x;
+                        else momentumX = 0;
+
                         if (this.action != 3) {
                             if (this.angleRads >= Math.PI / 5 && this.angleRads <= Math.PI / 2) {
                                 var ellipsePoint = findEllipsePoint(40 + this.PELLET_WIDTH / 2, 25 + this.PELLET_HEIGHT / 2, Math.PI / 5);
-                                this.game.addEntity(new Pellet(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y, Math.PI / 5, this.velocity.x, this.pelletSize));
+                                this.game.addEntity(new Pellet(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y, Math.PI / 5, momentumX, this.pelletSize));
                             } else if (this.angleRads >= Math.PI / 2 && this.angleRads <= 4 * Math.PI / 5) {
                                 var ellipsePoint = findEllipsePoint(40 + this.PELLET_WIDTH / 2, 25 + this.PELLET_HEIGHT / 2, 4 * Math.PI / 5);
-                                this.game.addEntity(new Pellet(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y, 4 * Math.PI / 5, this.velocity.x,this.pelletSize));
+                                this.game.addEntity(new Pellet(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y, 4 * Math.PI / 5, momentumX,this.pelletSize));
 
                             } else {
                                 var ellipsePoint = findEllipsePoint(40 + this.PELLET_WIDTH / 2, 25 + this.PELLET_HEIGHT / 2, this.angleRads);
-                                this.game.addEntity(new Pellet(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y, this.angleRads, this.velocity.x, this.pelletSize));
+                                this.game.addEntity(new Pellet(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y, this.angleRads, momentumX, this.pelletSize));
                             }
                         } else if (this.facing == 1) {
                             if (this.angleRads >= Math.PI / 5 && this.angleRads < 11 * Math.PI / 12) {
                                 var ellipsePoint = findEllipsePoint(40 + this.PELLET_WIDTH / 2, 25 + this.PELLET_HEIGHT / 2, Math.PI / 5);
-                                this.game.addEntity(new Pellet(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y, Math.PI / 5, this.velocity.x), this.pelletSize);
+                                this.game.addEntity(new Pellet(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y, Math.PI / 5, momentumX, this.pelletSize));
                             } else if (this.angleRads >= 11 * Math.PI / 12 && this.angleRads <= 3 * Math.PI / 2) {
                                 var ellipsePoint = findEllipsePoint(40 + this.PELLET_WIDTH / 2, 25 + this.PELLET_HEIGHT / 2, 3 * Math.PI / 2);
-                                this.game.addEntity(new Pellet(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y, 3 * Math.PI / 2, this.velocity.x, this.pelletSize));
+                                this.game.addEntity(new Pellet(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y, 3 * Math.PI / 2, momentumX, this.pelletSize));
 
                             } else {
                                 var ellipsePoint = findEllipsePoint(40 + this.PELLET_WIDTH / 2, 25 + this.PELLET_HEIGHT / 2, this.angleRads);
-                                this.game.addEntity(new Pellet(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y, this.angleRads, this.velocity.x, this.pelletSize));
+                                this.game.addEntity(new Pellet(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y, this.angleRads, momentumX, this.pelletSize));
                             }
                         } else {
                             if (this.angleRads <= 4 * Math.PI / 5 && this.angleRads > Math.PI / 12) {
                                 var ellipsePoint = findEllipsePoint(40 + this.PELLET_WIDTH / 2, 25 + this.PELLET_HEIGHT / 2, 4 * Math.PI / 5);
-                                this.game.addEntity(new Pellet(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y, 4 * Math.PI / 5, this.velocity.x, this.pelletSize));
+                                this.game.addEntity(new Pellet(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y, 4 * Math.PI / 5, momentumX, this.pelletSize));
                             } else if ((this.angleRads <= Math.PI / 12 && this.angleRads >= 0) || (this.angleRads >= 3 * Math.PI / 2 && this.angleRads <= 2 * Math.PI)) {
                                 var ellipsePoint = findEllipsePoint(40 + this.PELLET_WIDTH / 2, 25 + this.PELLET_HEIGHT / 2, 3 * Math.PI / 2);
-                                this.game.addEntity(new Pellet(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y, 3 * Math.PI / 2, this.velocity.x, this.pelletSize));
+                                this.game.addEntity(new Pellet(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y, 3 * Math.PI / 2, momentumX, this.pelletSize));
                             } else {
                                 var ellipsePoint = findEllipsePoint(40 + this.PELLET_WIDTH / 2, 25 + this.PELLET_HEIGHT / 2, this.angleRads);
-                                this.game.addEntity(new Pellet(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y, this.angleRads, this.velocity.x, this.pelletSize));
+                                this.game.addEntity(new Pellet(this.game, this.x + this.FIRE_OFFSET_X - this.PELLET_WIDTH / 2 + ellipsePoint.x, this.y + this.FIRE_OFFSET_Y - this.PELLET_HEIGHT / 2 + ellipsePoint.y, this.angleRads, momentumX, this.pelletSize));
                             }
                         }
                         this.weaponTimer = 0.2;
@@ -735,6 +741,25 @@ class Megaman {
 
         //console.log(that.velocity.y);
        }
+    }
+
+    damage(healthPoints) {
+        if (!this.invulnTimer) {
+            this.action = 2;
+            this.velocity.y = -180;
+            this.healthPoint -= healthPoints;
+
+            if (this.healthPoint <= 0) {
+                this.dead = true;
+            }
+            if (this.facing == 1) {
+                this.velocity.x = -160;
+            }
+            if (this.facing == 0) {
+                this.velocity.x = +160;
+            }
+            this.invulnTimer = 1.5;
+        }
     }
 
          
