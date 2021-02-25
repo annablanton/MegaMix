@@ -328,11 +328,8 @@ class Megaman {
                             } //when user just keep moving 
                             else this.velocity.x += ACC_MOVING * TICK;
                         } // when user click left button during moving to right 
-                        else if (this.game.left && !this.game.right) {
-                            if(this.game.shift){
-                                this.velocity.x -= ACC_SLIDING * TICK;
-                            }
-
+                        else if (this.game.left && !this.game.right) {       
+                                this.velocity.x -= ACC_SLIDING * TICK;                            
                         } // when user doesn't put any key during run to right side 
                         else {
                             this.velocity.x -= DEC_MOVING * TICK;
