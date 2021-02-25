@@ -52,7 +52,6 @@ class Megaman {
     }
 
     loadAnimation() {
-
       for(var i=0; i<2; i++){
           this.animations.push([]);         //2 facing (0=left | 1=right) 
           this.firingAnims.push([]);
@@ -248,12 +247,11 @@ class Megaman {
       };
 
     die(){       
-        
+        ASSET_MANAGER.playAsset("./sounds/death.wav");
         this.dead=true;
     }
 
     update() {
-      
       const TICK = this.game.clockTick;
       const MIN_MOVING = 4.45;   
       const ACC_MOVING = 133;
@@ -325,12 +323,16 @@ class Megaman {
                         if (this.game.right && !this.game.left) {
                             //when user click shft for sliding
                             if (this.game.shift) {
+                                ASSET_MANAGER.playAsset("./sounds/sliding.wav");
                                 this.velocity.x += ACC_SLIDING * TICK;
                             } //when user just keep moving 
                             else this.velocity.x += ACC_MOVING * TICK;
                         } // when user click left button during moving to right 
                         else if (this.game.left && !this.game.right) {
-                            this.velocity.x -= ACC_SLIDING * TICK;
+                            if(this.game.shift){
+                                this.velocity.x -= ACC_SLIDING * TICK;
+                            }
+
                         } // when user doesn't put any key during run to right side 
                         else {
                             this.velocity.x -= DEC_MOVING * TICK;
@@ -340,6 +342,7 @@ class Megaman {
                     if (this.facing === 0) {
                         if (this.game.left && !this.game.right) {
                             if (this.game.shift) {
+                                ASSET_MANAGER.playAsset("./sounds/sliding.wav");
                                 this.velocity.x -= ACC_SLIDING * TICK;
                             } else
                                 this.velocity.x -= ACC_MOVING * TICK;
@@ -355,6 +358,7 @@ class Megaman {
 
                 //for jumping
                 if (this.game.space) {
+                    ASSET_MANAGER.playAsset("./sounds/jump.wav"); 
                     if (Math.abs(this.velocity.x) < 16) {
                         this.velocity.y = -240;
                         this.fallAcc = STOP_FALL;
@@ -425,7 +429,7 @@ class Megaman {
       this.y += this.velocity.y * TICK * PARAMS.SCALE;
       this.updateBB();
      
-      if(this.y > 768) {
+      if(this.y > 800) {
         this.y = 690;
       this.die();
     }
@@ -481,9 +485,10 @@ class Megaman {
             //collision with enemies
             if ((entity instanceof Wheelie || entity instanceof Bulldozer ||
                 entity instanceof Gordo || entity instanceof HammerBro ||
-                entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met || entity instanceof CarockBeam 
+                entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met || entity instanceof CarockBeam ||entity instanceof ArmorKnightSpear
                 || entity instanceof MetProjectile || entity instanceof HammerBroHammer ) && (that.BB.collide(entity.BB)) && !that.invulnTimer) {
-                that.action = 2;
+                    ASSET_MANAGER.playAsset("./sounds/megamanDamage.wav");
+                    that.action = 2;
                 that.velocity.y = -180;
                 if(entity instanceof HammerBro ||entity instanceof Wheelie||entity instanceof Gordo||
                     entity instanceof MetProjectile|| entity instanceof Met  || entity instanceof Carock ){
@@ -530,6 +535,7 @@ class Megaman {
 
       //for mouse left clikcing and shooting
         if (this.game.click == true) {
+
             if (!(this.firingState == 2)) {
                 this.firingState = 1;
                 var mouseX = this.game.mouse.x;
@@ -549,8 +555,10 @@ class Megaman {
                 if (!this.weaponToggle) {
                     if (!this.weaponTimer) {
                         if (this.weaponLevel == 0) {
+                            ASSET_MANAGER.playAsset("./sounds/shooting.wav");
                             this.pelletSize = 1;
                         } else {
+                            ASSET_MANAGER.playAsset("./sounds/shooting.wav");
                             this.pelletSize = 2;
                         }
                         var momentumX;
@@ -598,6 +606,7 @@ class Megaman {
                 } else {
                     if (!this.weaponTimer) {
                         if (this.action != 3) {
+                            ASSET_MANAGER.playAsset("./sounds/laser.wav");
                             if (this.angleRads >= Math.PI / 5 && this.angleRads <= Math.PI / 2) {
                                 var laserOrigin = findEllipsePoint(40, 25, Math.PI / 5);
                                 this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X,
@@ -664,6 +673,8 @@ class Megaman {
             var mouseX = this.game.mouse.x;
             var mouseY = this.game.mouse.y;
             if (!(this.firingState == 2 || this.landed == 0)) {
+                ASSET_MANAGER.playAsset("./sounds/swing.wav");
+
                 this.firingState = 2;
 
                 var vector = new Vector(mouseX - (this.x + 46 - this.game.camera.x), mouseY - (this.y + 46- this.game.camera.y));
