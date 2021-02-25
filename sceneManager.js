@@ -7,8 +7,8 @@ class SceneManager {
         this.title = true;
 
 
-        //this.megaman = new Megaman(game, 100, 500);
-        this.megaman = new Megaman(game, 6000, 200);
+        //this.megaman = new Megaman(game, 6000, 500);
+        this.megaman = new Megaman(game, 100, 200);
         
         // game.addEntity(new Gordo(game, 400, 380, 1, 0));
         // game.addEntity(new Gordo(game, 400, 380, 0, 1));

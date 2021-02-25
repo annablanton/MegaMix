@@ -248,6 +248,7 @@ class Megaman {
       };
 
     die(){       
+        
         this.dead=true;
     }
 
@@ -425,8 +426,9 @@ class Megaman {
       this.updateBB();
      
       if(this.y > 768) {
-        this.die();
-      }
+        this.y = 690;
+      this.die();
+    }
         //collision for megaman
         var that = this;
             this.landedTimer -= this.game.clockTick;

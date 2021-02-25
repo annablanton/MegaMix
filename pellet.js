@@ -43,15 +43,15 @@ class Pellet {
 
                 if ((entity instanceof ArmorKnight || entity instanceof BulldozerMet) && that.BB.collide(entity.BB)) {
                     possibleHits.push(entity);
-
                 }
 
-                if ((entity instanceof Wheelie || entity instanceof Gordo ||
-                    entity instanceof HammerBro || entity instanceof Carock || (entity instanceof Met && entity.action != 3) || entity instanceof Barba) && that.BB.collide(entity.BB)) {
-                    if (entity.HEALTH_POINTS > 1) {
-                        entity.HEALTH_POINTS -= that.Pellet_Damage
-                    } if (entity.HEALTH_POINTS <= 1) {
-                        entity.HEALTH_POINTS -= that.Pellet_Damage
+            if ((entity instanceof Wheelie ||
+                entity instanceof HammerBro || entity instanceof Carock || (entity instanceof Met && entity.action != 3)) && that.BB.collide(entity.BB)) {
+                    if(entity.HEALTH_POINTS > 0){                        
+                        entity.HEALTH_POINTS -= that.Pellet_Damage 
+                    } 
+                    if(entity.HEALTH_POINTS <= 0){
+                        // entity.HEALTH_POINTS -= that.Pellet_Damage
                         entity.dead = true;
                         // entity.removeFromWorld = true;
                     }
