@@ -1074,28 +1074,28 @@ class HammerBro {
                         that.velocity.y = 0;
                         that.updateBB();
                     }
-                    //added for side hit of tiles 
-                    if (entity instanceof Tile && that.BB.collide(entity.topBB) && that.BB.collide(entity.bottomBB)) {
-                        if (that.BB.collide(entity.leftBB)) {
-                            that.facing = (that.facing == 1 ? 0 : 1);
+                     //side hit of tiles with facing
+                    else if (entity !== that&&!(entity instanceof Pellet) && !(entity instanceof Megaman)) { // )
+                        if (that.facing == 1 && that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
                             that.velocity.x = -that.velocity.x;
-                            that.turnTimer = that.game.timer.gameTime;
-                        } else if (that.BB.collide(entity.rightBB)) {
                             that.facing = (that.facing == 1 ? 0 : 1);
-                            that.velocity.x = -that.velocity.x;
                             that.turnTimer = that.game.timer.gameTime;
+                            that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
+                        } else if (that.facing == 0 && that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE >= entity.BB.right) {
+                            that.velocity.x = -that.velocity.x;
+                            that.facing = (that.facing == 1 ? 0 : 1);
+                            that.turnTimer = that.game.timer.gameTime;
+                            that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                         }
-                        that.updateBB();
-                    }
-
-                    else if (entity !== that && !(entity instanceof Pellet) && !(entity instanceof Tile) && !(entity instanceof HammerBroHammer)) { //&& !(entity instanceof Megaman)
-                        console.log(entity.constructor.name);
-                        //console.log(entity.BB.right);
-                        //console.log("collision");
-                        that.facing = (that.facing == 1 ? 0 : 1);
-                        that.velocity.x = -that.velocity.x;
-                        that.turnTimer = that.game.timer.gameTime;
-                    }
+                    }                   
+                    // else if (entity !== that && !(entity instanceof Pellet) && !(entity instanceof Tile)&& !(entity instanceof Megaman)) { // && !(entity instanceof HammerBroHammer)&& !(entity instanceof Megaman)&& !(entity instanceof Wheelie)
+                    //     console.log(entity.constructor.name);
+                    //     //console.log(entity.BB.right);
+                    //     //console.log("collision");
+                    //     that.facing = (that.facing == 1 ? 0 : 1);
+                    //     that.velocity.x = -that.velocity.x;
+                    //     that.turnTimer = that.game.timer.gameTime;
+                    // }
 
 
                 }
@@ -1108,8 +1108,8 @@ class HammerBro {
                     if (entity.x > that.x) {
                         that.facing = 1;
                         that.velocity.x = 20; 
-                    }
                     
+                }
                 } 
                 // Ceiling hitting collision detection
                 if (that.velocity.y < 0) {
@@ -1151,15 +1151,10 @@ class HammerBro {
 class Gordo {
     constructor(game, x, y, movementScaleX, movementScaleY) {
         Object.assign(this, { game, x, y, movementScaleX, movementScaleY });
-        this.HEALTH_POINTS = 3;
         this.velocity = { x: 15, y: 15 };
         this.SPRITE_WIDTH = 16;
         this.SPRITE_HEIGHT = 16;
-
-        
-
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/megamix_enemies.png");
-
         this.animation = new Animator(this.spritesheet, 146, 255, 16, 16, 2, 0.09 * 3, 4, true, true);
         this.updateBB();
 
@@ -1177,9 +1172,6 @@ class Gordo {
             //console.log(entity);
             //console.log(entity.BB);
             if (entity.BB && that.BB.collide(entity.BB)) {
-                if ((entity instanceof Pellet)) {
-                    //update lose life
-                }
                 if (!(entity instanceof Pellet)) { //&& !(entity instanceof Megaman)
                     //console.log("collided with " + entity.constructor.name);
                     if (that.BB.right - that.velocity.x * that.movementScaleX * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
@@ -1295,37 +1287,40 @@ class Wheelie {
                         that.velocity.y = 0;
                         that.updateBB();
                     }
-                    //added for side hit of tiles 
-                    if (entity instanceof Tile && that.BB.collide(entity.topBB) && that.BB.collide(entity.bottomBB)) {
-                        if (that.BB.collide(entity.leftBB)) {
-                            that.facing = (that.facing == 1 ? 0 : 1);
+                     //side hit of tiles with facing
+                     else if (entity !== that&&!(entity instanceof Pellet) && !(entity instanceof Megaman)) { // )
+                        if (that.facing == 1 && that.BB.right - that.velocity.x * that.game.clockTick * PARAMS.SCALE <= entity.BB.left) {
                             that.velocity.x = -that.velocity.x;
-                            that.turnTimer = that.game.timer.gameTime;
-                        } else if (that.BB.collide(entity.rightBB)) {
                             that.facing = (that.facing == 1 ? 0 : 1);
-                            that.velocity.x = -that.velocity.x;
                             that.turnTimer = that.game.timer.gameTime;
+                            that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
+                        } else if (that.facing == 0 && that.BB.left - that.velocity.x * that.game.clockTick * PARAMS.SCALE >= entity.BB.right) {
+                            that.velocity.x = -that.velocity.x;
+                            that.facing = (that.facing == 1 ? 0 : 1);
+                            that.turnTimer = that.game.timer.gameTime;
+                            that.x += that.velocity.x * that.game.clockTick * PARAMS.SCALE;
                         }
-                        that.updateBB();
-                    }  else if (entity !== that && !(entity instanceof Pellet) && !(entity instanceof Tile) && !(entity instanceof HammerBroHammer)) { //&& !(entity instanceof Megaman)
-                        console.log(entity.constructor.name);
-                        //console.log(entity.BB.right);
-                        //console.log("collision");
-                        that.facing = (that.facing == 1 ? 0 : 1);
-                        that.velocity.x = -that.velocity.x;
-                        that.turnTimer = that.game.timer.gameTime;
-                    }
-
+                    }    
+                    // else if (entity !== that && !(entity instanceof Pellet) && !(entity instanceof Tile)&& !(entity instanceof Megaman)&& !(entity instanceof HammerBro) ) { //&& !(entity instanceof Megaman)&& !(entity instanceof HammerBroHammer)&& !(entity instanceof Megaman)
+                    //     console.log(entity.constructor.name);
+                    //     //console.log(entity.BB.right);
+                    //     //console.log("collision");
+                    //     that.facing = (that.facing == 1 ? 0 : 1);
+                    //     that.velocity.x = -that.velocity.x;
+                    //     that.turnTimer = that.game.timer.gameTime;
+                    // }
                 }
+                
                 if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH / 2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT / 2 - that.y) ** 2) < 250 && that.state == 0) {
                     that.state = 1;
                     that.velocity.x *= 5;
                     that.velocity.y *= 5;
-                    if (entity.x < that.x) {
+                    if (entity.x < that.x) {       
                         if (that.facing == 1 && that.velocity.x > 0) {
                             that.facing = 0;
                             that.velocity.x = -that.velocity.x;
                         }
+                    
                         
                         // that.facing = 0;
                         // this.velocity.x = -this.velocity.x;
@@ -1335,7 +1330,7 @@ class Wheelie {
                             that.velocity.x = -that.velocity.x;
                         }
                     }
-                } else if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH / 2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT / 2 - that.y) ** 2) > 350 && that.state == 1) {
+                } else if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH / 2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT / 2 - that.y) ** 2) > 250 && that.state == 1) {
                     that.state = 0;
                     that.velocity.x /= 5;
                     that.velocity.y /= 5;    
