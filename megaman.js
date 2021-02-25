@@ -482,16 +482,18 @@ class Megaman {
             if ((entity instanceof Wheelie || entity instanceof Bulldozer ||
                 entity instanceof Gordo || entity instanceof HammerBro ||
                 entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met || entity instanceof CarockBeam 
-                || entity instanceof MetProjectile || entity instanceof HammerBroHammer ) && (that.BB.collide(entity.BB)) && !that.invulnTimer) {
+                || entity instanceof MetProjectile || entity instanceof HammerBroHammer || entity instanceof Barba || entity instanceof Fireball) && (that.BB.collide(entity.BB)) && !that.invulnTimer) {
                 that.action = 2;
                 that.velocity.y = -180;
-                if(entity instanceof HammerBro ||entity instanceof Wheelie||entity instanceof Gordo||
-                    entity instanceof MetProjectile|| entity instanceof Met  || entity instanceof Carock ){
+                if (entity instanceof HammerBro || entity instanceof Wheelie || entity instanceof Gordo ||
+                    entity instanceof MetProjectile || entity instanceof Met || entity instanceof Carock) {
                     that.damage(1); // Can have different damage depends on the enemy
-                } else if(entity instanceof ArmorKnight|| entity instanceof CarockBeam){
+                } else if (entity instanceof ArmorKnight || entity instanceof CarockBeam) {
                     that.damage(2);
-                } else if(entity instanceof Bulldozer){
+                } else if (entity instanceof Bulldozer) {
                     that.damage(4);
+                } else if (entity instanceof Barba || entity instanceof Fireball) {
+                    that.damage(3, 100);
                 }
 
                 //if(that.healthPoint <=0){
@@ -748,7 +750,7 @@ class Megaman {
        }
     }
 
-    damage(healthPoints) {
+    damage(healthPoints, knockback) {
         if (!this.invulnTimer) {
             this.action = 2;
             this.velocity.y = -180;
@@ -758,10 +760,12 @@ class Megaman {
                 this.dead = true;
             }
             if (this.facing == 1) {
-                this.velocity.x = -160;
+                if (!knockback) this.velocity.x = -160;
+                else this.velocity.x = -knockback;
             }
             if (this.facing == 0) {
-                this.velocity.x = +160;
+                if (!knockback) this.velocity.x = +160;
+                else this.velocity.x = knockback;
             }
             this.invulnTimer = 1.5;
         }

@@ -7,7 +7,7 @@ class SceneManager {
         this.title = true;
 
 
-        //this.megaman = new Megaman(game, 100, 500);
+        //this.megaman = new Megaman(game, 6000, 500);
         this.megaman = new Megaman(game, 100, 200);
         
         // game.addEntity(new Gordo(game, 400, 380, 1, 0));
@@ -300,7 +300,8 @@ class SceneManager {
         this.game.addEntity(new Wheelie(this.game, 5310,-100))
 
         // Bosses
-        this.game.addEntity(new Barba(this.game, 6528, 600));
+        var barba = new Barba(this.game, this.megaman, [6272, 6528, 6784, 7040, 7296], [600, 300]);
+        this.game.addEntity(barba);
         this.game.addEntity(new BigBoo(this.game, 5600, 600));
         this.game.addEntity(new Tile(this.game, 5600,704,11,0))
         this.game.addEntity(new Tile(this.game, 5600,672,11,0))
@@ -352,7 +353,7 @@ class SceneManager {
         this.game.addEntity(new Tile(this.game, 7456, -288, 13, 5));
         this.game.addEntity(new Tile(this.game, 7488, -288, 15, 5));
 
-        this.game.addEntity(new BossTrigger(this.game, 6144, -256, 100, 100));
+        this.game.addEntity(new BossTrigger(this.game, 6208, -256, 32 * 39, 32 * 31, barba, [{ x: 6112, y: 608 }, {x: 7520, y: 608}]));
 
         for (var i = 0; i < 40; i++) {
             this.game.addEntity(new Tile(this.game, 7552 + i * 32, 736, 3, 2));

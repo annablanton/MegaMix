@@ -31,7 +31,7 @@ class Laser {
                 } else if ((entity instanceof HammerBro || entity instanceof Barba 
                     || entity instanceof BigBoo || entity instanceof Wheelie || (entity instanceof Met && entity.action != 3)
                     || entity instanceof ArmorKnight || entity instanceof BulldozerMet
-                    || entity instanceof Carock) && intersect.x - that.game.camera.x <= 1024 && intersect.x - that.game.camera.x >= 0
+                    || entity instanceof Carock || entity instanceof Barba) && intersect.x - that.game.camera.x <= 1024 && intersect.x - that.game.camera.x >= 0
                         && intersect.y - that.game.camera.y <= 768 && intersect.y - that.game.camera.y >= 0) possibleHits.push(entity);
             }
         });
@@ -47,7 +47,10 @@ class Laser {
                 } if (entity.HEALTH_POINTS <= 1 && !(entity instanceof Tower)) {
                     entity.HEALTH_POINTS -= that.Laser_Damage
                     entity.dead = true;
-                    if (entity instanceof ArmorKnight) entity.shield.removeFromWorld = true;
+                    if (entity instanceof ArmorKnight) {
+                        entity.shield.removeFromWorld = true;
+                        if (entity.spear) entity.spear.removeFromWorld = true;
+                    }
                     if (entity instanceof BulldozerMet) entity.bulldozer.dead = true;
                 }
             }

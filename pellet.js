@@ -30,20 +30,20 @@ class Pellet {
         var that = this;
         var possibleHits = []
         this.game.entities.forEach(function (entity) {
-            if ((entity instanceof Tile||entity instanceof Wheelie || entity instanceof Bulldozer||
-                entity instanceof Gordo || entity instanceof HammerBro || entity instanceof Carock
-                || entity instanceof Met || entity instanceof ArmorKnightShield || entity instanceof Tower) && that.BB.collide(entity.BB)) {
-                that.removeFromWorld = true;
+            if (that.BB && entity.BB && that.BB.collide(entity.BB)) {
+                if ((entity instanceof Tile || entity instanceof Wheelie || entity instanceof Bulldozer ||
+                    entity instanceof Gordo || entity instanceof HammerBro || entity instanceof Carock
+                    || entity instanceof Met || entity instanceof ArmorKnightShield || entity instanceof Tower || entity instanceof Barba) && that.BB.collide(entity.BB)) {
+                    that.removeFromWorld = true;
 
-                if (entity instanceof ArmorKnightShield || entity instanceof Bulldozer) {
-                    that.game.addEntity(new Clank(that.game, that.x, that.y));
+                    if (entity instanceof ArmorKnightShield || entity instanceof Bulldozer) {
+                        that.game.addEntity(new Clank(that.game, that.x, that.y));
+                    }
                 }
-            }
 
-            if ((entity instanceof ArmorKnight || entity instanceof BulldozerMet) && that.BB.collide(entity.BB)) {
+                if ((entity instanceof ArmorKnight || entity instanceof BulldozerMet) && that.BB.collide(entity.BB)) {
                     possibleHits.push(entity);
-                
-            }
+                }
 
             if ((entity instanceof Wheelie ||
                 entity instanceof HammerBro || entity instanceof Carock || (entity instanceof Met && entity.action != 3)) && that.BB.collide(entity.BB)) {
@@ -56,9 +56,10 @@ class Pellet {
                         // entity.removeFromWorld = true;
                     }
 
-            }
+                }
 
-            if (entity instanceof Tower && that.BB.collide(entity.BB)) entity.HEALTH_POINTS -= that.Pellet_Damage;
+                if (entity instanceof Tower && that.BB.collide(entity.BB)) entity.HEALTH_POINTS -= that.Pellet_Damage;
+            }
         });
 
         if (!this.removeFromWorld) {
@@ -74,6 +75,7 @@ class Pellet {
                     possibleHits[i].dead = true;
                     if (possibleHits[i] instanceof ArmorKnight) {
                         possibleHits[i].shield.removeFromWorld = true;
+                        if (possibleHits[i].spear) possibleHits[i].spear.removeFromWorld = true;
                     }
                     if (possibleHits[i] instanceof BulldozerMet) {
                         // possibleHits[i].bulldozer.removeFromWorld = true;
