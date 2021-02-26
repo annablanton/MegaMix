@@ -14,6 +14,7 @@ class BigBoo {
         this.deadTimer = 0;
         this.HEALTH_POINTS = 30;
         this.teleportTimer = 2;
+        this.flickerFlag = false;
 
         this.animations = [];
         for (var i = 0; i < 2; i++) { //left/right
@@ -24,6 +25,7 @@ class BigBoo {
         this.animations[0].push(new Animator(this.spritesheet, 91, 11, 64, 64, 1, 1, 0, false, true));
         this.animations[1].push(new Animator(this.spritesheet, 252, 11, 64, 64, 1, 1, 0, true, true));
         this.animations[1].push(new Animator(this.spritesheet, 171, 11, 64, 64, 1, 1, 0, true, true));
+        this.updateBB();
     }
     update() {
         //if (this.game.timer.gameTime - this.actionTimer >= 2.5) {
@@ -88,23 +90,31 @@ class BigBoo {
                 }
             }
         }
+        this.updateBB();
 
 
     }
 
     updateBB() {
-        if (!this.teleporting) this.BB = new BoundingBox(this.x, this.y, 128, 128);
+        if (!this.teleporting && !this.reappearing) this.BB = new BoundingBox(this.x, this.y, 128, 128);
         else this.BB = new BoundingBox(-1000, 2000, 0, 0);
     }
 
     draw(ctx) {
-        ctx.save();
-        if (this.teleporting) {
-            ctx.globalAlpha = Math.max(0, (this.teleportTimer - 1)/2);
-        } else if (this.reappearing) {
-            ctx.globalAlpha = 1 - this.reappearTimer;
+        if (this.dead) {
+            if (this.flickerFlag) {
+                this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2);
+            }
+            this.flickerFlag = !this.flickerFlag;
+        } else {
+            ctx.save();
+            if (this.teleporting) {
+                ctx.globalAlpha = Math.max(0, (this.teleportTimer - 1) / 2);
+            } else if (this.reappearing) {
+                ctx.globalAlpha = 1 - this.reappearTimer;
+            }
+            this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2);
+            ctx.restore();
         }
-        this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2);
-        ctx.restore();
     }
 }

@@ -29,7 +29,7 @@ class Laser {
                     if (entity instanceof Tower) possibleHits.push(entity);
                     if (length < that.laserLength) that.laserLength = length;
                 } else if ((entity instanceof HammerBro || entity instanceof Barba 
-                    || entity instanceof BigBoo || entity instanceof Wheelie || (entity instanceof Met && entity.action != 3)
+                    || (entity instanceof BigBoo && !entity.teleporting && !entity.reappearing) || entity instanceof Wheelie || (entity instanceof Met && entity.action != 3)
                     || entity instanceof ArmorKnight || entity instanceof BulldozerMet
                     || entity instanceof Carock || entity instanceof Barba) && intersect.x - that.game.camera.x <= 1024 && intersect.x - that.game.camera.x >= 0
                         && intersect.y - that.game.camera.y <= 768 && intersect.y - that.game.camera.y >= 0) possibleHits.push(entity);

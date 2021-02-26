@@ -481,8 +481,9 @@ class Megaman {
             //collision with enemies
             if ((entity instanceof Wheelie || entity instanceof Bulldozer ||
                 entity instanceof Gordo || entity instanceof HammerBro ||
-                entity instanceof ArmorKnight || entity instanceof Carock || entity instanceof Met || entity instanceof CarockBeam 
-                || entity instanceof MetProjectile || entity instanceof HammerBroHammer || entity instanceof Barba || entity instanceof Fireball) && (that.BB.collide(entity.BB)) && !that.invulnTimer) {
+                entity instanceof ArmorKnight || (entity instanceof Carock && !entity.teleporting) || entity instanceof Met || entity instanceof CarockBeam 
+                || entity instanceof MetProjectile || entity instanceof HammerBroHammer || entity instanceof Barba || entity instanceof Fireball
+                || (entity instanceof BigBoo && !entity.teleporting && !entity.reappearing)) && entity.BB && (that.BB.collide(entity.BB)) && !that.invulnTimer) {
                 that.action = 2;
                 that.velocity.y = -180;
                 if (entity instanceof HammerBro || entity instanceof Wheelie || entity instanceof Gordo ||
@@ -492,8 +493,10 @@ class Megaman {
                     that.damage(2);
                 } else if (entity instanceof Bulldozer) {
                     that.damage(4);
-                } else if (entity instanceof Barba || entity instanceof Fireball) {
+                } else if (entity instanceof Barba || entity instanceof Fireball || entity instanceof BigBoo) {
                     that.damage(3, 100);
+                } else {
+                    that.damage(1);
                 }
 
                 //if(that.healthPoint <=0){
