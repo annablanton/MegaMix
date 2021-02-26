@@ -7,8 +7,8 @@ class SceneManager {
         this.title = true;
 
 
-        //this.megaman = new Megaman(game, 6000, 500);
-        this.megaman = new Megaman(game, 100, 200);
+        this.megaman = new Megaman(game, 6000, 500);
+        //this.megaman = new Megaman(game, 100, 200);
         
         // game.addEntity(new Gordo(game, 400, 380, 1, 0));
         // game.addEntity(new Gordo(game, 400, 380, 0, 1));
@@ -302,7 +302,8 @@ class SceneManager {
         // Bosses
         var barba = new Barba(this.game, this.megaman, [6272, 6528, 6784, 7040, 7296], [600, 300]);
         this.game.addEntity(barba);
-        this.game.addEntity(new BigBoo(this.game, 5600, 600));
+        //var bb = new BigBoo(this.game, 6900, 200, this.megaman);
+        //this.game.addEntity(bb);
         this.game.addEntity(new Tile(this.game, 5600,704,11,0))
         this.game.addEntity(new Tile(this.game, 5600,672,11,0))
         this.game.addEntity(new Bulldozer(this.game, 5800, 600))
@@ -312,20 +313,20 @@ class SceneManager {
         for(var i=0; i<6; i++){
             this.game.addEntity(new Tile(this.game, 6112+i*256,736, 12,0))
             this.game.addEntity(new Tile(this.game, 6144+i*256,736, 13,0))
-            this.game.addEntity(new Tile(this.game, 6176+i*256,736, 14,0))
-            this.game.addEntity(new Tile(this.game, 6208+i*256,736, 14,0))
-            this.game.addEntity(new Tile(this.game, 6240+i*256,736, 15,0))
+            this.game.addEntity(new Tile(this.game, 6176 + i * 256, 736, 14, 0))
+            this.game.addEntity(new Tile(this.game, 6208 + i * 256, 736, 14, 0))
+            this.game.addEntity(new Tile(this.game, 6240 + i * 256, 736, 15, 0))
         }
         for(var i=0; i<6; i++){
-            this.game.addEntity(new Tile(this.game, 6144+i*256,480, 12,1))
-            this.game.addEntity(new Tile(this.game, 6176+i*256,480, 13,1))
-            this.game.addEntity(new Tile(this.game, 6208+i*256,480, 15,1))
+            this.game.addEntity(new Tile(this.game, 6144 + i * 256, 480, 12, 1, true))
+            this.game.addEntity(new Tile(this.game, 6176 + i * 256, 480, 13, 1, true))
+            this.game.addEntity(new Tile(this.game, 6208 + i * 256, 480, 15, 1, true))
         }
 
         for(var i=0; i<5; i++){
-            this.game.addEntity(new Tile(this.game, 6272+i*256,224, 12,0))
-            this.game.addEntity(new Tile(this.game, 6304+i*256,224, 14,0))
-            this.game.addEntity(new Tile(this.game, 6336+i*256,224, 15,0))
+            this.game.addEntity(new Tile(this.game, 6272 + i * 256, 224, 12, 0, true))
+            this.game.addEntity(new Tile(this.game, 6304 + i * 256, 224, 14, 0, true))
+            this.game.addEntity(new Tile(this.game, 6336 + i * 256, 224, 15, 0, true))
         }
 
         for (var i = 0; i < 7; i++) {
@@ -354,6 +355,8 @@ class SceneManager {
         this.game.addEntity(new Tile(this.game, 7488, -288, 15, 5));
 
         this.game.addEntity(new BossTrigger(this.game, 6208, -256, 32 * 39, 32 * 31, barba, [{ x: 6112, y: 608 }, {x: 7520, y: 608}]));
+        //this.game.addEntity(new BossTrigger(this.game, 6208, -256, 32 * 39, 32 * 31, bb, [{ x: 6112, y: 608 }, { x: 7520, y: 608 }]));
+
 
         for (var i = 0; i < 40; i++) {
             this.game.addEntity(new Tile(this.game, 7552 + i * 32, 736, 3, 2));
