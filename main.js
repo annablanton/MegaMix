@@ -18,8 +18,20 @@ ASSET_MANAGER.queueDownload("./sprites/effects.png");
 ASSET_MANAGER.queueDownload("./sprites/intropage.png");
 ASSET_MANAGER.queueDownload("./sprites/towerdemolition.png");
 
+//sounds
+ASSET_MANAGER.queueDownload("./sounds/jump.wav"); 
+ASSET_MANAGER.queueDownload("./sounds/death.wav");
+ASSET_MANAGER.queueDownload("./sounds/laser.wav");
+ASSET_MANAGER.queueDownload("./sounds/megamanDamage.wav");
+ASSET_MANAGER.queueDownload("./sounds/sliding.wav");
+ASSET_MANAGER.queueDownload("./sounds/swing.wav");
+ASSET_MANAGER.queueDownload("./sounds/shooting.wav");
+ASSET_MANAGER.queueDownload("./sounds/background.mp3");
+
 
 ASSET_MANAGER.downloadAll(function () {
+	ASSET_MANAGER.autoRepeat("./sounds/background.mp3");
+
 	var canvas = document.getElementById('gameWorld');
 	canvas.width = CANVAS_WIDTH;
 	canvas.height = CANVAS_HEIGHT;

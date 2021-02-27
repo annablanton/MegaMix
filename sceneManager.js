@@ -4,50 +4,32 @@ class SceneManager {
         this.game.camera = this;
         this.x = 0;
         this.y = 0;
-        this.title = true;
-
+        this.title = true; 
+        this.stopmusic = false;
 
         //this.megaman = new Megaman(game, 6000, 500);
         this.megaman = new Megaman(game, 100, 200);
-        
-        // game.addEntity(new Gordo(game, 400, 380, 1, 0));
-        // game.addEntity(new Gordo(game, 400, 380, 0, 1));
-        // game.addEntity(new Gordo(game, 400, 380, -1, 0));
-        // game.addEntity(new Gordo(game, 400, 380, 0, -1));
-        // game.addEntity(new Wheelie(game, 400, 600));
-        // game.addEntity(new ArmorKnight(game, 600, 300));
-        // game.addEntity(new Bulldozer(game, 200, 200));
-        // game.addEntity(new Met(game, 400, 16));
-        // game.addEntity(new HammerBro(game, 500, 672));
-        // game.addEntity(new Carock(game, 400, 64));
-        // game.addEntity(new Barba(game, 600, 100));
-        // game.addEntity(new BigBoo(game, 600, 600));
-        
-        // game.addEntity(new Mushroom(game, 800, 600, 1));
-        // game.addEntity(new Mushroom(game, 900, 600, 0));
         game.addEntity(new HealthMeter(game, 975, 25));
         game.addEntity(new Pellet(game, 16, 16, Math.PI / 8));
         
         this.loadLevelOne(this.title);
+       
         game.addEntity(this.megaman);
         game.addEntity(this);
-        
     };
 
     clearEntities() {
         this.game.entities = [this];
     };
 
-    // loadTitle(title){
-    //     if (title) {
 
-    //     }
-    // }
     loadLevelOne(title) {
         this.title = title;
-       
+        // ASSET_MANAGER.pauseBackgroundMusic();
+        // ASSET_MANAGER.playAsset("./sounds/background.mp3");
         this.x = 0;
         //background setting
+        
         this.game.addEntity(new Background(this.game, -2818,-312));
         this.game.addEntity(new Background(this.game, -897,-312));
         this.game.addEntity(new Background(this.game, 1024,-312));
@@ -59,7 +41,6 @@ class SceneManager {
 
        
         this.game.addEntity(new Mushroom(this.game, 230,300,1))
-
         this.game.addEntity(new Powerup(this.game, -170,400))
 
 
@@ -367,15 +348,30 @@ class SceneManager {
 
     };
 
+    loadLevelTwo(){
+        
+    }
+
+    updateAudio(){
+        var mute=document.getElementById("mute").checked;
+        var volume=document.getElementById("volume").value;
+        ASSET_MANAGER.muteAudio(mute);
+        ASSET_MANAGER.adjustVolume(volume);
+    }
+
     update() {
+        
         PARAMS.DEBUG = document.getElementById("debug").checked;
 
+        this.updateAudio();
+        
         let midpoint_width = PARAMS.CANVAS_WIDTH/2 - 21;  //486;
         let midpoint_height = PARAMS.CANVAS_HEIGHT/2 - 12;
       
         if(this.title && this.game.space) {
             this.title = false;
         }
+        
         this.x = this.megaman.x - midpoint_width;
         if(this.megaman.y < midpoint_height){
         this.y = this.megaman.y - midpoint_height;
@@ -392,7 +388,7 @@ class SceneManager {
             ctx.fillStyle = "White";
             ctx.font = "30px Verdana";
             ctx.fillText("PRESS SPACE TO START", 600, 700)
-        }
+        } 
         // ctx.drawImage(ASSET_MANAGER.getAsset("./sprites/intropage.png"),0,0);
         ctx.fillStyle = "White";
         ctx.fillText("Megaman", 1.5 * 32, 1 * 32);
