@@ -3,6 +3,7 @@ class BossTrigger {
         Object.assign(this, { game, x, y, width, height, boss, walls});
         this.bossFightStarted = false;
         this.BB = new BoundingBox(this.x, this.y, this.width, this.height);
+        this.boss.arena = this;
         this.tiles = [];
     }
 

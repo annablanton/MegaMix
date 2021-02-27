@@ -32,8 +32,9 @@ class Pellet {
         this.game.entities.forEach(function (entity) {
             if (that.BB && entity.BB && that.BB.collide(entity.BB)) {
                 if ((entity instanceof Tile || entity instanceof Wheelie || entity instanceof Bulldozer ||
-                    entity instanceof Gordo || entity instanceof HammerBro || entity instanceof Carock
-                    || entity instanceof Met || entity instanceof ArmorKnightShield || entity instanceof Tower || entity instanceof Barba) && that.BB.collide(entity.BB)) {
+                    entity instanceof Gordo || entity instanceof HammerBro || (entity instanceof Carock && !entity.teleporting)
+                    || entity instanceof Met || entity instanceof ArmorKnightShield || entity instanceof Tower || entity instanceof Barba
+                    || (entity instanceof BigBoo && !entity.teleporting && !entity.reappearing)) && that.BB.collide(entity.BB)) {
                     that.removeFromWorld = true;
 
                     if (entity instanceof ArmorKnightShield || entity instanceof Bulldozer) {
@@ -46,7 +47,8 @@ class Pellet {
                 }
 
             if ((entity instanceof Wheelie ||
-                entity instanceof HammerBro || entity instanceof Carock || (entity instanceof Met && entity.action != 3)) && that.BB.collide(entity.BB)) {
+                entity instanceof HammerBro || (entity instanceof Carock && !entity.teleporting) || (entity instanceof Met && entity.action != 3) || entity instanceof Barba
+                || (entity instanceof BigBoo && !entity.teleporting && !entity.reappearing)) && that.BB.collide(entity.BB)) {
                     if(entity.HEALTH_POINTS > 0){                        
                         entity.HEALTH_POINTS -= that.Pellet_Damage 
                     } 
