@@ -3,6 +3,7 @@ class Barba {
         this.HEALTH_POINTS = 30;
         Object.assign(this, { game, megaman, xLocations, yLocations });
         this.centerX = xLocations[randomInt(xLocations.length)];
+        this.x = this.centerX + 10 * Math.sin(2 * this.game.timer.gameTime);
         this.y = yLocations[randomInt(yLocations.length)];
         this.targetY = this.y;
         if (this.megaman.x < this.centerX) this.facing = 0;
@@ -23,6 +24,7 @@ class Barba {
         this.animations[1].push(new Animator(this.spritesheet, 347, 50, 48, 17, 1, 0.5, 1, false, true));
         this.animations[1].push(new Animator(this.spritesheet, 249, 50, 48, 17, 3, 0.2, 1, true, false));
         this.child = new BarbaBody(this.game, this, 12, 12, this.megaman);
+        this.paused = true;
         this.changingLocations = false;
         this.locationTimer = 1;
         this.riseTimer = 0;
@@ -169,10 +171,11 @@ class BarbaBody {
             this.x = this.centerX;
             this.y = this.parent.y + 16 * 2;
         }
+        this.facing = this.parent.facing;
         if (numSectionsRemaining >= 0) {
             this.child = new BarbaBody(this.game, this, numSections, numSectionsRemaining - 1, this.megaman);
         }
-        this.facing = this.parent.facing;
+        console.log(this.facing);
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/barba.png");
         this.animations.push(new Animator(this.spritesheet, 82, 72, 19, 16, 1, 0.5, 0, false, true));
         this.animations.push(new Animator(this.spritesheet, 282, 72, 19, 16, 1, 0.5, 0, false, true));

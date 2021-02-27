@@ -1,5 +1,5 @@
 class Tile {
-    constructor(game, x, y, col, row) {
+    constructor(game, x, y, col, row, passable) {
         Object.assign(this, {game, x, y, col, row});
         const TILE_COLUMNS = 24;
         const TILE_ROWS = 11;
@@ -17,6 +17,8 @@ class Tile {
                 this.tileSheet[j][k] = new Animator(this.spritesheet, (j * TILE_GAP) + 1, (k * TILE_GAP) + 1, TILE_DIMENSION, TILE_DIMENSION, 1, 1, 0, false, true);
             }
         }
+        if (passable) this.passable = true;
+        else this.passable = false;
         this.updateBB();
     }
     
