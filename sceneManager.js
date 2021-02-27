@@ -12,8 +12,9 @@ class SceneManager {
         game.addEntity(new HealthMeter(game, 975, 25));
         game.addEntity(new Pellet(game, 16, 16, Math.PI / 8));
         
+
         this.loadLevelOne(this.title);
-       
+        // this.loadLevelTwo();       
         game.addEntity(this.megaman);
         game.addEntity(this);
     };
@@ -347,10 +348,207 @@ class SceneManager {
 
 
     };
-
     loadLevelTwo(){
+        this.x = 0;
+
+        //left wall at the beginning area
+        for (var i =0 ; i< 24; i ++){
+            this.game.addEntity(new Tile(this.game, -32,736-i*32,12,5)); 
+            this.game.addEntity(new Tile(this.game, -64,736-i*32,13,5)); 
+            this.game.addEntity(new Tile(this.game, -96,736-i*32,14,5)); 
+            this.game.addEntity(new Tile(this.game, -128,736-i*32,15,5)); 
+            this.game.addEntity(new Tile(this.game, -160,736-i*32,12,5)); 
+            this.game.addEntity(new Tile(this.game, -192,736-i*32,13,5)); 
+            this.game.addEntity(new Tile(this.game, -224,736-i*32,14,5)); 
+            this.game.addEntity(new Tile(this.game, -256,736-i*32,15,5)); 
+            this.game.addEntity(new Tile(this.game, -288,736-i*32,12,5)); 
+            this.game.addEntity(new Tile(this.game, -320,736-i*32,13,5)); 
+            this.game.addEntity(new Tile(this.game, -352,736-i*32,14,5)); 
+            this.game.addEntity(new Tile(this.game, -384,736-i*32,15,5)); 
+        }
+
+        //background
+        this.game.addEntity(new Background2(this.game, 0,0));
+        this.game.addEntity(new Background2(this.game, 0,195));
+        this.game.addEntity(new Background2(this.game, 0,390));
+        this.game.addEntity(new Background2(this.game, 0,585));
+        this.game.addEntity(new Background2(this.game, 626,0));
+        this.game.addEntity(new Background2(this.game, 626,195));
+        this.game.addEntity(new Background2(this.game, 626,390));
+        this.game.addEntity(new Background2(this.game, 626,585));
+        this.game.addEntity(new Background2(this.game, 1252,0));
+        this.game.addEntity(new Background2(this.game, 1252,195));
+        this.game.addEntity(new Background2(this.game, 1252,390));
+        this.game.addEntity(new Background2(this.game, 1252,585));
+        this.game.addEntity(new Background2(this.game, 1878,0));
+        this.game.addEntity(new Background2(this.game, 1878,195));
+        this.game.addEntity(new Background2(this.game, 1878,390));
+        this.game.addEntity(new Background2(this.game, 1878,585));
+        for(var i=0; i<22; i++){
+            this.game.addEntity(new Background2(this.game, 1252,-195-i*195));
+            this.game.addEntity(new Background2(this.game, 1878,-195-i*195));
+        }
+
         
-    }
+        // this.game.addEntity(new Background2(this.game, 626,780));
+        //first bottom
+        for (var i =0 ; i< 18; i ++){
+            this.game.addEntity(new Tile(this.game, 0+i*32*4,736,12,5)); 
+            this.game.addEntity(new Tile(this.game, 32+i*32*4,736,13,5)); 
+            this.game.addEntity(new Tile(this.game, 64+i*32*4,736,14,5)); 
+            this.game.addEntity(new Tile(this.game, 96+i*32*4,736,15,5)); 
+            this.game.addEntity(new Tile(this.game, 0+i*32*4,704,12,5));  
+            this.game.addEntity(new Tile(this.game, 32+i*32*4,704,13,5)); 
+            this.game.addEntity(new Tile(this.game, 64+i*32*4,704,14,5));   
+            this.game.addEntity(new Tile(this.game, 96+i*32*4,704,15,5)); 
+        }
+ 
+
+        //first ceiling
+        for (var i =0 ; i< 11; i ++){
+            this.game.addEntity(new Tile(this.game, 0+i*32*4,0,12,5)); 
+            this.game.addEntity(new Tile(this.game, 32+i*32*4,0,13,5)); 
+            this.game.addEntity(new Tile(this.game, 64+i*32*4,0,14,5)); 
+            this.game.addEntity(new Tile(this.game, 96+i*32*4,0,15,5)); 
+            this.game.addEntity(new Tile(this.game, 0+i*32*4,32,12,5)); 
+            this.game.addEntity(new Tile(this.game, 32+i*32*4,32,13,5)); 
+            this.game.addEntity(new Tile(this.game, 64+i*32*4,32,14,5)); 
+            this.game.addEntity(new Tile(this.game, 96+i*32*4,32,15,5)); 
+        }
+        //last tile 1504
+
+        //right tower
+        for (var i =0 ; i< 14; i ++){
+            for(var j = 0; j<35; j++){
+                this.game.addEntity(new Tile(this.game, 2304+i*32,608-j*128,16,0)); 
+                this.game.addEntity(new Tile(this.game, 2304+i*32,640-j*128,16,1)); 
+                this.game.addEntity(new Tile(this.game, 2304+i*32,672-j*128,16,2));
+                this.game.addEntity(new Tile(this.game, 2304+i*32,704-j*128,16,3));
+                this.game.addEntity(new Tile(this.game, 2304+i*32,736-j*128,16,4));   
+            }
+        }
+        //left tower
+        for (var i =0 ; i< 14; i ++){
+            for(var j = 0; j<33; j++){
+                this.game.addEntity(new Tile(this.game, 960+i*32,-160-j*128,16,0)); 
+                this.game.addEntity(new Tile(this.game, 960+i*32,-128-j*128,16,1));                 
+                this.game.addEntity(new Tile(this.game, 960+i*32,-96-j*128,16,2)); 
+                this.game.addEntity(new Tile(this.game, 960+i*32,-64-j*128,16,3)); 
+                this.game.addEntity(new Tile(this.game, 960+i*32,-32-j*128,16,4)); 
+            }
+        }
+        //1504-2272
+        //stair
+        for(var i =0; i<2; i++){
+            this.game.addEntity(new Tile(this.game, 1504+i*128,576,16,6)); 
+            this.game.addEntity(new Tile(this.game, 1536+i*128,576,17,6)); 
+            this.game.addEntity(new Tile(this.game, 1568+i*128,576,18,6)); 
+            this.game.addEntity(new Tile(this.game, 1600+i*128,576,19,6)); 
+        }
+        //stair
+        for(var i =0; i<2; i++){
+            this.game.addEntity(new Tile(this.game, 2016+i*128,192,16,6)); 
+            this.game.addEntity(new Tile(this.game, 2048+i*128,192,17,6)); 
+            this.game.addEntity(new Tile(this.game, 2080+i*128,192,18,6)); 
+            this.game.addEntity(new Tile(this.game, 2112+i*128,192,19,6)); 
+        }
+
+        //odd floors over the stairs
+        for(var i =0; i<5; i++){
+            for(var j=0; j<4; j++){
+                this.game.addEntity(new Tile(this.game, 1408+i*128,-96-j*512,16,6)); 
+                this.game.addEntity(new Tile(this.game, 1440+i*128,-96-j*512,17,6)); 
+                this.game.addEntity(new Tile(this.game, 1472+i*128,-96-j*512,18,6)); 
+                this.game.addEntity(new Tile(this.game, 1504+i*128,-96-j*512,19,6)); 
+                this.game.addEntity(new Tile(this.game, 2048,-128-j*512,19,6)); 
+                this.game.addEntity(new Tile(this.game, 2048,-160-j*512,19,6));     
+            }
+        }
+        //even floors over the stairs
+        for(var i =0; i<5; i++){
+            for(var j=0; j<4; j++){
+                this.game.addEntity(new Tile(this.game, 2272-i*128,-352-j*512,16,6)); 
+                this.game.addEntity(new Tile(this.game, 2240-i*128,-352-j*512,17,6)); 
+                this.game.addEntity(new Tile(this.game, 2208-i*128,-352-j*512,18,6)); 
+                this.game.addEntity(new Tile(this.game, 2176-i*128,-352-j*512,19,6)); 
+                this.game.addEntity(new Tile(this.game, 1632,-384-j*512,19,6)); 
+                this.game.addEntity(new Tile(this.game, 1632,-416-j*512,19,6));     
+            }
+        }
+        for(var i =0; i<2; i++){
+            for(var j=0; j<3; j++){
+                this.game.addEntity(new Tile(this.game, 2272,-2272-j*512,16,6));     
+                this.game.addEntity(new Tile(this.game, 2240-i*128,-2240-j*512,16,6));     
+                this.game.addEntity(new Tile(this.game, 2208-i*128,-2240-j*512,17,6));     
+                this.game.addEntity(new Tile(this.game, 2176-i*128,-2240-j*512,18,6));     
+                this.game.addEntity(new Tile(this.game, 2144-i*128,-2240-j*512,19,6));
+                this.game.addEntity(new Tile(this.game, 1984,-2272-j*512,16,6));          
+            }
+        }
+
+        for(var i =0; i<2; i++){
+            for(var j=0; j<3; j++){
+            this.game.addEntity(new Tile(this.game, 1504,-2528-j*512,16,6));     
+            this.game.addEntity(new Tile(this.game, 1536+i*128,-2496-j*512,16,6));     
+            this.game.addEntity(new Tile(this.game, 1568+i*128,-2496-j*512,17,6));     
+            this.game.addEntity(new Tile(this.game, 1600+i*128,-2496-j*512,18,6));     
+            this.game.addEntity(new Tile(this.game, 1632+i*128,-2496-j*512,19,6));
+            this.game.addEntity(new Tile(this.game, 1792,-2528-j*512,16,6));          
+            }
+        }      
+        this.game.addEntity(new Tile(this.game, 1920,-3670,16,6));          
+        this.game.addEntity(new Tile(this.game, 1952,-3670,16,6));       
+        this.game.addEntity(new Tile(this.game, 1984,-3670,16,6));
+
+        this.game.addEntity(new Tile(this.game, 2112,-3670,16,6));          
+        this.game.addEntity(new Tile(this.game, 2144,-3670,16,6));  
+        this.game.addEntity(new Tile(this.game, 2176,-3670,16,6));
+
+        //last ceiling
+        for (var i =0 ; i< 21; i ++){
+            this.game.addEntity(new Tile(this.game, 1408+i*32*4,-4290,12,5)); 
+            this.game.addEntity(new Tile(this.game, 1440+i*32*4,-4290,13,5)); 
+            this.game.addEntity(new Tile(this.game, 1472+i*32*4,-4290,14,5)); 
+            this.game.addEntity(new Tile(this.game, 1504+i*32*4,-4290,15,5)); 
+            this.game.addEntity(new Tile(this.game, 1408+i*32*4,-4268,12,5)); 
+            this.game.addEntity(new Tile(this.game, 1440+i*32*4,-4268,13,5)); 
+            this.game.addEntity(new Tile(this.game, 1472+i*32*4,-4268,14,5)); 
+            this.game.addEntity(new Tile(this.game, 1504+i*32*4, -4268,15,5)); 
+        }
+
+        //2720 //-4960
+        
+        //boss stairs
+        for(var i=0; i<5; i++){
+                this.game.addEntity(new Tile(this.game, 2752+i*64, -3744+i*64,19,1));
+                this.game.addEntity(new Tile(this.game, 2752+i*64, -3712+i*64,19,3));  
+                this.game.addEntity(new Tile(this.game, 2784+i*64, -3712+i*64,19,1));
+                this.game.addEntity(new Tile(this.game, 2784+i*64, -3680+i*64,19,3));  
+        }
+        //boss floor
+        for(var i=0; i<30; i++){
+            this.game.addEntity(new Tile(this.game, 3072+i*32, -3424,19,1));  
+            this.game.addEntity(new Tile(this.game, 3072+i*32, -3392,19,3));      
+        }
+        //boss wall
+        for(var i=0; i<9;i++){
+            this.game.addEntity(new Tile(this.game, 4032+i*32, -3456-i*96,19,1));
+            this.game.addEntity(new Tile(this.game, 4032+i*32, -3424-i*96,19,2));
+            this.game.addEntity(new Tile(this.game, 4032+i*32, -3392-i*96,19,3));
+        }
+
+        for(var i=0; i<4;i++){
+            this.game.addEntity(new Tile(this.game, 3072+i*256, -4064,17,0));
+            this.game.addEntity(new Tile(this.game, 3104+i*256, -4064,17,0));
+            this.game.addEntity(new Tile(this.game, 3136+i*256, -4064,17,0));
+        }  
+        for(var i=0; i<4;i++){
+            this.game.addEntity(new Tile(this.game, 3200+i*256, -3808,17,0));
+            this.game.addEntity(new Tile(this.game, 3232+i*256, -3808,17,0));
+            this.game.addEntity(new Tile(this.game, 3264+i*256, -3808,17,0));
+
+        } 
+    };
 
     updateAudio(){
         var mute=document.getElementById("mute").checked;

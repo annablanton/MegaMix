@@ -4,7 +4,7 @@ class GrapplingHook {
         this.x = x
         this.y = y
         this.SPEED = 350;
-        this.MAX_LENGTH = 400;
+        this.MAX_LENGTH = 500;
         this.HOOK_WIDTH = 9;
         this.HOOK_HEIGHT = 14;
         this.retracting = 0;
