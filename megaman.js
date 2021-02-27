@@ -422,6 +422,8 @@ class Megaman {
        
       
       //update x and y
+
+
       this.x += this.velocity.x * TICK * PARAMS.SCALE;
       this.y += this.velocity.y * TICK * PARAMS.SCALE;
       this.updateBB();
@@ -485,8 +487,9 @@ class Megaman {
 
 
                 entity instanceof ArmorKnight || (entity instanceof Carock && !entity.teleporting) || entity instanceof Met || entity instanceof CarockBeam ||entity instanceof ArmorKnightSpear
-                || entity instanceof MetProjectile || entity instanceof HammerBroHammer || entity instanceof Barba || entity instanceof Fireball) 
-                || (entity instanceof BigBoo && !entity.teleporting && !entity.reappearing)) && entity.BB && (that.BB.collide(entity.BB)) && !that.invulnTimer) {
+                || entity instanceof MetProjectile || entity instanceof HammerBroHammer || entity instanceof Barba || entity instanceof Fireball 
+                || (entity instanceof BigBoo && !entity.teleporting && !entity.reappearing)) && entity.BB && that.BB.collide(entity.BB) && !that.invulnTimer) {
+                console.log("enemy collision");
                 ASSET_MANAGER.playAsset("./sounds/megamanDamage.wav");
                 that.action = 2;
                 that.velocity.y = -180;
@@ -527,6 +530,7 @@ class Megaman {
 
         });
             if (!this.landedTimer) this.action = 2;
+
 
       //for clicking q button (weapon toggling)
       if (this.game.q == true) {
