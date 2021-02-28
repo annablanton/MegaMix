@@ -1,6 +1,6 @@
 class Barba {
     constructor(game, megaman, xLocations, yLocations) {
-        this.HEALTH_POINTS = 30;
+        this.HEALTH_POINTS = 20;
         Object.assign(this, { game, megaman, xLocations, yLocations });
         this.centerX = xLocations[randomInt(xLocations.length)];
         this.x = this.centerX + 10 * Math.sin(2 * this.game.timer.gameTime);
