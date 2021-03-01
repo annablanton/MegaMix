@@ -292,6 +292,7 @@ class Megaman {
         this.poisonedTimer++;
         this.game.flipControl = true;
         if (this.poisonedTimer > 150) {
+          this.poisonedTimer = 0;
           this.state = 0;
           this.game.flipControl = false;
         }
