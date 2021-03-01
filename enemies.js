@@ -234,6 +234,7 @@ class Carock {
         this.startFireTimer = 1;
         this.firstFireOccurred = false;
         this.teleporting = false;
+        this.fallDetectionTimer = 0;
 
         this.dead = false;
         this.deadTimer = 0;
@@ -410,13 +411,34 @@ class Carock {
                 if (entity instanceof Megaman && Math.sqrt((entity.x + entity.MEGAMAN_WIDTH / 2 - that.x) ** 2 + (entity.y + entity.MEGAMAN_HEIGHT / 2 - that.y) ** 2) < 250) {
                     that.state = 1;
                 }
+
+                // Cliff Detection
+                if (entity instanceof Tile) {
+                    if (that.FDBB.collide(entity.BB)){
+                        that.fallDetectionTimer = 0;
+                                 
+                    } else {
+                        that.fallDetectionTimer += that.game.clockTick;
+                        if (that.state == 0 && that.velocity.y == 0 && that.fallDetectionTimer > 300) {
+                            that.facing = (that.facing == 1 ? 0 : 1);
+                            that.velocity.x = -that.velocity.x; 
+                        }      
+                    }
+                }
             });
             this.updateBB();
         }
     }
 
     updateBB() {
-        if (!this.teleporting) this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH_WALK * 2, this.SPRITE_HEIGHT * 2);
+        if (!this.teleporting) {
+            this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH_WALK * 2, this.SPRITE_HEIGHT * 2);
+            if (this.facing == 0) {
+                this.FDBB = new BoundingBox(this.x - 20, this.y + this.SPRITE_HEIGHT * 2, 10, 10);
+            } else {
+                this.FDBB = new BoundingBox(this.x + this.SPRITE_WIDTH_WALK * 2.5, this.y + this.SPRITE_HEIGHT * 2, 10, 10);
+            }
+        }
         else this.BB = new BoundingBox(-1000, 2000, 0, 0);
     }
 
@@ -453,11 +475,15 @@ class Carock {
                     ctx.fillStyle = "Red";
                 }
                 ctx.fillText(" • ", this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y);
+                ctx.strokeStyle = "Red";
+                ctx.strokeRect(this.FDBB.x - this.game.camera.x, this.FDBB.y- this.game.camera.y, this.FDBB.width, this.FDBB.height);
 
             }
         }
         if (PARAMS.DEBUG) {
             ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y, this.BB.width, this.BB.height);
+            ctx.strokeStyle = "Red";
+            ctx.strokeRect(this.FDBB.x - this.game.camera.x, this.FDBB.y- this.game.camera.y, this.FDBB.width, this.FDBB.height);
             if (this.state == 0) {
                 ctx.fillStyle = "Lightgreen";
             } else {
@@ -477,6 +503,7 @@ class Bulldozer {
         this.facing = 0; //0=left, 1=right
         this.velocity = { x: -25, y: 0 };
         this.turnTimer = this.game.timer.gameTime;
+        this.fallDetectionTimer = 0;
         this.met = new BulldozerMet(this.game, this);
         this.game.addEntity(this.met);
 
@@ -596,7 +623,19 @@ class Bulldozer {
                     that.state = 0;
                     that.action = 0;
                 }
-
+                // Cliff Detection
+                if (entity instanceof Tile) {
+                    if (that.FDBB.collide(entity.BB)){
+                        that.fallDetectionTimer = 0;
+                                 
+                    } else {
+                        that.fallDetectionTimer += that.game.clockTick;
+                        if (that.state == 0 && that.velocity.y == 0 && that.fallDetectionTimer > 200) {
+                            that.facing = (that.facing == 1 ? 0 : 1);
+                            that.velocity.x = -that.velocity.x; 
+                        }      
+                    }
+                }
 
 
             });
@@ -607,8 +646,10 @@ class Bulldozer {
     updateBB() {
         if (this.facing == 0) {
             this.BB = new BoundingBox(this.x + 25, this.y + 48, this.SPRITE_WIDTH * 2 - 10 - 25, this.SPRITE_HEIGHT * 2 - 48)
+            this.FDBB = new BoundingBox(this.x - 20, this.y + this.SPRITE_HEIGHT * 2, 10, 10);
         } else {
             this.BB = new BoundingBox(this.x + 10, this.y + 48, this.SPRITE_WIDTH * 2 - 10 - 25, this.SPRITE_HEIGHT * 2 - 48)
+            this.FDBB = new BoundingBox(this.x + this.SPRITE_WIDTH * 2.4, this.y + this.SPRITE_HEIGHT * 2, 10, 10);
         }
     }
 
@@ -637,6 +678,8 @@ class Bulldozer {
                     ctx.fillStyle = "Red";
                 }
                 ctx.strokeRect(this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y, this.BB.width, this.BB.height);
+                ctx.strokeStyle = "Red";
+                ctx.strokeRect(this.FDBB.x - this.game.camera.x, this.FDBB.y- this.game.camera.y, this.FDBB.width, this.FDBB.height);
             }
         }
     }
@@ -696,6 +739,7 @@ class ArmorKnight {
         this.velocity = { x: -25, y: 0 };
         this.turnTimer = this.game.timer.gameTime;
         this.attackTimer = 0;
+        this.fallDetectionTimer = 0;
         this.HEALTH_POINTS = 4;
 
         this.spear = null;
@@ -837,6 +881,20 @@ class ArmorKnight {
                         that.velocity.x = 24
                     }
                 } 
+
+                  // Cliff Detection
+                  if (entity instanceof Tile) {
+                    if (that.FDBB.collide(entity.BB)){
+                        that.fallDetectionTimer = 0;
+                                 
+                    } else {
+                        that.fallDetectionTimer += that.game.clockTick;
+                        if (that.state == 0 && that.velocity.y == 0 && that.fallDetectionTimer > 100) {
+                            that.facing = (that.facing == 1 ? 0 : 1);
+                            that.velocity.x = -that.velocity.x; 
+                        }      
+                    }
+                }
             });
             this.updateBB();
         }
@@ -844,12 +902,15 @@ class ArmorKnight {
 
     updateBB() {
         if (this.facing == 0) {
-            if(this.action ==1){
+            this.FDBB = new BoundingBox(this.x - 20, this.y + this.SPRITE_HEIGHT * 2.4, 10, 10);
+            if(this.action == 1){
                 this.BB = new BoundingBox(this.x + this.SPEAR_LENGTH_ATTACK, this.y, this.SPRITE_WIDTH_ATTACK * 2.25 - this.SPEAR_LENGTH_ATTACK, this.SPRITE_HEIGHT * 2.25);
             } else{
                 this.BB = new BoundingBox(this.x + this.SPEAR_LENGTH, this.y, this.SPRITE_WIDTH_WALK * 2.25 - this.SPEAR_LENGTH, this.SPRITE_HEIGHT * 2.25);
             }
-        } else if (this.facing ==1){
+        } else if (this.facing == 1){
+            console.log("move to right");
+            this.FDBB = new BoundingBox(this.x + this.SPRITE_WIDTH_WALK * 2.6, this.y + this.SPRITE_HEIGHT * 2.4, 10, 10);
             if(this.action ==1){
                 this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH_ATTACK * 2.25 - this.SPEAR_LENGTH_ATTACK, this.SPRITE_HEIGHT * 2.25);
             } else{
@@ -879,6 +940,8 @@ class ArmorKnight {
                     ctx.fillStyle = "Red";
                 }
                 ctx.fillText(" • ", this.BB.x - this.game.camera.x, this.BB.y- this.game.camera.y);
+                ctx.strokeStyle = "Red";
+                ctx.strokeRect(this.FDBB.x - this.game.camera.x, this.FDBB.y- this.game.camera.y, this.FDBB.width, this.FDBB.height);
             }
         }
         //this.shield.draw(ctx);
@@ -990,6 +1053,7 @@ class HammerBro {
         this.jumpTimer = 0;
         this.hasJump = false;
         this.hasFired = true;
+        this.fallDetectionTimer = 0;
         
         this.dead = false;
         this.deadTimer = 0;
@@ -1109,7 +1173,7 @@ class HammerBro {
                         that.facing = 1;
                         that.velocity.x = 20; 
                     
-                }
+                    } 
                 } 
                 // Ceiling hitting collision detection
                 if (that.velocity.y < 0) {
@@ -1118,13 +1182,32 @@ class HammerBro {
                         that.y = entity.BB.bottom - 24;
                     }
                 }
+
+                // Cliff Detection
+                if (entity instanceof Tile) {
+                    if (that.FDBB.collide(entity.BB)){
+                        that.fallDetectionTimer = 0;
+                                 
+                    } else {
+                        that.fallDetectionTimer += that.game.clockTick;
+                        if (that.state == 0 && that.velocity.y == 0 && that.fallDetectionTimer > 100) {
+                            that.facing = (that.facing == 1 ? 0 : 1);
+                            that.velocity.x = -that.velocity.x; 
+                        }      
+                    }
+                }
             });
         }
     }
 
 
     updateBB() {
-        this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH * 2.5, this.SPRITE_HEIGHT * 2.5)
+        this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH * 2.5, this.SPRITE_HEIGHT * 2.5);
+        if (this.facing == 0) {
+            this.FDBB = new BoundingBox(this.x - 20, this.y + this.SPRITE_HEIGHT * 2.4, 10, 10);
+        } else {
+            this.FDBB = new BoundingBox(this.x + 20 + this.SPRITE_WIDTH * 2.6, this.y + this.SPRITE_HEIGHT * 2.4, 10, 10);
+        }
     }
 
     draw(ctx) {
@@ -1143,6 +1226,9 @@ class HammerBro {
                     ctx.fillStyle = "Red";
                 }
                 ctx.fillText(" • ", this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y);
+                ctx.strokeStyle = "Red";
+                ctx.strokeRect(this.FDBB.x - this.game.camera.x, this.FDBB.y- this.game.camera.y, this.FDBB.width, this.FDBB.height);
+                
             }
         }
     }
@@ -1335,6 +1421,19 @@ class Wheelie {
                     that.velocity.x /= 5;
                     that.velocity.y /= 5;    
                 }
+                 // Cliff Detection
+                if (entity instanceof Tile) {
+                    if (that.FDBB.collide(entity.BB)){
+                        that.fallDetectionTimer = 0;
+                                 
+                    } else {
+                        that.fallDetectionTimer += that.game.clockTick;
+                        if (that.state == 0 && that.velocity.y == 0 && that.fallDetectionTimer > 100) {
+                            that.facing = (that.facing == 1 ? 0 : 1);
+                            that.velocity.x = -that.velocity.x; 
+                        }      
+                    }
+                }
             });
         }
         
@@ -1342,6 +1441,11 @@ class Wheelie {
 
     updateBB() {
         this.BB = new BoundingBox(this.x, this.y, this.SPRITE_WIDTH * 3, this.SPRITE_HEIGHT * 3)
+        if (this.facing == 0) {
+            this.FDBB = new BoundingBox(this.x - 20, this.y + this.SPRITE_HEIGHT * 2.4, 10, 10);
+        } else {
+            this.FDBB = new BoundingBox(this.x + 20 + this.SPRITE_WIDTH * 2.6, this.y + this.SPRITE_HEIGHT * 2.4, 10, 10);
+        }
     }
 
     draw(ctx) {
@@ -1352,7 +1456,7 @@ class Wheelie {
             this.flickerFlag = !this.flickerFlag;
         } else {
             this.animations[this.facing][this.state][this.action].drawFrame(this.game.clockTick, ctx, this.x- this.game.camera.x, this.y- this.game.camera.y, 3);
-            if (PARAMS.DEBUG) {
+                if (PARAMS.DEBUG) {
                     ctx.strokeRect(this.BB.x - this.game.camera.x, this.BB.y- this.game.camera.y, this.BB.width, this.BB.height);
                     if (this.state == 0) {
                         ctx.fillStyle = "Lightgreen";
@@ -1361,7 +1465,9 @@ class Wheelie {
                     }
                     ctx.fillText(" • ", this.BB.x - this.game.camera.x, this.BB.y- this.game.camera.y);
                 }
-            }
+                ctx.strokeStyle = "Red";
+                ctx.strokeRect(this.FDBB.x - this.game.camera.x, this.FDBB.y- this.game.camera.y, this.FDBB.width, this.FDBB.height);
+         }
         
         //this.animations[0][0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 3);
         //this.animations[1][0][0].drawFrame(this.game.clockTick, ctx, 16 + 16 * 5, 16, 3);
