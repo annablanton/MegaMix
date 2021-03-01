@@ -14,7 +14,8 @@ class SceneManager {
         
 
         this.loadLevelOne(this.title);
-        // this.loadLevelTwo();       
+        // this.loadLevelTwo();   
+        // this.loadTutorialLevel();    
         game.addEntity(this.megaman);
         game.addEntity(this);
     };
@@ -25,6 +26,7 @@ class SceneManager {
 
 
     loadLevelOne(title) {
+        this.levelTitle = "Level 1";
         this.title = title;
         // ASSET_MANAGER.pauseBackgroundMusic();
         // ASSET_MANAGER.playAsset("./sounds/background.mp3");
@@ -349,6 +351,7 @@ class SceneManager {
 
     };
     loadLevelTwo(){
+        this.levelTitle = "Level 2";
         this.x = 0;
 
         //left wall at the beginning area
@@ -550,6 +553,61 @@ class SceneManager {
         } 
     };
 
+    loadTutorialLevel() {
+        this.levelTitle = "Tutorial";
+        this.game.addEntity(new Background(this.game, -2818,-312));
+        this.game.addEntity(new Background(this.game, -897,-312));
+        this.game.addEntity(new Background(this.game, 1024,-312));
+        this.game.addEntity(new Background(this.game, 2945,-312));
+        this.game.addEntity(new Background(this.game, 4866,-312));
+        this.game.addEntity(new Background(this.game, 6787,-312));
+        this.game.addEntity(new Background(this.game, 8708,-312));
+        this.game.addEntity(new Background(this.game, 10629,-312));
+        this.tutorial = true;
+        // Floor
+        for (var i =0 ; i< 12; i ++){
+            this.game.addEntity(new Tile(this.game, 0+i*32*4,736,9,1)); 
+            this.game.addEntity(new Tile(this.game, 32+i*32*4,736,10,1)); 
+            this.game.addEntity(new Tile(this.game, 64+i*32*4,736,9,1)); 
+            this.game.addEntity(new Tile(this.game, 96+i*32*4,736,10,1)); 
+            this.game.addEntity(new Tile(this.game, 0+i*32*4,704,9,0));  
+            this.game.addEntity(new Tile(this.game, 32+i*32*4,704,10,0)); 
+            this.game.addEntity(new Tile(this.game, 64+i*32*4,704,9,0));   
+            this.game.addEntity(new Tile(this.game, 96+i*32*4,704,10,0)); 
+        }
+
+        for (var i =14 ; i< 45; i ++){
+            this.game.addEntity(new Tile(this.game, 0+i*32*4,736,9,1)); 
+            this.game.addEntity(new Tile(this.game, 32+i*32*4,736,10,1)); 
+            this.game.addEntity(new Tile(this.game, 64+i*32*4,736,9,1)); 
+            this.game.addEntity(new Tile(this.game, 96+i*32*4,736,10,1)); 
+            this.game.addEntity(new Tile(this.game, 0+i*32*4,704,9,0));  
+            this.game.addEntity(new Tile(this.game, 32+i*32*4,704,10,0)); 
+            this.game.addEntity(new Tile(this.game, 64+i*32*4,704,9,0));   
+            this.game.addEntity(new Tile(this.game, 96+i*32*4,704,10,0)); 
+        }
+
+        // Jump obstacle
+        for (var i = 0; i < 2; i++) {
+            this.game.addEntity(new Tile(this.game, 20 * 32 + i * 32, 672, 6 + i, 2))
+            this.game.addEntity(new Tile(this.game, 20 * 32 + i * 32, 640, 6 + i, 1))
+            this.game.addEntity(new Tile(this.game, 20 * 32 + i * 32, 608, 6 + i, 0))
+        }
+
+        // Grapping hook obstacle
+        for (var i = 0; i < 2; i++) {
+            for (var j = 0; j < 11; j++) {
+                this.game.addEntity(new Tile(this.game, 125 * 32 + i * 32, 672 - j * 32, 6 + i, 2 + j%2))
+                this.game.addEntity(new Tile(this.game, 125 * 32 + i * 32, 640 - j * 32, 6 + i, 1 + j%2))
+            } 
+            this.game.addEntity(new Tile(this.game, 125 * 32 + i * 32, 288, 6 + i, 0))
+        }
+
+        this.game.addEntity(new Wheelie(this.game, 80 * 32, 640));
+
+
+    }
+
     updateAudio(){
         var mute=document.getElementById("mute").checked;
         var volume=document.getElementById("volume").value;
@@ -580,20 +638,56 @@ class SceneManager {
     };
 
     draw(ctx) {
+        if(this.tutorial) {
+            ctx.fillStyle = "Black";
+            ctx.font = 20 + 'px "Press Start 2P"';
+            ctx.fillText("Press WASD to move", -this.game.camera.x, 300 - this.game.camera.y);
+
+            ctx.fillText("Press space to jump", -this.game.camera.x + 500, 500 - this.game.camera.y);
+            ctx.fillText("↓", -this.game.camera.x + 660, 600 - this.game.camera.y);
+
+            ctx.fillText("Sliding can increase the speed", -this.game.camera.x + 1150, 400 - this.game.camera.y);
+            ctx.fillText("which make you jump further!!", -this.game.camera.x + 1150, 450 - this.game.camera.y);
+            
+
+            ctx.fillText("Use the cursor to aim,", -this.game.camera.x + 2050, 480 - this.game.camera.y);
+            ctx.fillText("left click to shoot pellets", -this.game.camera.x + 2050, 530 - this.game.camera.y);
+            ctx.fillText("Press Q to switch weapon mode", -this.game.camera.x + 2050, 580 - this.game.camera.y);
+
+            ctx.fillText("Use the cursor to aim,", -this.game.camera.x + 2950, 280 - this.game.camera.y);
+            ctx.fillText("right click to shoot graplling hook", -this.game.camera.x + 2950, 330 - this.game.camera.y);
+            ctx.fillText("Press shift to unhook", -this.game.camera.x + 2950, 380 - this.game.camera.y);
+
+            ctx.fillText("Stand here", -this.game.camera.x + 3550, 590 - this.game.camera.y);
+            ctx.fillText("↓", -this.game.camera.x + 3650, 650 - this.game.camera.y);
+
+            ctx.fillText("Aim here and", -this.game.camera.x + 3850, 180 - this.game.camera.y);
+            ctx.fillText("RIGHT click", -this.game.camera.x + 3850, 230 - this.game.camera.y);
+            ctx.fillText("↓", -this.game.camera.x + 3980, 280 - this.game.camera.y);
+
+            ctx.font = 30 + 'px "Press Start 2P"';
+            ctx.fillText("You got it!", -this.game.camera.x + 4450,450 - this.game.camera.y);
+
+        }
 
         if (this.title) {
             ctx.drawImage(ASSET_MANAGER.getAsset("./sprites/intropage.png"),0,0);
             ctx.fillStyle = "White";
-            ctx.font = "30px Verdana";
+            ctx.font = 20 + 'px "Press Start 2P"';
             ctx.fillText("PRESS SPACE TO START", 600, 700)
         } 
         // ctx.drawImage(ASSET_MANAGER.getAsset("./sprites/intropage.png"),0,0);
         ctx.fillStyle = "White";
+        ctx.font = 20 + 'px "Press Start 2P"';
         ctx.fillText("Megaman", 1.5 * 32, 1 * 32);
-        ctx.fillText("Stage 1", 15 * 32, 1 * 32);
+        ctx.fillText(this.levelTitle, 15 * 32, 1 * 32);
         ctx.fillText("TIME", 25 * 32, 1 * 32);
-        if (PARAMS.DEBUG) {
+        
+        
+        
 
+        if (PARAMS.DEBUG) {
+            ctx.font = 18 + 'px "Press Start 2P"';
             ctx.strokeStyle = "White";
             ctx.lineWidth = 2;
             ctx.strokeStyle = this.game.left ? "White" : "Grey";

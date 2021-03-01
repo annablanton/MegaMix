@@ -32,15 +32,14 @@ class Mushroom {
                         }
                     }
                     if (that.type == 1) entity.state = 1; 
-                } else if ((entity instanceof Tile)
+                } 
+                if ((entity instanceof Tile)
                     && (that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE) <= entity.BB.top) {
                     that.y = entity.BB.top - that.SPRITE_HEIGHT;
                     that.velocity.y = 0;
                     that.updateBB();
-                } else if (entity !== that) {
-                    that.velocity.x = -that.velocity.x;
-                }
-            };
+                } 
+             };
         });
         
     }
@@ -89,11 +88,9 @@ class Powerup {
                     entity.weaponLevel = 1;
                 } else if ((entity instanceof Tile)
                     && (that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE) <= entity.BB.top) {
-                    that.y = entity.BB.top - that.SPRITE_HEIGHT;
+                    that.y = entity.BB.top - that.SPRITE_HEIGHT - 0.5;
                     that.velocity.y = 0;
 
-                } else if (entity !== that) {
-                    that.velocity.x = -that.velocity.x;
                 }
                 that.updateBB();
             };                    
