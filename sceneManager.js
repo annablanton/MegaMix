@@ -13,9 +13,9 @@ class SceneManager {
         game.addEntity(new Pellet(game, 16, 16, Math.PI / 8));
         
 
-        this.loadLevelOne(this.title);
+        //this.loadLevelOne(this.title);
         // this.loadLevelTwo();   
-        // this.loadTutorialLevel();    
+         this.loadTutorialLevel();    
         game.addEntity(this.megaman);
         game.addEntity(this);
     };
