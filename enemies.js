@@ -139,11 +139,8 @@ class Met {
                 //console.log(entity.BB);
                 if (entity.BB && that.BB.collide(entity.BB)) {
                     //console.log(entity.BB);
-                    if ((entity instanceof Pellet)) {
-                        //update lose life
-                    }
                     if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
-                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 2;
+                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 2-0.2;
                         that.velocity.y = 0;
                         that.updateBB();
                     } else if (entity !== that && !(entity instanceof Pellet)) { //&& !(entity instanceof Megaman)
@@ -381,12 +378,9 @@ class Carock {
                 //console.log(entity);
                 //console.log(entity.BB);
                 if (entity.BB && that.BB.collide(entity.BB)) {
-                    if ((entity instanceof Pellet)) {
-                        //update lose life
-                    }
                     //console.log(entity.BB);
                     if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
-                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 2;
+                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 2-0.2;
                         that.velocity.y = 0;
                         that.updateBB();
                     } else if (entity !== that && !(entity instanceof Pellet)) { //&& !(entity instanceof Megaman)
@@ -576,7 +570,7 @@ class Bulldozer {
                     }
                     //console.log(entity.BB);
                     if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
-                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 2;
+                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 2-0.2;
                         that.velocity.y = 0;
                         that.updateBB();
                     } else if (entity !== that &&!(entity instanceof Pellet)&& !(entity instanceof Megaman)) { //
@@ -816,7 +810,7 @@ class ArmorKnight {
                     }
                     //console.log(entity.BB);
                     if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
-                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 2.25;
+                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 2.25-0.2;
                         that.velocity.y = 0;
                         that.updateBB();
                     }                 
@@ -1134,7 +1128,7 @@ class HammerBro {
                     }
                     //console.log(entity.BB);
                     if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
-                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 2.5;
+                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 2.5-0.2;
                         that.velocity.y = 0;
                         that.updateBB();
                     }

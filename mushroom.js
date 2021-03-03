@@ -35,7 +35,7 @@ class Mushroom {
                 } 
                 if ((entity instanceof Tile)
                     && (that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE) <= entity.BB.top) {
-                    that.y = entity.BB.top - that.SPRITE_HEIGHT;
+                    that.y = entity.BB.top - that.SPRITE_HEIGHT-0.5;
                     that.velocity.y = 0;
                     that.updateBB();
                 } 
@@ -88,7 +88,7 @@ class Powerup {
                     entity.weaponLevel = 1;
                 } else if ((entity instanceof Tile)
                     && (that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE) <= entity.BB.top) {
-                    that.y = entity.BB.top - that.SPRITE_HEIGHT - 0.5;
+                    that.y = entity.BB.top - that.SPRITE_HEIGHT-0.5;
                     that.velocity.y = 0;
 
                 }
