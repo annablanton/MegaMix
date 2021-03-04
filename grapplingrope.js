@@ -70,7 +70,6 @@ class GrapplingHook {
                 }
 
                 if (entity instanceof Tile && !that.retracting) {
-                    //code to pull megaman to grappling spot goes here
                     that.pulling = 1;
                 }
             }

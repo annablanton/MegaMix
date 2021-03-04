@@ -7,16 +7,15 @@ class SceneManager {
         this.title = true; 
         this.stopmusic = false;
 
-        //this.megaman = new Megaman(game, 6000, 500);
-        this.megaman = new Megaman(game, 100, 200);
+        ////this.megaman = new Megaman(game, 6000, 500);
+        ////this.megaman = new Megaman(game, 100, 200);
+        //this.megaman = new Megaman(game, 2600, -3900)
         game.addEntity(new HealthMeter(game, 975, 25));
-        game.addEntity(new Pellet(game, 16, 16, Math.PI / 8));
         
-
-        // this.loadLevelOne(this.title);
-        this.loadLevelTwo();   
-        // this.loadTutorialLevel();    
-        game.addEntity(this.megaman);
+        ////this.loadLevelOne(this.title);
+        //this.loadLevelTwo();   
+        //// this.loadTutorialLevel(); 
+        //game.addEntity(this.megaman);
         game.addEntity(this);
     };
 
@@ -27,7 +26,7 @@ class SceneManager {
 
     loadLevelOne() {
         this.levelTitle = "Level 1";
-        this.title = title;
+        //this.title = title;
         // ASSET_MANAGER.pauseBackgroundMusic();
         // ASSET_MANAGER.playAsset("./sounds/background.mp3");
         this.x = 0;
@@ -338,7 +337,7 @@ class SceneManager {
         this.game.addEntity(new Tile(this.game, 7456, -288, 13, 5));
         this.game.addEntity(new Tile(this.game, 7488, -288, 15, 5));
 
-        this.game.addEntity(new BossTrigger(this.game, 6208, -256, 32 * 39, 32 * 31, barba, [{ x: 6112, y: 608 }, {x: 7520, y: 608}]));
+        this.game.addEntity(new BossTrigger(this.game, 6208, -256, 32 * 39, 32 * 31, barba, [{ x: 6112, y: 608, length: 4 }, {x: 7520, y: 608, length: 4}]));
         //this.game.addEntity(new BossTrigger(this.game, 6208, -256, 32 * 39, 32 * 31, bb, [{ x: 6112, y: 608 }, { x: 7520, y: 608 }]));
 
 
@@ -347,6 +346,9 @@ class SceneManager {
         }
 
         this.game.addEntity(new Tower(this.game, 7936, 428.5));
+
+        this.game.addEntity(this.megaman);
+        this.game.addEntity(this);
 
 
     };
@@ -357,9 +359,9 @@ class SceneManager {
         //left wall at the beginning area
         for (var i =0 ; i< 24; i ++){
             this.game.addEntity(new Tile(this.game, -32,736-i*32,12,5)); 
-            this.game.addEntity(new Tile(this.game, -64,736-i*32,13,5)); 
-            this.game.addEntity(new Tile(this.game, -96,736-i*32,14,5)); 
-            this.game.addEntity(new Tile(this.game, -128,736-i*32,15,5)); 
+            this.game.addNonCollidableEntity(new Tile(this.game, -64,736-i*32,13,5)); 
+            this.game.addNonCollidableEntity(new Tile(this.game, -96,736-i*32,14,5)); 
+            this.game.addNonCollidableEntity(new Tile(this.game, -128,736-i*32,15,5)); 
             // this.game.addEntity(new Tile(this.game, -160,736-i*32,12,5)); 
             // this.game.addEntity(new Tile(this.game, -192,736-i*32,13,5)); 
             // this.game.addEntity(new Tile(this.game, -224,736-i*32,14,5)); 
@@ -371,25 +373,25 @@ class SceneManager {
         }
 
         //background
-        this.game.addEntity(new Background2(this.game, 0,0));
-        this.game.addEntity(new Background2(this.game, 0,195));
-        this.game.addEntity(new Background2(this.game, 0,390));
-        this.game.addEntity(new Background2(this.game, 0,585));
-        this.game.addEntity(new Background2(this.game, 626,0));
-        this.game.addEntity(new Background2(this.game, 626,195));
-        this.game.addEntity(new Background2(this.game, 626,390));
-        this.game.addEntity(new Background2(this.game, 626,585));
-        this.game.addEntity(new Background2(this.game, 1252,0));
-        this.game.addEntity(new Background2(this.game, 1252,195));
-        this.game.addEntity(new Background2(this.game, 1252,390));
-        this.game.addEntity(new Background2(this.game, 1252,585));
-        this.game.addEntity(new Background2(this.game, 1878,0));
-        this.game.addEntity(new Background2(this.game, 1878,195));
-        this.game.addEntity(new Background2(this.game, 1878,390));
-        this.game.addEntity(new Background2(this.game, 1878,585));
+        this.game.addNonCollidableEntity(new Background2(this.game, 0,0));
+        this.game.addNonCollidableEntity(new Background2(this.game, 0,195));
+        this.game.addNonCollidableEntity(new Background2(this.game, 0,390));
+        this.game.addNonCollidableEntity(new Background2(this.game, 0,585));
+        this.game.addNonCollidableEntity(new Background2(this.game, 626,0));
+        this.game.addNonCollidableEntity(new Background2(this.game, 626,195));
+        this.game.addNonCollidableEntity(new Background2(this.game, 626,390));
+        this.game.addNonCollidableEntity(new Background2(this.game, 626,585));
+        this.game.addNonCollidableEntity(new Background2(this.game, 1252,0));
+        this.game.addNonCollidableEntity(new Background2(this.game, 1252,195));
+        this.game.addNonCollidableEntity(new Background2(this.game, 1252,390));
+        this.game.addNonCollidableEntity(new Background2(this.game, 1252,585));
+        this.game.addNonCollidableEntity(new Background2(this.game, 1878,0));
+        this.game.addNonCollidableEntity(new Background2(this.game, 1878,195));
+        this.game.addNonCollidableEntity(new Background2(this.game, 1878,390));
+        this.game.addNonCollidableEntity(new Background2(this.game, 1878,585));
         for(var i=0; i<22; i++){
-            this.game.addEntity(new Background2(this.game, 1252,-195-i*195));
-            this.game.addEntity(new Background2(this.game, 1878,-195-i*195));
+            this.game.addNonCollidableEntity(new Background2(this.game, 1252,-195-i*195));
+            this.game.addNonCollidableEntity(new Background2(this.game, 1878,-195-i*195));
         }
 
         
@@ -407,6 +409,15 @@ class SceneManager {
 
 
         //first ceiling
+//        for (var i =0 ; i< 11; i ++){
+//            this.game.addNonCollidableEntity(new Tile(this.game, 0+i*32*4,0,12,5)); 
+//            this.game.addNonCollidableEntity(new Tile(this.game, 32+i*32*4,0,13,5)); 
+//            this.game.addNonCollidableEntity(new Tile(this.game, 64+i*32*4,0,14,5)); 
+//            this.game.addNonCollidableEntity(new Tile(this.game, 96+i*32*4,0,15,5)); 
+//            this.game.addEntity(new Tile(this.game, 0+i*32*4,32,12,5)); 
+//            this.game.addEntity(new Tile(this.game, 32+i*32*4,32,13,5)); 
+//            this.game.addEntity(new Tile(this.game, 64+i*32*4,32,14,5)); 
+//            this.game.addEntity(new Tile(this.game, 96+i*32*4,32,15,5)); 
         for (var i =0 ; i< 10; i ++){
             this.game.addEntity(new Tile(this.game, 0+i*32*4,0,12,5)); 
             this.game.addEntity(new Tile(this.game, 32+i*32*4,0,13,5)); 
@@ -420,6 +431,47 @@ class SceneManager {
         //last tile 1504
 
         //right tower
+
+//        for (var j = 0; j < 35; j++) {
+//            this.game.addEntity(new Tile(this.game, 2304, 608 - j * 128, 16, 0));
+//            this.game.addEntity(new Tile(this.game, 2304, 640 - j * 128, 16, 1));
+//            this.game.addEntity(new Tile(this.game, 2304, 672 - j * 128, 16, 2));
+//            this.game.addEntity(new Tile(this.game, 2304, 704 - j * 128, 16, 3));
+//            this.game.addEntity(new Tile(this.game, 2304, 736 - j * 128, 16, 4));   
+//        }
+
+//        for (var i = 0; i < 14; i++) {
+//            this.game.addEntity(new Tile(this.game, 2336 + i * 32, -3744, 16, 0));
+//            this.game.addEntity(new Tile(this.game, 2336 + i * 32, -3744, 16, 1));
+//            this.game.addEntity(new Tile(this.game, 2336 + i * 32, -3744, 16, 2));
+//            this.game.addEntity(new Tile(this.game, 2336 + i * 32, -3744, 16, 3));
+//            this.game.addEntity(new Tile(this.game, 2336 + i * 32, -3744, 16, 4));   
+//        }
+//        for (var i =0 ; i< 13; i ++){
+//            for(var j = 0; j<35; j++){
+//                this.game.addNonCollidableEntity(new Tile(this.game, 2336+i*32,608-j*128,16,0)); 
+//                this.game.addNonCollidableEntity(new Tile(this.game, 2336+i*32,640-j*128,16,1)); 
+//                this.game.addNonCollidableEntity(new Tile(this.game, 2336+i*32,672-j*128,16,2));
+//                this.game.addNonCollidableEntity(new Tile(this.game, 2336+i*32,704-j*128,16,3));
+//                this.game.addNonCollidableEntity(new Tile(this.game, 2336+i*32,736-j*128,16,4));   
+//            }
+//        }
+//        //left tower
+
+//        for (var j = 0; j < 33; j++) {
+//            this.game.addEntity(new Tile(this.game, 1376, -160 - j * 128, 16, 0));
+//            this.game.addEntity(new Tile(this.game, 1376, -128 - j * 128, 16, 1));
+//            this.game.addEntity(new Tile(this.game, 1376 , -96 - j * 128, 16, 2));
+//            this.game.addEntity(new Tile(this.game, 1376, -64 - j * 128, 16, 3));
+//            this.game.addEntity(new Tile(this.game, 1376, -32 - j * 128, 16, 4)); 
+//        }
+//        for (var i =0 ; i< 13; i ++){
+//            for(var j = 0; j<33; j++){
+//                this.game.addNonCollidableEntity(new Tile(this.game, 960+i*32,-160-j*128,16,0)); 
+//                this.game.addNonCollidableEntity(new Tile(this.game, 960+i*32,-128-j*128,16,1));                 
+//                this.game.addNonCollidableEntity(new Tile(this.game, 960+i*32,-96-j*128,16,2)); 
+//                this.game.addNonCollidableEntity(new Tile(this.game, 960+i*32,-64-j*128,16,3)); 
+//                this.game.addNonCollidableEntity(new Tile(this.game, 960+i*32,-32-j*128,16,4)); 
         for (var i =0 ; i< 1; i ++){
             for(var j = 0; j<35; j++){
                 this.game.addEntity(new Tile(this.game, 2496+i*32,608-j*128,16,0)); 
@@ -599,6 +651,12 @@ class SceneManager {
             this.game.addEntity(new Tile(this.game, 4032+i*32, -3392-i*96,19,3));
         }
 
+        var bb = new BigBoo(this.game, 3800, -3800, this.megaman);
+        this.game.addEntity(bb);
+
+        this.game.addEntity(new BossTrigger(this.game, 3136, -4236, 896, 800, bb, [{ x: 3042, y: -4236, length: 24 }, { x: 4096, y: -4268, length: 1 }, { x: 4128, y: -4268, length: 1 },
+            { x: 4160, y: -4268, length: 1 }, { x: 4192, y: -4268, length: 1 }, { x: 4224, y: -4268, length: 1 }, { x: 4256, y: -4268, length: 1 }, { x: 4288, y: -4268, length: 1 }]));
+
         for(var i=0; i<4;i++){
             this.game.addEntity(new Tile(this.game, 3072+i*256, -4064,17,0));
             this.game.addEntity(new Tile(this.game, 3104+i*256, -4064,17,0));
@@ -682,7 +740,9 @@ class SceneManager {
         this.game.addEntity(new Mushroom(this.game, 1700, -3300,0))
         this.game.addEntity(new Mushroom(this.game, 2100, -3900,0))
         this.game.addEntity(new Mushroom(this.game, 2600, -4350,0))
-        this.game.addEntity(new Mushroom(this.game, 3200, -4350,0))
+        this.game.addEntity(new Mushroom(this.game, 3200, -4350, 0))
+        this.game.addEntity(this.megaman);
+        this.game.addEntity(this);
 
     };
 
@@ -737,6 +797,8 @@ class SceneManager {
         }
 
         this.game.addEntity(new Wheelie(this.game, 80 * 32, 640));
+        this.game.addEntity(this.megaman);
+        this.game.addEntity(this);
 
 
     }
@@ -759,14 +821,23 @@ class SceneManager {
       
         if(this.title && this.game.space) {
             this.title = false;
+            console.log("level start");
+            //this.megaman = new Megaman(this.game, 6000, 500);
+            this.megaman = new Megaman(this.game, 100, 200);
+            //this.megaman = new Megaman(this.game, 2600, -3900);
+            this.loadLevelOne();
+            //this.loadLevelTwo();
+            // this.loadTutorialLevel();
         }
-        
-        this.x = this.megaman.x - midpoint_width;
-        if(this.megaman.y < midpoint_height){
-        this.y = this.megaman.y - midpoint_height;
-        } 
-        else{
-            this.y = 0;
+
+        if (!this.title) {
+            this.x = this.megaman.x - midpoint_width;
+            if (this.megaman.y < midpoint_height) {
+                this.y = this.megaman.y - midpoint_height;
+            }
+            else {
+                this.y = 0;
+            }
         }
     };
 
@@ -812,7 +883,7 @@ class SceneManager {
         ctx.fillStyle = "White";
         ctx.font = 20 + 'px "Press Start 2P"';
         ctx.fillText("Megaman", 1.5 * 32, 1 * 32);
-        ctx.fillText(this.levelTitle, 15 * 32, 1 * 32);
+        if (!this.title) ctx.fillText(this.levelTitle, 15 * 32, 1 * 32);
         ctx.fillText("TIME", 25 * 32, 1 * 32);
         
         

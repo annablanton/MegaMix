@@ -15,6 +15,7 @@ class BigBoo {
         this.HEALTH_POINTS = 30;
         this.teleportTimer = 2;
         this.flickerFlag = false;
+        this.velocity = { x: 0, y: 0 };
 
         this.animations = [];
         for (var i = 0; i < 2; i++) { //left/right
@@ -78,15 +79,35 @@ class BigBoo {
                     this.reappearTimer = 0;
                     this.reappearing = false;
                     this.action = 1;
-                    this.attackTimer = 1;
+                    this.attackTimer = 0.5;
                 }
             } else if (this.action == 1) {
-                this.attackTimer -= this.game.clockTick;
-                if (this.attackTimer <= 0) {
-                    this.attackTimer = 0;
-                    this.action = 0;
-                    this.teleporting = true;
-                    this.teleportTimer = 2;
+                if (this.attackTimer > 0) {
+                    this.attackTimer -= this.game.clockTick;
+                    if (this.attackTimer <= 0) {
+                        this.attackTimer = 0;
+                        this.parabolaOrigin = new Point(this.megaman.x + this.megaman.FIRE_OFFSET_X - 64, this.megaman.y + this.megaman.FIRE_OFFSET_Y - 64);
+                        this.initPos = new Point(this.x, this.y);
+                        this.hideTimer = 2;
+                        var t = 1 - this.hideTimer;
+                        this.velocity.x = (this.megaman.x - this.x) / 1;
+                        this.velocity.y = -1 * t * (this.parabolaOrigin.y - this.y) / 1;
+                        this.x += this.velocity.x * this.game.clockTick;
+                        this.y += this.velocity.y * this.game.clockTick;
+                        this.facing = this.x < this.parabolaOrigin.x ? 1 : 0;
+                    }
+                } else {
+                    this.hideTimer -= this.game.clockTick;
+                    if (this.hideTimer <= 0) this.hideTimer = 0;
+                    var t = 1 - this.hideTimer;
+                    this.velocity.y = -2 * t * (this.parabolaOrigin.y - this.initPos.y) / 1;
+                    this.x += this.velocity.x * this.game.clockTick;
+                    this.y += this.velocity.y * this.game.clockTick;
+                    if (!this.hideTimer) {
+                        this.teleporting = true;
+                        this.action = 0;
+                        this.teleportTimer = 2;
+                    }
                 }
             }
         }
@@ -96,7 +117,7 @@ class BigBoo {
     }
 
     updateBB() {
-        if (!this.teleporting && !this.reappearing) this.BB = new BoundingBox(this.x, this.y, 128, 128);
+        if (!this.teleporting) this.BB = new BoundingBox(this.x, this.y, 128, 128);
         else this.BB = new BoundingBox(-1000, 2000, 0, 0);
     }
 
@@ -115,6 +136,9 @@ class BigBoo {
             }
             this.animations[this.facing][this.action].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2);
             ctx.restore();
+        }
+        if (PARAMS.DEBUG) {
+            if (this.parabolaOrigin) ctx.fillRect(this.parabolaOrigin.x - this.game.camera.x - 2, this.parabolaOrigin.y - this.game.camera.y - 2, 4, 4);
         }
     }
 }

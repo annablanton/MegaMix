@@ -12,7 +12,7 @@ class BossTrigger {
             if (this.BB.collide(this.game.camera.megaman.BB)) {
                 var that = this;
                 this.walls.forEach(function (wall) {
-                    for (var i = 0; i < 4; i++) {
+                    for (var i = 0; i < wall.length; i++) {
                         var tile = new Tile(that.game, wall.x, wall.y + i * 32, 24, 3);
                         that.tiles.push(tile);
                         that.game.addEntity(tile);
