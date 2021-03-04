@@ -26,7 +26,7 @@ class SceneManager {
 
     loadLevelOne() {
         this.levelTitle = "Level 1";
-        this.title = title;
+        //this.title = title;
         // ASSET_MANAGER.pauseBackgroundMusic();
         // ASSET_MANAGER.playAsset("./sounds/background.mp3");
         this.x = 0;
@@ -822,11 +822,11 @@ class SceneManager {
         if(this.title && this.game.space) {
             this.title = false;
             console.log("level start");
-            //this.megaman = new Megaman(game, 6000, 500);
-            //this.megaman = new Megaman(game, 100, 200);
-            this.megaman = new Megaman(this.game, 2600, -3900);
-            //this.loadLevelOne(this.title);
-            this.loadLevelTwo();
+            //this.megaman = new Megaman(this.game, 6000, 500);
+            this.megaman = new Megaman(this.game, 100, 200);
+            //this.megaman = new Megaman(this.game, 2600, -3900);
+            this.loadLevelOne();
+            //this.loadLevelTwo();
             // this.loadTutorialLevel();
         }
 
@@ -883,7 +883,7 @@ class SceneManager {
         ctx.fillStyle = "White";
         ctx.font = 20 + 'px "Press Start 2P"';
         ctx.fillText("Megaman", 1.5 * 32, 1 * 32);
-        ctx.fillText(this.levelTitle, 15 * 32, 1 * 32);
+        if (!this.title) ctx.fillText(this.levelTitle, 15 * 32, 1 * 32);
         ctx.fillText("TIME", 25 * 32, 1 * 32);
         
         
