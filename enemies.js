@@ -1363,7 +1363,7 @@ class Wheelie {
                     }
                     //console.log(entity.BB);
                     if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
-                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 3;
+                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 3 - 0.5;
                         that.velocity.y = 0;
                         that.updateBB();
                     }

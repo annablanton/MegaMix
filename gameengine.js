@@ -2,6 +2,7 @@
 class GameEngine {
     constructor() {
         this.entities = [];
+        this.nonCollidableEntities = [];
         this.ctx = null;
         this.left=false; //direction
         this.right=false;
@@ -213,8 +214,15 @@ class GameEngine {
         this.entities.push(entity);
     };
 
+    addNonCollidableEntity(entity) {
+        this.nonCollidableEntities.push(entity);
+    }
+
     draw() {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        for (var i = 0; i < this.nonCollidableEntities.length; i++) {
+            this.nonCollidableEntities[i].draw(this.ctx);
+        }
         for (var i = 0; i < this.entities.length; i++) {
             this.entities[i].draw(this.ctx);            
         }
@@ -230,6 +238,9 @@ class GameEngine {
             if (!entity.removeFromWorld) {
                 entity.update();
             }
+        }
+        for (var i = 0; i < this.nonCollidableEntities.length; i++) {
+            this.nonCollidableEntities[i].update();
         }
 
         for (var i = this.entities.length - 1; i >= 0; --i) {

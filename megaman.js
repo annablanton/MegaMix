@@ -300,6 +300,8 @@ class Megaman {
 
         if (this.grapplingHook && this.grapplingHook.removeFromWorld && this.firingState == 2) {
             this.firingState = 0;
+            this.grapplingHook.pulling = 0;
+            this.grapplingHook.retracting = 0;
         }
 
 

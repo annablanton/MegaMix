@@ -80,22 +80,26 @@ function lineAndBoxIntersect(lineX, lineY, angle, length, bb) {
 
     var closestIntersectionLength = length;
     if (lineBBLeftIntersectY >= bbTopY && lineBBLeftIntersectY <= bbBottomY
-          && lineBBLeftIntersectY >= lowerLineY && lineBBLeftIntersectY <= higherLineY) {
+        && lineBBLeftIntersectY >= lowerLineY && lineBBLeftIntersectY <= higherLineY
+        && bbLeftX >= lowerLineX && bbRightX <= higherLineX) {
         var dist = distance(lineX, lineY, bbLeftX, lineBBLeftIntersectY);
         if (dist < closestIntersectionLength) closestIntersectionLength = dist;
     }
     if (lineBBRightIntersectY >= bbTopY && lineBBRightIntersectY <= bbBottomY
-        && lineBBRightIntersectY >= lowerLineY && lineBBRightIntersectY <= higherLineY) {
+        && lineBBRightIntersectY >= lowerLineY && lineBBRightIntersectY <= higherLineY
+        && bbRightX >= lowerLineX && bbRightX <= higherLineX) {
         var dist = distance(lineX, lineY, bbRightX, lineBBRightIntersectY);
         if (dist < closestIntersectionLength) closestIntersectionLength = dist;
     }
     if (lineBBBottomIntersectX >= bbLeftX && lineBBBottomIntersectX <= bbRightX
-        && lineBBBottomIntersectX >= lowerLineX && lineBBBottomIntersectX <= higherLineX) {
+        && lineBBBottomIntersectX >= lowerLineX && lineBBBottomIntersectX <= higherLineX
+        && bbBottomY >= lowerLineY && bbBottomY <= higherLineY) {
         var dist = distance(lineX, lineY, lineBBBottomIntersectX, bbBottomY);
         if (dist < closestIntersectionLength) closestIntersectionLength = dist;
     }
     if (lineBBTopIntersectX >= bbLeftX && lineBBTopIntersectX <= bbRightX
-        && lineBBTopIntersectX >= lowerLineX && lineBBTopIntersectX <= higherLineX) {
+        && lineBBTopIntersectX >= lowerLineX && lineBBTopIntersectX <= higherLineX
+        && bbTopY >= lowerLineY && bbTopY <= higherLineY) {
         var dist = distance(lineX, lineY, lineBBTopIntersectX, bbTopY);
         if (dist < closestIntersectionLength) closestIntersectionlength = dist;
     }
