@@ -24,6 +24,7 @@ class Mushroom {
         this.game.entities.forEach(function (entity) {
             if (entity.BB && that.BB.collide(entity.BB)) {
                 if (entity instanceof Megaman) {
+                    ASSET_MANAGER.playAsset("./sounds/mushroom.wav");
                     that.removeFromWorld = true;
                     if (that.type == 0) {
                         entity.healthPoint += 5;
@@ -84,6 +85,7 @@ class Powerup {
         this.game.entities.forEach(function (entity) {
             if (entity.BB && that.BB.collide(entity.BB)) {
                 if (entity instanceof Megaman) {
+                    ASSET_MANAGER.playAsset("./sounds/powerup.wav");
                     that.removeFromWorld = true;
                     entity.weaponLevel = 1;
                 } else if ((entity instanceof Tile)

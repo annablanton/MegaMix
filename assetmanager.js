@@ -38,20 +38,7 @@ class AssetManager {
 
                 img.src = path;
                 this.cache[path] = img;
-            } else if (path.endsWith(".wav")) {
-                // var aud = new Audio();
-
-                // aud.addEventListener("canplaythrough", function () {
-                //     console.log("Loaded " + this.src);
-                //     that.successCount++;
-                //     if (that.isDone()) callback();
-                // });
-
-                // aud.addEventListener("error", function () {
-                //     console.log("Error loading " + this.src);
-                //     that.errorCount++;
-                //     if (that.isDone()) callback();
-                // });
+            } else if (path.endsWith(".wav")||path.endsWith(".mp3")) {
                 var aud = new Audio();
 
                 aud.addEventListener("canplaythrough", function () {
@@ -72,32 +59,9 @@ class AssetManager {
 
                 aud.src = path;
                 this.cache[path] = aud;
-                
-            } else if (path.endsWith(".mp3")) {
-                var aud = new Audio();
-
-                aud.addEventListener("canplaythrough", function () {
-                    console.log("Loaded " + this.src);
-                    that.successCount++;
-                    if (that.isDone()) callback();
-                });
-
-                aud.addEventListener("error", function () {
-                    console.log("Error loading " + this.src);
-                    that.errorCount++;
-                    if (that.isDone()) callback();
-                });
-                aud.addEventListener("ended", function () {
-                    aud.pause();
-                    aud.currentTime =0;
-                });
-
-                aud.src = path;
-                aud.load();
-
-                this.cache[path] = aud;
-                break;
-            }
+               
+            } 
+           
         }
     };
 

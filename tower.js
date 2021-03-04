@@ -19,10 +19,13 @@ class Tower {
             this.action = 0;
         } else if (!this.fallen) {
             if (this.animations[1].isDoneNextFrame(this.game.clockTick)) {
+
                 this.action = 2;
                 this.fallen = true;
             } else {
                 this.action = 1;
+                ASSET_MANAGER.pauseBackgroundMusic();
+                ASSET_MANAGER.playAsset("./sounds/stageclear.wav");
             }
         }
         this.updateBB();
