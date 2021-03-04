@@ -143,7 +143,7 @@ class Met {
                         //update lose life
                     }
                     if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
-                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 2;
+                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 2 - 0.5;
                         that.velocity.y = 0;
                         that.updateBB();
                     } else if (entity !== that && !(entity instanceof Pellet)) { //&& !(entity instanceof Megaman)
@@ -386,7 +386,7 @@ class Carock {
                     }
                     //console.log(entity.BB);
                     if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
-                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 2;
+                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 2 - 0.5;
                         that.velocity.y = 0;
                         that.updateBB();
                     } else if (entity !== that && !(entity instanceof Pellet)) { //&& !(entity instanceof Megaman)
@@ -413,18 +413,18 @@ class Carock {
                 }
 
                 // Cliff Detection
-                if (entity instanceof Tile) {
-                    if (that.FDBB.collide(entity.BB)){
-                        that.fallDetectionTimer = 0;
+                // if (entity instanceof Tile) {
+                //     if (that.FDBB.collide(entity.BB)){
+                //         that.fallDetectionTimer = 0;
                                  
-                    } else {
-                        that.fallDetectionTimer += that.game.clockTick;
-                        if (that.state == 0 && that.velocity.y == 0 && that.fallDetectionTimer > 300) {
-                            that.facing = (that.facing == 1 ? 0 : 1);
-                            that.velocity.x = -that.velocity.x; 
-                        }      
-                    }
-                }
+                //     } else {
+                //         that.fallDetectionTimer += that.game.clockTick;
+                //         if (that.state == 0 && that.velocity.y == 0 && that.fallDetectionTimer > 300) {
+                //             that.facing = (that.facing == 1 ? 0 : 1);
+                //             that.velocity.x = -that.velocity.x; 
+                //         }      
+                //     }
+                // }
             });
             this.updateBB();
         }
@@ -576,7 +576,7 @@ class Bulldozer {
                     }
                     //console.log(entity.BB);
                     if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
-                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 2;
+                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 2 - 0.5;
                         that.velocity.y = 0;
                         that.updateBB();
                     } else if (entity !== that &&!(entity instanceof Pellet)&& !(entity instanceof Megaman)) { //
@@ -624,18 +624,18 @@ class Bulldozer {
                     that.action = 0;
                 }
                 // Cliff Detection
-                if (entity instanceof Tile) {
-                    if (that.FDBB.collide(entity.BB)){
-                        that.fallDetectionTimer = 0;
+                // if (entity instanceof Tile) {
+                //     if (that.FDBB.collide(entity.BB)){
+                //         that.fallDetectionTimer = 0;
                                  
-                    } else {
-                        that.fallDetectionTimer += that.game.clockTick;
-                        if (that.state == 0 && that.velocity.y == 0 && that.fallDetectionTimer > 200) {
-                            that.facing = (that.facing == 1 ? 0 : 1);
-                            that.velocity.x = -that.velocity.x; 
-                        }      
-                    }
-                }
+                //     } else {
+                //         that.fallDetectionTimer += that.game.clockTick;
+                //         if (that.state == 0 && that.velocity.y == 0 && that.fallDetectionTimer > 200) {
+                //             that.facing = (that.facing == 1 ? 0 : 1);
+                //             that.velocity.x = -that.velocity.x; 
+                //         }      
+                //     }
+                // }
 
 
             });
@@ -816,7 +816,7 @@ class ArmorKnight {
                     }
                     //console.log(entity.BB);
                     if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
-                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 2.25;
+                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 2.25 - 0.5;
                         that.velocity.y = 0;
                         that.updateBB();
                     }                 
@@ -883,18 +883,18 @@ class ArmorKnight {
                 } 
 
                   // Cliff Detection
-                  if (entity instanceof Tile) {
-                    if (that.FDBB.collide(entity.BB)){
-                        that.fallDetectionTimer = 0;
+                //   if (entity instanceof Tile) {
+                //     if (that.FDBB.collide(entity.BB)){
+                //         that.fallDetectionTimer = 0;
                                  
-                    } else {
-                        that.fallDetectionTimer += that.game.clockTick;
-                        if (that.state == 0 && that.velocity.y == 0 && that.fallDetectionTimer > 100) {
-                            that.facing = (that.facing == 1 ? 0 : 1);
-                            that.velocity.x = -that.velocity.x; 
-                        }      
-                    }
-                }
+                //     } else {
+                //         that.fallDetectionTimer += that.game.clockTick;
+                //         if (that.state == 0 && that.velocity.y == 0 && that.fallDetectionTimer > 100) {
+                //             that.facing = (that.facing == 1 ? 0 : 1);
+                //             that.velocity.x = -that.velocity.x; 
+                //         }      
+                //     }
+                // }
             });
             this.updateBB();
         }
@@ -1134,7 +1134,7 @@ class HammerBro {
                     }
                     //console.log(entity.BB);
                     if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
-                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 2.5;
+                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 2.5 - 0.5;
                         that.velocity.y = 0;
                         that.updateBB();
                     }
@@ -1184,18 +1184,18 @@ class HammerBro {
                 }
 
                 // Cliff Detection
-                if (entity instanceof Tile) {
-                    if (that.FDBB.collide(entity.BB)){
-                        that.fallDetectionTimer = 0;
+                // if (entity instanceof Tile) {
+                //     if (that.FDBB.collide(entity.BB)){
+                //         that.fallDetectionTimer = 0;
                                  
-                    } else {
-                        that.fallDetectionTimer += that.game.clockTick;
-                        if (that.state == 0 && that.velocity.y == 0 && that.fallDetectionTimer > 100) {
-                            that.facing = (that.facing == 1 ? 0 : 1);
-                            that.velocity.x = -that.velocity.x; 
-                        }      
-                    }
-                }
+                //     } else {
+                //         that.fallDetectionTimer += that.game.clockTick;
+                //         if (that.state == 0 && that.velocity.y == 0 && that.fallDetectionTimer > 100) {
+                //             that.facing = (that.facing == 1 ? 0 : 1);
+                //             that.velocity.x = -that.velocity.x; 
+                //         }      
+                //     }
+                // }
             });
         }
     }
@@ -1369,7 +1369,7 @@ class Wheelie {
                     }
                     //console.log(entity.BB);
                     if (entity instanceof Tile && that.BB.bottom - that.velocity.y * that.game.clockTick * PARAMS.SCALE <= entity.BB.top) {
-                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 3;
+                        that.y = entity.BB.top - that.SPRITE_HEIGHT * 3 - 0.5;
                         that.velocity.y = 0;
                         that.updateBB();
                     }
@@ -1422,18 +1422,18 @@ class Wheelie {
                     that.velocity.y /= 5;    
                 }
                  // Cliff Detection
-                if (entity instanceof Tile) {
-                    if (that.FDBB.collide(entity.BB)){
-                        that.fallDetectionTimer = 0;
+                // if (entity instanceof Tile) {
+                //     if (that.FDBB.collide(entity.BB)){
+                //         that.fallDetectionTimer = 0;
                                  
-                    } else {
-                        that.fallDetectionTimer += that.game.clockTick;
-                        if (that.state == 0 && that.velocity.y == 0 && that.fallDetectionTimer > 100) {
-                            that.facing = (that.facing == 1 ? 0 : 1);
-                            that.velocity.x = -that.velocity.x; 
-                        }      
-                    }
-                }
+                //     } else {
+                //         that.fallDetectionTimer += that.game.clockTick;
+                //         if (that.state == 0 && that.velocity.y == 0 && that.fallDetectionTimer > 100) {
+                //             that.facing = (that.facing == 1 ? 0 : 1);
+                //             that.velocity.x = -that.velocity.x; 
+                //         }      
+                //     }
+                // }
             });
         }
         
