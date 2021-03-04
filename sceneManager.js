@@ -6,7 +6,7 @@ class SceneManager {
         this.y = 0;
         this.title = true; 
         this.stopmusic = false;
-
+        
         ////this.megaman = new Megaman(game, 6000, 500);
         ////this.megaman = new Megaman(game, 100, 200);
         //this.megaman = new Megaman(game, 2600, -3900)
@@ -26,9 +26,9 @@ class SceneManager {
 
     loadLevelOne() {
         this.levelTitle = "Level 1";
-        //this.title = title;
-        // ASSET_MANAGER.pauseBackgroundMusic();
-        // ASSET_MANAGER.playAsset("./sounds/background.mp3");
+        // this.title = title;
+        ASSET_MANAGER.pauseBackgroundMusic();
+        ASSET_MANAGER.playAsset("./sounds/background.mp3");
         this.x = 0;
         //background setting
         
@@ -145,7 +145,7 @@ class SceneManager {
         this.game.addEntity(new HammerBro(this.game, 4500, -300));
 
 
-        this.game.addEntity(new Wheelie(this.game, 4800, -200));
+        this.game.addEntity(new Wheelie(this.game, 4800, 400));
 
 
         this.game.addEntity(new Tile(this.game, 3240,704, 3,2)); 
@@ -232,8 +232,8 @@ class SceneManager {
         this.game.addEntity(new Gordo(this.game, 3300, 25, 1, 0));
         this.game.addEntity(new Gordo(this.game, 3000, 45, -1, 0));
 
-        this.game.addEntity(new HammerBro(this.game, 5500, -900));
-        this.game.addEntity(new HammerBro(this.game, 5000, -900));
+        this.game.addEntity(new HammerBro(this.game, 5500, 0));
+        this.game.addEntity(new HammerBro(this.game, 5000, 0));
         //next stairs 
         for(var i =0; i<4; i++){
             for(var j=0; j<4-i; j++){
@@ -353,6 +353,8 @@ class SceneManager {
 
     };
     loadLevelTwo(){
+        ASSET_MANAGER.pauseBackgroundMusic();
+        ASSET_MANAGER.playAsset("./sounds/background1.mp3");
         this.levelTitle = "Level 2";
         this.x = 0;
 
@@ -747,6 +749,10 @@ class SceneManager {
     };
 
     loadTutorialLevel() {
+        ASSET_MANAGER.pauseBackgroundMusic();
+        ASSET_MANAGER.playAsset("./sounds/tutorial bgm.mp3");
+      
+       
         this.levelTitle = "Tutorial";
         this.game.addEntity(new Background(this.game, -2818,-312));
         this.game.addEntity(new Background(this.game, -897,-312));
@@ -826,7 +832,7 @@ class SceneManager {
             this.megaman = new Megaman(this.game, 100, 200);
             //this.megaman = new Megaman(this.game, 2600, -3900);
             this.loadLevelOne();
-            //this.loadLevelTwo();
+            // this.loadLevelTwo();
             // this.loadTutorialLevel();
         }
 
