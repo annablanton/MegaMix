@@ -20,6 +20,7 @@ class Megaman {
         this.healthPoint = this.FULL_HEALTH_POINT;
         this.poisonedTimer = 0;
         this.healthBar = new HealthMeter(this);
+        this.weaponmodeicon = new WeaponIcon(this);
         this.landedTimer = 0.05;
         this.landed = 0;
 
@@ -819,6 +820,7 @@ class Megaman {
             ctx.fillRect(this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2  + ellipsePoint.x - 1-this.game.camera.x, this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y - 1- this.game.camera.y, 2, 2);
         }
         this.healthBar.draw(ctx);
+        this.weaponmodeicon.draw(ctx);
       
     };
 
