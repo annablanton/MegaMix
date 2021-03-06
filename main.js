@@ -18,6 +18,7 @@ ASSET_MANAGER.queueDownload("./sprites/bg2.png");
 ASSET_MANAGER.queueDownload("./sprites/effects.png");
 ASSET_MANAGER.queueDownload("./sprites/intropage.png");
 ASSET_MANAGER.queueDownload("./sprites/towerdemolition.png");
+ASSET_MANAGER.queueDownload("./sprites/weapon_icon.png");
 
 //sounds
 ASSET_MANAGER.queueDownload("./sounds/background.mp3");
