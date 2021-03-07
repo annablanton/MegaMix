@@ -12,6 +12,7 @@ class Tower {
         this.HEALTH_POINTS = 10;
         this.fallen = false;
         console.log(this.animations[2]);
+        this.transitionTimer = 5;
     }
 
     update() {
@@ -25,6 +26,8 @@ class Tower {
                 this.action = 1;
             }
         }
+
+        if (this.fallen) this.transitionTimer -= this.game.clockTick;
         this.updateBB();
     }
 

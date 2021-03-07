@@ -250,6 +250,12 @@ class GameEngine {
         }
     };
 
+    clearEntities() {
+        this.entities.forEach(function (entity) {
+            entity.removeFromWorld = true;
+        })
+    }
+
     loop() {
         this.clockTick = this.timer.tick();
         this.update();
