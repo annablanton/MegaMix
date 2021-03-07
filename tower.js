@@ -12,7 +12,7 @@ class Tower {
         this.HEALTH_POINTS = 10;
         this.fallen = false;
         console.log(this.animations[2]);
-        this.transitionTimer = 5;
+        this.transitionTimer = 7;
     }
 
     update() {
@@ -20,10 +20,13 @@ class Tower {
             this.action = 0;
         } else if (!this.fallen) {
             if (this.animations[1].isDoneNextFrame(this.game.clockTick)) {
+
                 this.action = 2;
                 this.fallen = true;
             } else {
                 this.action = 1;
+                ASSET_MANAGER.pauseBackgroundMusic();
+                ASSET_MANAGER.playAsset("./sounds/stageclear.wav");
             }
         }
 

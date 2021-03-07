@@ -20,6 +20,7 @@ class Megaman {
         this.healthPoint = this.FULL_HEALTH_POINT;
         this.poisonedTimer = 0;
         this.healthBar = new HealthMeter(this);
+        this.weaponmodeicon = new WeaponIcon(this);
         this.landedTimer = 0.05;
         this.landed = 0;
 
@@ -240,13 +241,14 @@ class Megaman {
         this.firingAnims[1][1][3][7] = new Animator(this.spritesheet, 1483, 207 + 661, 46, 46, 2, 0.1, 5, false, true);
 
         //pritesheet, xStart, yStart, width, height, frameCount, frameDuration, framePadding, reverse, loop
-        this.rightdeadAnims = new Animator(this.spritesheet, 105, 615, 46, 46, 5, 0.5, 5,true,false);
-        this.leftdeadAnims = new Animator(this.spritesheet, 360, 615, 46, 46, 5, 0.5, 5,false,false);
+        this.rightdeadAnims = new Animator(this.spritesheet, 106, 615, 46, 46, 5, 0.5, 5,true,false);
+        this.leftdeadAnims = new Animator(this.spritesheet, 361, 615, 46, 46, 5, 0.5, 5,false,false);
         this.rightpoisondeadAnims = new Animator(this.spritesheet, 105, 1276, 46, 46, 4, 0.5, 5, true,false);        
         this.leftpoisondeadAnims = new Animator(this.spritesheet, 310, 1276, 46, 46, 4, 0.5, 5, false, false);
       };
 
     die(){       
+        ASSET_MANAGER.pauseBackgroundMusic();
         ASSET_MANAGER.playAsset("./sounds/death.wav");
         this.dead=true;
     }
@@ -818,6 +820,7 @@ class Megaman {
             ctx.fillRect(this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2  + ellipsePoint.x - 1-this.game.camera.x, this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y - 1- this.game.camera.y, 2, 2);
         }
         this.healthBar.draw(ctx);
+        this.weaponmodeicon.draw(ctx);
       
     };
 

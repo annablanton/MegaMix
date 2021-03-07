@@ -8,8 +8,10 @@ class BossTrigger {
     }
 
     update() {
-        if (!this.bossFightStarted) {
+        if (!this.bossFightStarted) {            
             if (this.BB.collide(this.game.camera.megaman.BB)) {
+                ASSET_MANAGER.pauseBackgroundMusic();
+                ASSET_MANAGER.playAsset("./sounds/bossbattle.mp3");
                 var that = this;
                 this.walls.forEach(function (wall) {
                     for (var i = 0; i < wall.length; i++) {

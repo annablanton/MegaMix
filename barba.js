@@ -54,6 +54,7 @@ class Barba {
                 if (!this.facing) mouthOpenFinished = this.animations[0][1].isDoneNextFrame(this.game.clockTick);
                 else mouthOpenFinished = this.animations[1][1].isDoneNextFrame(this.game.clockTick);
                 if (mouthOpenFinished) {
+                    ASSET_MANAGER.playAsset("./sounds/barbafire1.wav");
                     this.action = 2;
                     this.closeMouthTimer = 2;
                     this.fireBallTimer = 0;
