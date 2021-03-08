@@ -12,6 +12,7 @@ class Tower {
         this.HEALTH_POINTS = 10;
         this.fallen = false;
         console.log(this.animations[2]);
+        this.transitionTimer = 7;
     }
 
     update() {
@@ -28,6 +29,8 @@ class Tower {
                 ASSET_MANAGER.playAsset("./sounds/stageclear.wav");
             }
         }
+
+        if (this.fallen) this.transitionTimer -= this.game.clockTick;
         this.updateBB();
     }
 

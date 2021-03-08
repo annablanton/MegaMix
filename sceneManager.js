@@ -17,6 +17,7 @@ class SceneManager {
         //// this.loadTutorialLevel(); 
         //game.addEntity(this.megaman);
         game.addEntity(this);
+        this.level = 0;
     };
 
     clearEntities() {
@@ -345,7 +346,8 @@ class SceneManager {
             this.game.addEntity(new Tile(this.game, 7552 + i * 32, 736, 3, 2));
         }
 
-        this.game.addEntity(new Tower(this.game, 7936, 428.5));
+        this.tower = new Tower(this.game, 7936, 428.5);
+        this.game.addEntity(this.tower);
 
         this.game.addEntity(this.megaman);
         this.game.addEntity(this);
@@ -629,6 +631,8 @@ class SceneManager {
             // this.game.addEntity(new Tile(this.game, 1472+i*32*4,-4268,14,5)); 
             // this.game.addEntity(new Tile(this.game, 1504+i*32*4, -4268,15,5)); 
         }
+        this.tower = new Tower(this.game, 1400, -4597.5);
+        this.game.addEntity(this.tower);
 
         //2720 //-4960
         for(var i=0; i<7; i++){
@@ -801,12 +805,31 @@ class SceneManager {
             } 
             this.game.addEntity(new Tile(this.game, 125 * 32 + i * 32, 288, 6 + i, 0))
         }
-
+        this.tower = new Tower(this.game, 5000, 396.5);
         this.game.addEntity(new Wheelie(this.game, 80 * 32, 640));
         this.game.addEntity(this.megaman);
+        this.game.addEntity(this.tower);
         this.game.addEntity(this);
 
 
+    }
+
+    loadLevel(level) {
+        switch (level) {
+            case 0:
+                this.loadTutorialLevel();
+                break;
+            case 1:
+                this.tutorial = false;
+                this.loadLevelOne();
+                break;
+            case 2:
+                this.loadLevelTwo();
+                break;
+            case 3:
+                //end screen here
+                break;
+        }
     }
 
     updateAudio(){
@@ -831,12 +854,23 @@ class SceneManager {
             //this.megaman = new Megaman(this.game, 6000, 500);
             this.megaman = new Megaman(this.game, 100, 200);
             //this.megaman = new Megaman(this.game, 2600, -3900);
-            this.loadLevelOne();
-            // this.loadLevelTwo();
+            this.loadLevel(this.level);
+            //this.loadLevelTwo();
             // this.loadTutorialLevel();
         }
 
+        if (this.tower && this.tower.transitionTimer <= 0) {
+            this.game.clearEntities();
+            this.removeFromWorld = false;
+            this.tower = null;
+            this.megaman = new Megaman(this.game, 100, 200);
+            this.loadLevel(++this.level);
+        }
+
+
+
         if (!this.title) {
+            console.log(this.megaman);
             this.x = this.megaman.x - midpoint_width;
             if (this.megaman.y < midpoint_height) {
                 this.y = this.megaman.y - midpoint_height;
