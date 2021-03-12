@@ -23,7 +23,7 @@ class Barba {
         this.animations[1].push(new Animator(this.spritesheet, 249, 50, 48, 17, 3, 0.2, 1, false, false));
         this.animations[1].push(new Animator(this.spritesheet, 347, 50, 48, 17, 1, 0.5, 1, false, true));
         this.animations[1].push(new Animator(this.spritesheet, 249, 50, 48, 17, 3, 0.2, 1, true, false));
-        this.child = new BarbaBody(this.game, this, 12, 12, this.megaman);
+        this.child = new BarbaBody(this.game, this, 16, 16, this.megaman);
         this.paused = true;
         this.changingLocations = false;
         this.locationTimer = 1;
