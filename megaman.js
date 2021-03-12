@@ -120,7 +120,7 @@ class Megaman {
         this.firingAnims[1][0][0][4] = new Animator(this.spritesheet, 769, 207, 46, 46, 3, 0.1, 5, false, true);
         this.firingAnims[1][0][0][5] = new Animator(this.spritesheet, 769, 156, 46, 46, 3, 0.1, 5, false, true);
         this.firingAnims[1][0][0][6] = new Animator(this.spritesheet, 922, 156, 46, 46, 3, 0.1, 5, false, true);
-        this.firingAnims[1][0][0][7] = new Animator(this.spritesheet, 922, 208, 46, 46, 3, 0.1, 5, false, true);
+        this.firingAnims[1][0][0][7] = new Animator(this.spritesheet, 922, 206, 46, 46, 3, 0.1, 5, false, true);
 
         // facing right = 1, normal =0  |  0= idle, 1 = walk/run, 2 = jump, 3 = sliding, 4 = shooting, 5=graphing  
         this.animations[1][0][1] = new Animator(this.spritesheet, 1075, 3, 46, 46, 4, 0.1, 5, false, true);
@@ -206,7 +206,7 @@ class Megaman {
         this.firingAnims[1][1][0][4] = new Animator(this.spritesheet, 769, 207 + 661, 46, 46, 3, 0.1, 5, false, true);
         this.firingAnims[1][1][0][5] = new Animator(this.spritesheet, 769, 156 + 661, 46, 46, 3, 0.1, 5, false, true);
         this.firingAnims[1][1][0][6] = new Animator(this.spritesheet, 922, 156 + 661, 46, 46, 3, 0.1, 5, false, true);
-        this.firingAnims[1][1][0][7] = new Animator(this.spritesheet, 922, 208 + 661, 46, 46, 3, 0.1, 5, false, true);
+        this.firingAnims[1][1][0][7] = new Animator(this.spritesheet, 922, 207 + 661, 46, 46, 3, 0.1, 5, false, true);
 
         // facing right = 1, poison = 1  |  0= idle, 1 = walk/run 2 = jump 3 = sliding
         this.animations[1][1][1] = new Animator(this.spritesheet, 1075, 664, 46, 46, 4, 0.1, 5, false, true);
@@ -510,7 +510,7 @@ class Megaman {
                 } else if (entity instanceof Bulldozer) {
                     that.damage(4);
                 } else if (entity instanceof Barba || entity instanceof Fireball || entity instanceof BigBoo) {
-                    that.damage(3, 100);
+                    that.damage(3, 45);
                 } else {
                     that.damage(1);
                 }
@@ -576,7 +576,7 @@ class Megaman {
                             this.pelletSize = 1;
                         } else {
                             ASSET_MANAGER.playAsset("./sounds/shooting.wav");
-                            this.pelletSize = 2;
+                            this.pelletSize = 1.3;
                         }
                         var momentumX;
                         if ((this.velocity.x > 0 && vector.x > 0) || (this.velocity.x < 0 && vector.x < 0)) momentumX = this.velocity.x;
@@ -788,11 +788,18 @@ class Megaman {
             }
             if (this.facing == 1) {
                 if (!knockback) this.velocity.x = -160;
-                else this.velocity.x = -knockback;
+                else {
+                    this.velocity.x = -knockback;
+                    this.velocity.y = -230;
+                }
+
             }
             if (this.facing == 0) {
                 if (!knockback) this.velocity.x = +160;
-                else this.velocity.x = knockback;
+                else {
+                    this.velocity.x = knockback;
+                    this.velocity.y = -230;
+                }
             }
             this.invulnTimer = 1.5;
         }
