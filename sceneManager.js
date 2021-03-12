@@ -9,8 +9,8 @@ class SceneManager {
         this.lives = 3;
         
         ////this.megaman = new Megaman(game, 6000, 500);
-        this.megaman = new Megaman(game, 5500, 200);
-        //this.megaman = new Megaman(game, 2600, -3900)
+        this.megaman = new Megaman(game, 100, 200);
+        this.megaman = new Megaman(game, 2600, -3900)
         game.addEntity(new HealthMeter(game, 975, 25));
         this.GAME_OVER_TEXT = "GAME OVER";
         this.PRESS_SPACE_DEATH_TEXT = "PRESS SPACE TO TRY AGAIN";
@@ -21,7 +21,7 @@ class SceneManager {
         //// this.loadTutorialLevel(); 
         //game.addEntity(this.megaman);
         game.addEntity(this);
-        this.level = 1;
+        this.level = 0;
     };
 
     clearEntities() {
@@ -328,10 +328,10 @@ class SceneManager {
         }
 
         for (var i = 0; i < 7; i++) {
-            this.game.addEntity(new Tile(this.game, 6240 + 5 * 256, 576 - 4 * i * 32, 16, 3));
-            this.game.addEntity(new Tile(this.game, 6240 + 5 * 256, 544 - 4 * i * 32, 16, 2));
-            this.game.addEntity(new Tile(this.game, 6240 + 5 * 256, 512 - 4 * i * 32, 16, 1));
-            this.game.addEntity(new Tile(this.game, 6240 + 5 * 256, 480 - 4 * i * 32, 16, 0));
+            this.game.addEntity(new Tile(this.game, 6240 + 5 * 256, 448 - 4 * i * 32, 16, 3));
+            this.game.addEntity(new Tile(this.game, 6240 + 5 * 256, 416 - 4 * i * 32, 16, 2));
+            this.game.addEntity(new Tile(this.game, 6240 + 5 * 256, 384 - 4 * i * 32, 16, 1));
+            this.game.addEntity(new Tile(this.game, 6240 + 5 * 256, 352 - 4 * i * 32, 16, 0));
         }
 
         for (var i = 0; i < 7; i++) {
