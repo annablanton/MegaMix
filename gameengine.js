@@ -250,6 +250,13 @@ class GameEngine {
         }
     };
 
+    clearEntities() {
+        if (this.camera) this.camera.tutorial = false;
+        this.entities.forEach(function (entity) {
+            entity.removeFromWorld = true;
+        })
+    }
+
     loop() {
         this.clockTick = this.timer.tick();
         this.update();

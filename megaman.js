@@ -12,14 +12,16 @@ class Megaman {
         this.LASER_HEIGHT = 1024;
         this.FULL_HEALTH_POINT = 28;
         this.MAX_GRAPPLE_SPEED = 1000;
+        this.deadTimer = 3;
 
         this.facing = 0;                    //0=left 1=right
         this.state =0;                      // 0 = normal 1 = poison
-        this.action = 0;                    // 0= idle, 1 = walk/run 2 = jump 3 = sliding 4 = shooting 5=graphing 
+        this.action = 2;                    // 0= idle, 1 = walk/run 2 = jump 3 = sliding 4 = shooting 5=graphing 
         this.firingState = 0;               // 0 = not firing, 1 = shooting weapon, 2 = grappling
         this.healthPoint = this.FULL_HEALTH_POINT;
         this.poisonedTimer = 0;
         this.healthBar = new HealthMeter(this);
+        this.weaponmodeicon = new WeaponIcon(this);
         this.landedTimer = 0.05;
         this.landed = 0;
 
@@ -273,7 +275,7 @@ class Megaman {
   
         if (this.dead) {
             
-            // this.velocity.y = -800
+            this.deadTimer -= this.game.clockTick;
         } else{
             
       if (this.weaponTimer > 0) {
@@ -360,16 +362,18 @@ class Megaman {
                 //for jumping
                 if (this.game.space) {
                     ASSET_MANAGER.playAsset("./sounds/jump.wav"); 
-                    if (Math.abs(this.velocity.x) < 16) {
-                        this.velocity.y = -240;
-                        this.fallAcc = STOP_FALL;
-                    } else if (Math.abs(this.velocity.x) < 40) {
-                        this.velocity.y = -240;
-                        this.fallAcc = WALK_FALL;
-                    } else {
-                        this.velocity.y = -300;
-                        this.fallAcc = RUN_FALL;
-                    }
+                    //if (Math.abs(this.velocity.x) < 16) {
+                    //    this.velocity.y = -240;
+                    //    this.fallAcc = STOP_FALL;
+                    //} else if (Math.abs(this.velocity.x) < 40) {
+                    //    this.velocity.y = -240;
+                    //    this.fallAcc = WALK_FALL;
+                    //} else {
+                    //    this.velocity.y = -300;
+                    //    this.fallAcc = RUN_FALL;
+                    //}
+                    this.velocity.y = -300;
+                    this.fallAcc = RUN_FALL;
                     this.action = 2;
                 }
             } else {
@@ -618,8 +622,8 @@ class Megaman {
                     }
                 } else {
                     if (!this.weaponTimer) {
+                        ASSET_MANAGER.playAsset("./sounds/laser.wav");
                         if (this.action != 3) {
-                            ASSET_MANAGER.playAsset("./sounds/laser.wav");
                             if (this.angleRads >= Math.PI / 5 && this.angleRads <= Math.PI / 2) {
                                 var laserOrigin = findEllipsePoint(40, 25, Math.PI / 5);
                                 this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X,
@@ -780,6 +784,7 @@ class Megaman {
 
             if (this.healthPoint <= 0) {
                 this.dead = true;
+                this.die();
             }
             if (this.facing == 1) {
                 if (!knockback) this.velocity.x = -160;
@@ -791,6 +796,10 @@ class Megaman {
             }
             this.invulnTimer = 1.5;
         }
+    }
+    updatePosition(x, y) {
+        this.x = x;
+        this.y = y;
     }
 
          
@@ -819,6 +828,7 @@ class Megaman {
             ctx.fillRect(this.x + this.FIRE_OFFSET_X - this.LASER_WIDTH / 2  + ellipsePoint.x - 1-this.game.camera.x, this.y + this.FIRE_OFFSET_Y - this.LASER_HEIGHT / 2 + ellipsePoint.y - 1- this.game.camera.y, 2, 2);
         }
         this.healthBar.draw(ctx);
+        this.weaponmodeicon.draw(ctx);
       
     };
 

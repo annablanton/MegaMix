@@ -6,17 +6,22 @@ class SceneManager {
         this.y = 0;
         this.title = true; 
         this.stopmusic = false;
+        this.lives = 3;
         
         ////this.megaman = new Megaman(game, 6000, 500);
-        ////this.megaman = new Megaman(game, 100, 200);
+        this.megaman = new Megaman(game, 100, 200);
         //this.megaman = new Megaman(game, 2600, -3900)
         game.addEntity(new HealthMeter(game, 975, 25));
+        this.GAME_OVER_TEXT = "GAME OVER";
+        this.PRESS_SPACE_DEATH_TEXT = "PRESS SPACE TO TRY AGAIN";
+        this.PRESS_SPACE_GAME_OVER_TEXT = "PRESS SPACE TO CONTINUE";
         
         ////this.loadLevelOne(this.title);
         //this.loadLevelTwo();   
         //// this.loadTutorialLevel(); 
         //game.addEntity(this.megaman);
         game.addEntity(this);
+        this.level = 0;
     };
 
     clearEntities() {
@@ -345,7 +350,8 @@ class SceneManager {
             this.game.addEntity(new Tile(this.game, 7552 + i * 32, 736, 3, 2));
         }
 
-        this.game.addEntity(new Tower(this.game, 7936, 428.5));
+        this.tower = new Tower(this.game, 7936, 428.5);
+        this.game.addEntity(this.tower);
 
         this.game.addEntity(this.megaman);
         this.game.addEntity(this);
@@ -629,6 +635,8 @@ class SceneManager {
             // this.game.addEntity(new Tile(this.game, 1472+i*32*4,-4268,14,5)); 
             // this.game.addEntity(new Tile(this.game, 1504+i*32*4, -4268,15,5)); 
         }
+        this.tower = new Tower(this.game, 1400, -4597.5);
+        this.game.addEntity(this.tower);
 
         //2720 //-4960
         for(var i=0; i<7; i++){
@@ -801,12 +809,31 @@ class SceneManager {
             } 
             this.game.addEntity(new Tile(this.game, 125 * 32 + i * 32, 288, 6 + i, 0))
         }
-
+        this.tower = new Tower(this.game, 5000, 396.5);
         this.game.addEntity(new Wheelie(this.game, 80 * 32, 640));
         this.game.addEntity(this.megaman);
+        this.game.addEntity(this.tower);
         this.game.addEntity(this);
 
 
+    }
+
+    loadLevel(level) {
+        switch (level) {
+            case 0:
+                this.loadTutorialLevel();
+                break;
+            case 1:
+                this.tutorial = false;
+                this.loadLevelOne();
+                break;
+            case 2:
+                this.loadLevelTwo();
+                break;
+            case 3:
+                //end screen here
+                break;
+        }
     }
 
     updateAudio(){
@@ -829,11 +856,45 @@ class SceneManager {
             this.title = false;
             console.log("level start");
             //this.megaman = new Megaman(this.game, 6000, 500);
-            this.megaman = new Megaman(this.game, 100, 200);
+            this.DEATH_SCREEN_TEXT = "LIVES: " + this.lives;
             //this.megaman = new Megaman(this.game, 2600, -3900);
-            this.loadLevelOne();
-            // this.loadLevelTwo();
+            this.loadLevel(this.level);
+            //this.loadLevelTwo();
             // this.loadTutorialLevel();
+        }
+
+        if (this.tower && this.tower.transitionTimer <= 0) {
+            this.game.clearEntities();
+            this.removeFromWorld = false;
+            this.megaman = new Megaman(this.game, 100, 200);
+            this.tower = null;
+            this.DEATH_SCREEN_TEXT = "LIVES: " + this.lives;
+            this.loadLevel(++this.level);
+        } else if (this.megaman && this.megaman.deadTimer <= 0 && !this.deathScreen) {
+            this.game.clearEntities();
+            if (this.lives > 0) {
+                this.deathScreen = true;
+                this.lives--;
+                this.updateDeathText();
+            } else {
+                this.gameOverScreen = true;
+                this.level = 0;
+                this.lives = 3;
+            }
+            this.removeFromWorld = false;
+            this.megaman = new Megaman(this.game, 100, 200);
+            this.tower = null;
+            this.game.addEntity(this);
+        }
+
+        if (this.deathScreen && this.game.space) {
+            this.deathScreen = false;
+            this.loadLevel(this.level);
+        }
+
+        if (this.gameOverScreen && this.game.space) {
+            this.gameOverScreen = false;
+            this.loadLevel(this.level);
         }
 
         if (!this.title) {
@@ -846,6 +907,10 @@ class SceneManager {
             }
         }
     };
+
+    updateDeathText() {
+        this.DEATH_SCREEN_TEXT = "LIVES: " + this.lives;
+    }
 
     draw(ctx) {
         if(this.tutorial) {
@@ -880,11 +945,21 @@ class SceneManager {
         }
 
         if (this.title) {
-            ctx.drawImage(ASSET_MANAGER.getAsset("./sprites/intropage.png"),0,0);
+            ctx.drawImage(ASSET_MANAGER.getAsset("./sprites/intropage.png"), 0, 0);
             ctx.fillStyle = "White";
             ctx.font = 20 + 'px "Press Start 2P"';
             ctx.fillText("PRESS SPACE TO START", 600, 700)
-        } 
+        } else if (this.deathScreen) {
+            ctx.fillStyle = "White";
+            ctx.font = 20 + 'px "Press Start 2P"';
+            ctx.fillText(this.DEATH_SCREEN_TEXT, CANVAS_WIDTH / 2 - this.DEATH_SCREEN_TEXT.length * 10, CANVAS_HEIGHT / 2);
+            ctx.fillText(this.PRESS_SPACE_DEATH_TEXT, CANVAS_WIDTH / 2 - this.PRESS_SPACE_DEATH_TEXT.length * 10, CANVAS_HEIGHT / 2 + 30);
+        } else if (this.gameOverScreen) {
+            ctx.fillStyle = "White";
+            ctx.font = 20 + 'px "Press Start 2P"';
+            ctx.fillText(this.GAME_OVER_TEXT, CANVAS_WIDTH / 2 - this.GAME_OVER_TEXT.length * 10, CANVAS_HEIGHT / 2);
+            ctx.fillText(this.PRESS_SPACE_GAME_OVER_TEXT, CANVAS_WIDTH / 2 - this.PRESS_SPACE_GAME_OVER_TEXT.length * 10, CANVAS_HEIGHT / 2 + 30);
+        }
         // ctx.drawImage(ASSET_MANAGER.getAsset("./sprites/intropage.png"),0,0);
         ctx.fillStyle = "White";
         ctx.font = 20 + 'px "Press Start 2P"';
