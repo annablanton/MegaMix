@@ -622,8 +622,8 @@ class Megaman {
                     }
                 } else {
                     if (!this.weaponTimer) {
+                        ASSET_MANAGER.playAsset("./sounds/laser.wav");
                         if (this.action != 3) {
-                            ASSET_MANAGER.playAsset("./sounds/laser.wav");
                             if (this.angleRads >= Math.PI / 5 && this.angleRads <= Math.PI / 2) {
                                 var laserOrigin = findEllipsePoint(40, 25, Math.PI / 5);
                                 this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X,
@@ -784,6 +784,7 @@ class Megaman {
 
             if (this.healthPoint <= 0) {
                 this.dead = true;
+                this.die();
             }
             if (this.facing == 1) {
                 if (!knockback) this.velocity.x = -160;

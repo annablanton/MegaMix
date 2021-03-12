@@ -866,7 +866,6 @@ class SceneManager {
         if (this.tower && this.tower.transitionTimer <= 0) {
             this.game.clearEntities();
             this.removeFromWorld = false;
-            this.megaman.removeFromWorld = false;
             this.megaman = new Megaman(this.game, 100, 200);
             this.tower = null;
             this.DEATH_SCREEN_TEXT = "LIVES: " + this.lives;
@@ -883,7 +882,6 @@ class SceneManager {
                 this.lives = 3;
             }
             this.removeFromWorld = false;
-            this.megaman.removeFromWorld = false;
             this.megaman = new Megaman(this.game, 100, 200);
             this.tower = null;
             this.game.addEntity(this);
