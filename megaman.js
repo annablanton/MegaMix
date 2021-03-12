@@ -12,10 +12,11 @@ class Megaman {
         this.LASER_HEIGHT = 1024;
         this.FULL_HEALTH_POINT = 28;
         this.MAX_GRAPPLE_SPEED = 1000;
+        this.deadTimer = 3;
 
         this.facing = 0;                    //0=left 1=right
         this.state =0;                      // 0 = normal 1 = poison
-        this.action = 0;                    // 0= idle, 1 = walk/run 2 = jump 3 = sliding 4 = shooting 5=graphing 
+        this.action = 2;                    // 0= idle, 1 = walk/run 2 = jump 3 = sliding 4 = shooting 5=graphing 
         this.firingState = 0;               // 0 = not firing, 1 = shooting weapon, 2 = grappling
         this.healthPoint = this.FULL_HEALTH_POINT;
         this.poisonedTimer = 0;
@@ -274,7 +275,7 @@ class Megaman {
   
         if (this.dead) {
             
-            // this.velocity.y = -800
+            this.deadTimer -= this.game.clockTick;
         } else{
             
       if (this.weaponTimer > 0) {
@@ -361,16 +362,18 @@ class Megaman {
                 //for jumping
                 if (this.game.space) {
                     ASSET_MANAGER.playAsset("./sounds/jump.wav"); 
-                    if (Math.abs(this.velocity.x) < 16) {
-                        this.velocity.y = -240;
-                        this.fallAcc = STOP_FALL;
-                    } else if (Math.abs(this.velocity.x) < 40) {
-                        this.velocity.y = -240;
-                        this.fallAcc = WALK_FALL;
-                    } else {
-                        this.velocity.y = -300;
-                        this.fallAcc = RUN_FALL;
-                    }
+                    //if (Math.abs(this.velocity.x) < 16) {
+                    //    this.velocity.y = -240;
+                    //    this.fallAcc = STOP_FALL;
+                    //} else if (Math.abs(this.velocity.x) < 40) {
+                    //    this.velocity.y = -240;
+                    //    this.fallAcc = WALK_FALL;
+                    //} else {
+                    //    this.velocity.y = -300;
+                    //    this.fallAcc = RUN_FALL;
+                    //}
+                    this.velocity.y = -300;
+                    this.fallAcc = RUN_FALL;
                     this.action = 2;
                 }
             } else {
@@ -792,6 +795,10 @@ class Megaman {
             }
             this.invulnTimer = 1.5;
         }
+    }
+    updatePosition(x, y) {
+        this.x = x;
+        this.y = y;
     }
 
          
