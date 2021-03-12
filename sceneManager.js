@@ -6,11 +6,15 @@ class SceneManager {
         this.y = 0;
         this.title = true; 
         this.stopmusic = false;
+        this.lives = 3;
         
         ////this.megaman = new Megaman(game, 6000, 500);
-        ////this.megaman = new Megaman(game, 100, 200);
+        this.megaman = new Megaman(game, 100, 200);
         //this.megaman = new Megaman(game, 2600, -3900)
         game.addEntity(new HealthMeter(game, 975, 25));
+        this.GAME_OVER_TEXT = "GAME OVER";
+        this.PRESS_SPACE_DEATH_TEXT = "PRESS SPACE TO TRY AGAIN";
+        this.PRESS_SPACE_GAME_OVER_TEXT = "PRESS SPACE TO CONTINUE";
         
         ////this.loadLevelOne(this.title);
         //this.loadLevelTwo();   
@@ -852,7 +856,7 @@ class SceneManager {
             this.title = false;
             console.log("level start");
             //this.megaman = new Megaman(this.game, 6000, 500);
-            this.megaman = new Megaman(this.game, 100, 200);
+            this.DEATH_SCREEN_TEXT = "LIVES: " + this.lives;
             //this.megaman = new Megaman(this.game, 2600, -3900);
             this.loadLevel(this.level);
             //this.loadLevelTwo();
@@ -862,15 +866,38 @@ class SceneManager {
         if (this.tower && this.tower.transitionTimer <= 0) {
             this.game.clearEntities();
             this.removeFromWorld = false;
-            this.tower = null;
             this.megaman = new Megaman(this.game, 100, 200);
+            this.tower = null;
+            this.DEATH_SCREEN_TEXT = "LIVES: " + this.lives;
             this.loadLevel(++this.level);
+        } else if (this.megaman && this.megaman.deadTimer <= 0 && !this.deathScreen) {
+            this.game.clearEntities();
+            if (this.lives > 0) {
+                this.deathScreen = true;
+                this.lives--;
+                this.updateDeathText();
+            } else {
+                this.gameOverScreen = true;
+                this.level = 0;
+                this.lives = 3;
+            }
+            this.removeFromWorld = false;
+            this.megaman = new Megaman(this.game, 100, 200);
+            this.tower = null;
+            this.game.addEntity(this);
         }
 
+        if (this.deathScreen && this.game.space) {
+            this.deathScreen = false;
+            this.loadLevel(this.level);
+        }
 
+        if (this.gameOverScreen && this.game.space) {
+            this.gameOverScreen = false;
+            this.loadLevel(this.level);
+        }
 
         if (!this.title) {
-            console.log(this.megaman);
             this.x = this.megaman.x - midpoint_width;
             if (this.megaman.y < midpoint_height) {
                 this.y = this.megaman.y - midpoint_height;
@@ -880,6 +907,10 @@ class SceneManager {
             }
         }
     };
+
+    updateDeathText() {
+        this.DEATH_SCREEN_TEXT = "LIVES: " + this.lives;
+    }
 
     draw(ctx) {
         if(this.tutorial) {
@@ -914,11 +945,21 @@ class SceneManager {
         }
 
         if (this.title) {
-            ctx.drawImage(ASSET_MANAGER.getAsset("./sprites/intropage.png"),0,0);
+            ctx.drawImage(ASSET_MANAGER.getAsset("./sprites/intropage.png"), 0, 0);
             ctx.fillStyle = "White";
             ctx.font = 20 + 'px "Press Start 2P"';
             ctx.fillText("PRESS SPACE TO START", 600, 700)
-        } 
+        } else if (this.deathScreen) {
+            ctx.fillStyle = "White";
+            ctx.font = 20 + 'px "Press Start 2P"';
+            ctx.fillText(this.DEATH_SCREEN_TEXT, CANVAS_WIDTH / 2 - this.DEATH_SCREEN_TEXT.length * 10, CANVAS_HEIGHT / 2);
+            ctx.fillText(this.PRESS_SPACE_DEATH_TEXT, CANVAS_WIDTH / 2 - this.PRESS_SPACE_DEATH_TEXT.length * 10, CANVAS_HEIGHT / 2 + 30);
+        } else if (this.gameOverScreen) {
+            ctx.fillStyle = "White";
+            ctx.font = 20 + 'px "Press Start 2P"';
+            ctx.fillText(this.GAME_OVER_TEXT, CANVAS_WIDTH / 2 - this.GAME_OVER_TEXT.length * 10, CANVAS_HEIGHT / 2);
+            ctx.fillText(this.PRESS_SPACE_GAME_OVER_TEXT, CANVAS_WIDTH / 2 - this.PRESS_SPACE_GAME_OVER_TEXT.length * 10, CANVAS_HEIGHT / 2 + 30);
+        }
         // ctx.drawImage(ASSET_MANAGER.getAsset("./sprites/intropage.png"),0,0);
         ctx.fillStyle = "White";
         ctx.font = 20 + 'px "Press Start 2P"';
