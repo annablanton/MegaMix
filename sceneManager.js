@@ -10,7 +10,7 @@ class SceneManager {
         
         ////this.megaman = new Megaman(game, 6000, 500);
         this.megaman = new Megaman(game, 100, 200);
-        this.megaman = new Megaman(game, 2600, -3900)
+        //this.megaman = new Megaman(game, 2600, -3900)
         game.addEntity(new HealthMeter(game, 975, 25));
         this.GAME_OVER_TEXT = "GAME OVER";
         this.PRESS_SPACE_DEATH_TEXT = "PRESS SPACE TO TRY AGAIN";
