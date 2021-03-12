@@ -559,8 +559,9 @@ class SceneManager {
                 this.game.addEntity(new Tile(this.game, 1312+i*128,-96-j*512,17,6)); 
                 this.game.addEntity(new Tile(this.game, 1344+i*128,-96-j*512,18,6)); 
                 this.game.addEntity(new Tile(this.game, 1376+i*128,-96-j*512,19,6)); 
+                this.game.addEntity(new Tile(this.game, 2048,-96-j*512,19,6)); 
                 this.game.addEntity(new Tile(this.game, 2048,-128-j*512,19,6)); 
-                this.game.addEntity(new Tile(this.game, 2048,-160-j*512,19,6));     
+                this.game.addEntity(new Tile(this.game, 2048,-160-j*512,19,6));  
                 // this.game.addEntity(new Tile(this.game, 1408+i*128,-96-j*512,16,6)); 
                 // this.game.addEntity(new Tile(this.game, 1440+i*128,-96-j*512,17,6)); 
                 // this.game.addEntity(new Tile(this.game, 1472+i*128,-96-j*512,18,6)); 
@@ -583,8 +584,9 @@ class SceneManager {
                 this.game.addEntity(new Tile(this.game, 2432-i*128,-352-j*512,17,6)); 
                 this.game.addEntity(new Tile(this.game, 2400-i*128,-352-j*512,18,6)); 
                 this.game.addEntity(new Tile(this.game, 2368-i*128,-352-j*512,19,6)); 
+                this.game.addEntity(new Tile(this.game, 1824,-352-j*512,19,6)); 
                 this.game.addEntity(new Tile(this.game, 1824,-384-j*512,19,6)); 
-                this.game.addEntity(new Tile(this.game, 1824,-416-j*512,19,6));     
+                this.game.addEntity(new Tile(this.game, 1824,-416-j*512,19,6)); 
 
 
             }
@@ -697,6 +699,8 @@ class SceneManager {
 
         //1280-2048
         //1824-2464
+        
+        this.game.addEntity(new Mushroom(this.game, 1300, -275,0))
         this.game.addEntity(new Met(this.game, 1650, 64,0));
         this.game.addEntity(new Met(this.game, 2100, 64,0));
         this.game.addEntity(new Met(this.game, 1650, 400,0));
@@ -712,17 +716,19 @@ class SceneManager {
         this.game.addEntity(new HammerBro(this.game, 2050, -500));
         this.game.addEntity(new HammerBro(this.game, 2200, -500));
         this.game.addEntity(new HammerBro(this.game, 2350, -500));
+        this.game.addEntity(new Mushroom(this.game, 2464, -500,0))
         this.game.addEntity(new Carock(this.game, 2450, -500, this.megaman));
 
-
-        this.game.addEntity(new Bulldozer(this.game, 1350, -775));
+        this.game.addEntity(new Mushroom(this.game, 1300, -775,0))
+        this.game.addEntity(new Bulldozer(this.game, 1450, -775));
         this.game.addEntity(new Bulldozer(this.game, 1800, -775));
         this.game.addEntity(new Carock(this.game, 1950, -775, this.megaman));
        
         this.game.addEntity(new Wheelie(this.game, 2200, -1050));
         this.game.addEntity(new Wheelie(this.game, 2450, -1050));
 
-        this.game.addEntity(new Met(this.game, 1350, -1325, 0));
+        this.game.addEntity(new Mushroom(this.game, 1300, -1325,0))
+        this.game.addEntity(new Met(this.game, 1400, -1325, 0));
         this.game.addEntity(new Bulldozer(this.game, 1650, -1325));
         this.game.addEntity(new Met(this.game, 1800, -1325, 0));
 
@@ -749,8 +755,8 @@ class SceneManager {
         this.game.addEntity(new Mushroom(this.game, 2100, -2300,0))
         this.game.addEntity(new Mushroom(this.game, 1700, -3300,0))
         this.game.addEntity(new Mushroom(this.game, 2100, -3900,0))
-        this.game.addEntity(new Mushroom(this.game, 2600, -4350,0))
-        this.game.addEntity(new Mushroom(this.game, 3200, -4350, 0))
+        this.game.addEntity(new Mushroom(this.game, 2600, -4000,0))
+
         this.game.addEntity(this.megaman);
         this.game.addEntity(this);
 
