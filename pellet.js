@@ -3,6 +3,7 @@ class Pellet {
         Object.assign(this, { game, x, y, angle, size });
         this.x = x
         this.y = y
+        this.size= size;
         this.SPEED = 100;
         this.Pellet_Damage = 1;
         this.velocity = { x: (this.SPEED) * Math.cos(this.angle) + momentumX, y: this.SPEED * Math.sin(this.angle) };
@@ -10,7 +11,7 @@ class Pellet {
         this.PELLET_WIDTH = 8;
         this.PELLET_HEIGHT = 6;
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/projectiles.png");
-        this.rotatedPellet = rotationCanvas(this.spritesheet, 5, 8, this.PELLET_WIDTH, this.PELLET_HEIGHT, this.angle, 2);
+        this.rotatedPellet = rotationCanvas(this.spritesheet, 5, 8, this.PELLET_WIDTH, this.PELLET_HEIGHT, this.angle, size*2);
     }
 
     updateBB() {
@@ -49,13 +50,24 @@ class Pellet {
             if ((entity instanceof Wheelie ||
                 entity instanceof HammerBro || (entity instanceof Carock && !entity.teleporting) || (entity instanceof Met && entity.action != 3) || entity instanceof Barba
                 || (entity instanceof BigBoo && !entity.teleporting && !entity.reappearing)) && that.BB.collide(entity.BB)) {
-                    if(entity.HEALTH_POINTS > 0){                        
-                        entity.HEALTH_POINTS -= that.Pellet_Damage 
-                    } 
-                    if(entity.HEALTH_POINTS <= 0){
-                        // entity.HEALTH_POINTS -= that.Pellet_Damage
-                        entity.dead = true;
-                        // entity.removeFromWorld = true;
+                    if(that.size==1.3){
+                        if(entity.HEALTH_POINTS > 0){                        
+                            entity.HEALTH_POINTS -= that.Pellet_Damage*2 
+                        } 
+                        if(entity.HEALTH_POINTS <= 0){
+                            // entity.HEALTH_POINTS -= that.Pellet_Damage
+                            entity.dead = true;
+                            // entity.removeFromWorld = true;
+                        }
+                    } else{
+                        if(entity.HEALTH_POINTS > 0){                        
+                            entity.HEALTH_POINTS -= that.Pellet_Damage 
+                        } 
+                        if(entity.HEALTH_POINTS <= 0){
+                            // entity.HEALTH_POINTS -= that.Pellet_Damage
+                            entity.dead = true;
+                            // entity.removeFromWorld = true;
+                        }    
                     }
 
                 }

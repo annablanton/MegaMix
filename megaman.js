@@ -12,10 +12,11 @@ class Megaman {
         this.LASER_HEIGHT = 1024;
         this.FULL_HEALTH_POINT = 28;
         this.MAX_GRAPPLE_SPEED = 1000;
+        this.deadTimer = 3;
 
         this.facing = 0;                    //0=left 1=right
         this.state =0;                      // 0 = normal 1 = poison
-        this.action = 0;                    // 0= idle, 1 = walk/run 2 = jump 3 = sliding 4 = shooting 5=graphing 
+        this.action = 2;                    // 0= idle, 1 = walk/run 2 = jump 3 = sliding 4 = shooting 5=graphing 
         this.firingState = 0;               // 0 = not firing, 1 = shooting weapon, 2 = grappling
         this.healthPoint = this.FULL_HEALTH_POINT;
         this.poisonedTimer = 0;
@@ -119,7 +120,7 @@ class Megaman {
         this.firingAnims[1][0][0][4] = new Animator(this.spritesheet, 769, 207, 46, 46, 3, 0.1, 5, false, true);
         this.firingAnims[1][0][0][5] = new Animator(this.spritesheet, 769, 156, 46, 46, 3, 0.1, 5, false, true);
         this.firingAnims[1][0][0][6] = new Animator(this.spritesheet, 922, 156, 46, 46, 3, 0.1, 5, false, true);
-        this.firingAnims[1][0][0][7] = new Animator(this.spritesheet, 922, 208, 46, 46, 3, 0.1, 5, false, true);
+        this.firingAnims[1][0][0][7] = new Animator(this.spritesheet, 922, 206, 46, 46, 3, 0.1, 5, false, true);
 
         // facing right = 1, normal =0  |  0= idle, 1 = walk/run, 2 = jump, 3 = sliding, 4 = shooting, 5=graphing  
         this.animations[1][0][1] = new Animator(this.spritesheet, 1075, 3, 46, 46, 4, 0.1, 5, false, true);
@@ -205,7 +206,7 @@ class Megaman {
         this.firingAnims[1][1][0][4] = new Animator(this.spritesheet, 769, 207 + 661, 46, 46, 3, 0.1, 5, false, true);
         this.firingAnims[1][1][0][5] = new Animator(this.spritesheet, 769, 156 + 661, 46, 46, 3, 0.1, 5, false, true);
         this.firingAnims[1][1][0][6] = new Animator(this.spritesheet, 922, 156 + 661, 46, 46, 3, 0.1, 5, false, true);
-        this.firingAnims[1][1][0][7] = new Animator(this.spritesheet, 922, 208 + 661, 46, 46, 3, 0.1, 5, false, true);
+        this.firingAnims[1][1][0][7] = new Animator(this.spritesheet, 922, 207 + 661, 46, 46, 3, 0.1, 5, false, true);
 
         // facing right = 1, poison = 1  |  0= idle, 1 = walk/run 2 = jump 3 = sliding
         this.animations[1][1][1] = new Animator(this.spritesheet, 1075, 664, 46, 46, 4, 0.1, 5, false, true);
@@ -274,7 +275,7 @@ class Megaman {
   
         if (this.dead) {
             
-            // this.velocity.y = -800
+            this.deadTimer -= this.game.clockTick;
         } else{
             
       if (this.weaponTimer > 0) {
@@ -361,16 +362,18 @@ class Megaman {
                 //for jumping
                 if (this.game.space) {
                     ASSET_MANAGER.playAsset("./sounds/jump.wav"); 
-                    if (Math.abs(this.velocity.x) < 16) {
-                        this.velocity.y = -240;
-                        this.fallAcc = STOP_FALL;
-                    } else if (Math.abs(this.velocity.x) < 40) {
-                        this.velocity.y = -240;
-                        this.fallAcc = WALK_FALL;
-                    } else {
-                        this.velocity.y = -300;
-                        this.fallAcc = RUN_FALL;
-                    }
+                    //if (Math.abs(this.velocity.x) < 16) {
+                    //    this.velocity.y = -240;
+                    //    this.fallAcc = STOP_FALL;
+                    //} else if (Math.abs(this.velocity.x) < 40) {
+                    //    this.velocity.y = -240;
+                    //    this.fallAcc = WALK_FALL;
+                    //} else {
+                    //    this.velocity.y = -300;
+                    //    this.fallAcc = RUN_FALL;
+                    //}
+                    this.velocity.y = -300;
+                    this.fallAcc = RUN_FALL;
                     this.action = 2;
                 }
             } else {
@@ -507,7 +510,7 @@ class Megaman {
                 } else if (entity instanceof Bulldozer) {
                     that.damage(4);
                 } else if (entity instanceof Barba || entity instanceof Fireball || entity instanceof BigBoo) {
-                    that.damage(3, 100);
+                    that.damage(3, 45);
                 } else {
                     that.damage(1);
                 }
@@ -573,7 +576,7 @@ class Megaman {
                             this.pelletSize = 1;
                         } else {
                             ASSET_MANAGER.playAsset("./sounds/shooting.wav");
-                            this.pelletSize = 2;
+                            this.pelletSize = 1.3;
                         }
                         var momentumX;
                         if ((this.velocity.x > 0 && vector.x > 0) || (this.velocity.x < 0 && vector.x < 0)) momentumX = this.velocity.x;
@@ -619,8 +622,8 @@ class Megaman {
                     }
                 } else {
                     if (!this.weaponTimer) {
+                        ASSET_MANAGER.playAsset("./sounds/laser.wav");
                         if (this.action != 3) {
-                            ASSET_MANAGER.playAsset("./sounds/laser.wav");
                             if (this.angleRads >= Math.PI / 5 && this.angleRads <= Math.PI / 2) {
                                 var laserOrigin = findEllipsePoint(40, 25, Math.PI / 5);
                                 this.game.addEntity(new Laser(this.game, this.x + this.FIRE_OFFSET_X,
@@ -781,17 +784,29 @@ class Megaman {
 
             if (this.healthPoint <= 0) {
                 this.dead = true;
+                this.die();
             }
             if (this.facing == 1) {
                 if (!knockback) this.velocity.x = -160;
-                else this.velocity.x = -knockback;
+                else {
+                    this.velocity.x = -knockback;
+                    this.velocity.y = -230;
+                }
+
             }
             if (this.facing == 0) {
                 if (!knockback) this.velocity.x = +160;
-                else this.velocity.x = knockback;
+                else {
+                    this.velocity.x = knockback;
+                    this.velocity.y = -230;
+                }
             }
             this.invulnTimer = 1.5;
         }
+    }
+    updatePosition(x, y) {
+        this.x = x;
+        this.y = y;
     }
 
          

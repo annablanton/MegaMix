@@ -240,7 +240,11 @@ class GameEngine {
             }
         }
         for (var i = 0; i < this.nonCollidableEntities.length; i++) {
-            this.nonCollidableEntities[i].update();
+            var entity = this.nonCollidableEntities[i];
+
+            if (!entity.removeFromWorld) {
+                entity.update();
+            }
         }
 
         for (var i = this.entities.length - 1; i >= 0; --i) {
@@ -248,12 +252,23 @@ class GameEngine {
                 this.entities.splice(i, 1);
             }
         }
+
+        for (var i = 0; i < this.nonCollidableEntities.length; i++) {
+            if (this.nonCollidableEntities[i].removeFromWorld) {
+                this.nonCollidableEntities.splice(i, 1);
+            }
+        }
     };
 
     clearEntities() {
+        if (this.camera) this.camera.tutorial = false;
         this.entities.forEach(function (entity) {
             entity.removeFromWorld = true;
-        })
+        });
+
+        this.nonCollidableEntities.forEach(function (entity) {
+            entity.removeFromWorld = true;
+        });
     }
 
     loop() {

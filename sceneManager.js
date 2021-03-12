@@ -6,11 +6,15 @@ class SceneManager {
         this.y = 0;
         this.title = true; 
         this.stopmusic = false;
+        this.lives = 3;
         
         ////this.megaman = new Megaman(game, 6000, 500);
-        ////this.megaman = new Megaman(game, 100, 200);
+        this.megaman = new Megaman(game, 100, 200);
         //this.megaman = new Megaman(game, 2600, -3900)
         game.addEntity(new HealthMeter(game, 975, 25));
+        this.GAME_OVER_TEXT = "GAME OVER";
+        this.PRESS_SPACE_DEATH_TEXT = "PRESS SPACE TO TRY AGAIN";
+        this.PRESS_SPACE_GAME_OVER_TEXT = "PRESS SPACE TO CONTINUE";
         
         ////this.loadLevelOne(this.title);
         //this.loadLevelTwo();   
@@ -33,14 +37,14 @@ class SceneManager {
         this.x = 0;
         //background setting
         
-        this.game.addEntity(new Background(this.game, -2818,-312));
-        this.game.addEntity(new Background(this.game, -897,-312));
-        this.game.addEntity(new Background(this.game, 1024,-312));
-        this.game.addEntity(new Background(this.game, 2945,-312));
-        this.game.addEntity(new Background(this.game, 4866,-312));
-        this.game.addEntity(new Background(this.game, 6787,-312));
-        this.game.addEntity(new Background(this.game, 8708,-312));
-        this.game.addEntity(new Background(this.game, 10629,-312));
+        this.game.addNonCollidableEntity(new Background(this.game, -2818,-312));
+        this.game.addNonCollidableEntity(new Background(this.game, -897,-312));
+        this.game.addNonCollidableEntity(new Background(this.game, 1024,-312));
+        this.game.addNonCollidableEntity(new Background(this.game, 2945,-312));
+        this.game.addNonCollidableEntity(new Background(this.game, 4866,-312));
+        this.game.addNonCollidableEntity(new Background(this.game, 6787,-312));
+        this.game.addNonCollidableEntity(new Background(this.game, 8708,-312));
+        this.game.addNonCollidableEntity(new Background(this.game, 10629,-312));
 
        
         this.game.addEntity(new Mushroom(this.game, 230,300,1))
@@ -262,91 +266,101 @@ class SceneManager {
         this.game.addEntity(new Tile(this.game, 3718+i*32, -288 ,3,2));}    
         
         for(var i =0; i<50; i++){        
-            this.game.addEntity(new Tile(this.game, 4480+i*32, 736 ,3,2));
+            this.game.addEntity(new Tile(this.game, 4480+i*32, 608 ,3,2));
         }    
         
         // Boss session preparation
-        this.game.addEntity(new Tile(this.game, 4900,288,11,0))
-        this.game.addEntity(new Tile(this.game, 4932,256,11,0))
-        this.game.addEntity(new Tile(this.game, 4964,224,11,0))
-        this.game.addEntity(new Tile(this.game, 5000,160,11,0))
-        this.game.addEntity(new Tile(this.game, 5352,160,11,0))
+        this.game.addEntity(new Tile(this.game, 4900,160,11,0))
+        this.game.addEntity(new Tile(this.game, 4932,128,11,0))
+        this.game.addEntity(new Tile(this.game, 4964,96,11,0))
+        this.game.addEntity(new Tile(this.game, 5000,32,11,0))
+        this.game.addEntity(new Tile(this.game, 5352,32,11,0))
         for(var i = 0; i < 12; i++) {
-            this.game.addEntity(new Tile(this.game, 5000+i*32, 192,12 + i%4,0))
+            this.game.addEntity(new Tile(this.game, 5000+i*32, 64,12 + i%4,0))
         }
         for(var i = 0; i<4; i++){
-            this.game.addEntity(new Mushroom(this.game, 5032+i*64, 100, 0));
+            this.game.addEntity(new Mushroom(this.game, 5032+i*64, 32, 0));
         }
 
         for(var i = 0; i<16; i++){
-            this.game.addEntity(new Tile(this.game, 5352, 704- i*32, 11, 0))
+            this.game.addEntity(new Tile(this.game, 5352, 576- i*32, 11, 0))
         }
-        this.game.addEntity(new Wheelie(this.game, 5310,-100))
+        this.game.addEntity(new Wheelie(this.game, 5310,-32))
 
         // Bosses
-        var barba = new Barba(this.game, this.megaman, [6272, 6528, 6784, 7040, 7296], [600, 300]);
+        var barba = new Barba(this.game, this.megaman, [6272, 6528, 6784, 7040, 7296], [472, 172]);
         this.game.addEntity(barba);
         //var bb = new BigBoo(this.game, 6900, 200, this.megaman);
         //this.game.addEntity(bb);
-        this.game.addEntity(new Tile(this.game, 5600,704,11,0))
-        this.game.addEntity(new Tile(this.game, 5600,672,11,0))
-        this.game.addEntity(new Bulldozer(this.game, 5800, 600))
-        this.game.addEntity(new Tile(this.game, 6000,704,11,0))
-        this.game.addEntity(new Tile(this.game, 6000,672,11,0))
+        this.game.addEntity(new Tile(this.game, 5600, 544, 11, 0));
+        this.game.addEntity(new Tile(this.game, 5600, 576, 11, 0));
+        this.game.addEntity(new Bulldozer(this.game, 5800, 472));
+        this.game.addEntity(new Tile(this.game, 6000, 544, 11, 0));
+        this.game.addEntity(new Tile(this.game, 6000, 576, 11, 0));
 
         for(var i=0; i<6; i++){
-            this.game.addEntity(new Tile(this.game, 6112+i*256,736, 12,0))
-            this.game.addEntity(new Tile(this.game, 6144+i*256,736, 13,0))
-            this.game.addEntity(new Tile(this.game, 6176 + i * 256, 736, 14, 0))
-            this.game.addEntity(new Tile(this.game, 6208 + i * 256, 736, 14, 0))
-            this.game.addEntity(new Tile(this.game, 6240 + i * 256, 736, 15, 0))
+            this.game.addEntity(new Tile(this.game, 6112 + i * 256, 608, 12, 0));
+            this.game.addEntity(new Tile(this.game, 6144 + i * 256, 608, 13, 0));
+            this.game.addEntity(new Tile(this.game, 6176 + i * 256, 608, 14, 0));
+            this.game.addEntity(new Tile(this.game, 6208 + i * 256, 608, 14, 0));
+            this.game.addEntity(new Tile(this.game, 6240 + i * 256, 608, 15, 0));
+        }
+
+        for (var i = 0; i < 6; i++) {
+            for (var j = 0; j < 4; j++) {
+                this.game.addEntity(new Tile(this.game, 6112 + i * 256, 640 + j * 32, 12, 0));
+                this.game.addNonCollidableEntity(new Tile(this.game, 6144 + i * 256, 640 + j * 32, 13, 0));
+                this.game.addNonCollidableEntity(new Tile(this.game, 6176 + i * 256, 640 + j * 32, 14, 0));
+                this.game.addNonCollidableEntity(new Tile(this.game, 6208 + i * 256, 640 + j * 32, 14, 0));
+                this.game.addEntity(new Tile(this.game, 6240 + i * 256, 640 + j * 32, 15, 0));
+            }
         }
         for(var i=0; i<6; i++){
-            this.game.addEntity(new Tile(this.game, 6144 + i * 256, 480, 12, 1, true))
-            this.game.addEntity(new Tile(this.game, 6176 + i * 256, 480, 13, 1, true))
-            this.game.addEntity(new Tile(this.game, 6208 + i * 256, 480, 15, 1, true))
+            this.game.addEntity(new Tile(this.game, 6144 + i * 256, 352, 12, 1, true));
+            this.game.addEntity(new Tile(this.game, 6176 + i * 256, 352, 13, 1, true));
+            this.game.addEntity(new Tile(this.game, 6208 + i * 256, 352, 15, 1, true));
         }
 
         for(var i=0; i<5; i++){
-            this.game.addEntity(new Tile(this.game, 6272 + i * 256, 224, 12, 0, true))
-            this.game.addEntity(new Tile(this.game, 6304 + i * 256, 224, 14, 0, true))
-            this.game.addEntity(new Tile(this.game, 6336 + i * 256, 224, 15, 0, true))
+            this.game.addEntity(new Tile(this.game, 6272 + i * 256, 96, 12, 0, true));
+            this.game.addEntity(new Tile(this.game, 6304 + i * 256, 96, 14, 0, true));
+            this.game.addEntity(new Tile(this.game, 6336 + i * 256, 96, 15, 0, true));
         }
 
         for (var i = 0; i < 7; i++) {
-            this.game.addEntity(new Tile(this.game, 6240 + 5 * 256, 576 - 4 * i * 32, 16, 3));
-            this.game.addEntity(new Tile(this.game, 6240 + 5 * 256, 544 - 4 * i * 32, 16, 2));
-            this.game.addEntity(new Tile(this.game, 6240 + 5 * 256, 512 - 4 * i * 32, 16, 1));
-            this.game.addEntity(new Tile(this.game, 6240 + 5 * 256, 480 - 4 * i * 32, 16, 0));
+            this.game.addEntity(new Tile(this.game, 6240 + 5 * 256, 448 - 4 * i * 32, 16, 3));
+            this.game.addEntity(new Tile(this.game, 6240 + 5 * 256, 416 - 4 * i * 32, 16, 2));
+            this.game.addEntity(new Tile(this.game, 6240 + 5 * 256, 384 - 4 * i * 32, 16, 1));
+            this.game.addEntity(new Tile(this.game, 6240 + 5 * 256, 352 - 4 * i * 32, 16, 0));
         }
 
         for (var i = 0; i < 7; i++) {
-            this.game.addEntity(new Tile(this.game, 6112, 576 - 4 * i * 32, 16, 3));
-            this.game.addEntity(new Tile(this.game, 6112, 544 - 4 * i * 32, 16, 2));
-            this.game.addEntity(new Tile(this.game, 6112, 512 - 4 * i * 32, 16, 1));
-            this.game.addEntity(new Tile(this.game, 6112, 480 - 4 * i * 32, 16, 0));
+            this.game.addEntity(new Tile(this.game, 6112, 448 - 4 * i * 32, 16, 3));
+            this.game.addEntity(new Tile(this.game, 6112, 416 - 4 * i * 32, 16, 2));
+            this.game.addEntity(new Tile(this.game, 6112, 384 - 4 * i * 32, 16, 1));
+            this.game.addEntity(new Tile(this.game, 6112, 352 - 4 * i * 32, 16, 0));
         }
 
         for (var i = 0; i < 10; i++) {
-            this.game.addEntity(new Tile(this.game, 6144 + 4 * i * 32, -288, 12, 5));
-            this.game.addEntity(new Tile(this.game, 6176 + 4 * i * 32, -288, 13, 5));
-            this.game.addEntity(new Tile(this.game, 6208 + 4 * i * 32, -288, 14, 5));
-            this.game.addEntity(new Tile(this.game, 6240 + 4 * i * 32, -288, 15, 5));
+            this.game.addEntity(new Tile(this.game, 6144 + 4 * i * 32, -416, 12, 5));
+            this.game.addEntity(new Tile(this.game, 6176 + 4 * i * 32, -416, 13, 5));
+            this.game.addEntity(new Tile(this.game, 6208 + 4 * i * 32, -416, 14, 5));
+            this.game.addEntity(new Tile(this.game, 6240 + 4 * i * 32, -416, 15, 5));
         }
 
-        this.game.addEntity(new Tile(this.game, 7424, -288, 12, 5));
-        this.game.addEntity(new Tile(this.game, 7456, -288, 13, 5));
-        this.game.addEntity(new Tile(this.game, 7488, -288, 15, 5));
+        this.game.addEntity(new Tile(this.game, 7424, -416, 12, 5));
+        this.game.addEntity(new Tile(this.game, 7456, -416, 13, 5));
+        this.game.addEntity(new Tile(this.game, 7488, -416, 15, 5));
 
-        this.game.addEntity(new BossTrigger(this.game, 6208, -256, 32 * 39, 32 * 31, barba, [{ x: 6112, y: 608, length: 4 }, {x: 7520, y: 608, length: 4}]));
+        this.game.addEntity(new BossTrigger(this.game, 6208, -384, 32 * 39, 32 * 31, barba, [{ x: 6112, y: 480, length: 4 }, {x: 7520, y: 480, length: 4}]));
         //this.game.addEntity(new BossTrigger(this.game, 6208, -256, 32 * 39, 32 * 31, bb, [{ x: 6112, y: 608 }, { x: 7520, y: 608 }]));
 
 
         for (var i = 0; i < 40; i++) {
-            this.game.addEntity(new Tile(this.game, 7552 + i * 32, 736, 3, 2));
+            this.game.addEntity(new Tile(this.game, 7552 + i * 32, 608, 3, 2));
         }
 
-        this.tower = new Tower(this.game, 7936, 428.5);
+        this.tower = new Tower(this.game, 7936, 300.5);
         this.game.addEntity(this.tower);
 
         this.game.addEntity(this.megaman);
@@ -555,8 +569,9 @@ class SceneManager {
                 this.game.addEntity(new Tile(this.game, 1312+i*128,-96-j*512,17,6)); 
                 this.game.addEntity(new Tile(this.game, 1344+i*128,-96-j*512,18,6)); 
                 this.game.addEntity(new Tile(this.game, 1376+i*128,-96-j*512,19,6)); 
+                this.game.addEntity(new Tile(this.game, 2048,-96-j*512,19,6)); 
                 this.game.addEntity(new Tile(this.game, 2048,-128-j*512,19,6)); 
-                this.game.addEntity(new Tile(this.game, 2048,-160-j*512,19,6));     
+                this.game.addEntity(new Tile(this.game, 2048,-160-j*512,19,6));  
                 // this.game.addEntity(new Tile(this.game, 1408+i*128,-96-j*512,16,6)); 
                 // this.game.addEntity(new Tile(this.game, 1440+i*128,-96-j*512,17,6)); 
                 // this.game.addEntity(new Tile(this.game, 1472+i*128,-96-j*512,18,6)); 
@@ -579,8 +594,9 @@ class SceneManager {
                 this.game.addEntity(new Tile(this.game, 2432-i*128,-352-j*512,17,6)); 
                 this.game.addEntity(new Tile(this.game, 2400-i*128,-352-j*512,18,6)); 
                 this.game.addEntity(new Tile(this.game, 2368-i*128,-352-j*512,19,6)); 
+                this.game.addEntity(new Tile(this.game, 1824,-352-j*512,19,6)); 
                 this.game.addEntity(new Tile(this.game, 1824,-384-j*512,19,6)); 
-                this.game.addEntity(new Tile(this.game, 1824,-416-j*512,19,6));     
+                this.game.addEntity(new Tile(this.game, 1824,-416-j*512,19,6)); 
 
 
             }
@@ -693,6 +709,8 @@ class SceneManager {
 
         //1280-2048
         //1824-2464
+        
+        this.game.addEntity(new Mushroom(this.game, 1300, -275,0))
         this.game.addEntity(new Met(this.game, 1650, 64,0));
         this.game.addEntity(new Met(this.game, 2100, 64,0));
         this.game.addEntity(new Met(this.game, 1650, 400,0));
@@ -708,17 +726,19 @@ class SceneManager {
         this.game.addEntity(new HammerBro(this.game, 2050, -500));
         this.game.addEntity(new HammerBro(this.game, 2200, -500));
         this.game.addEntity(new HammerBro(this.game, 2350, -500));
+        this.game.addEntity(new Mushroom(this.game, 2464, -500,0))
         this.game.addEntity(new Carock(this.game, 2450, -500, this.megaman));
 
-
-        this.game.addEntity(new Bulldozer(this.game, 1350, -775));
+        this.game.addEntity(new Mushroom(this.game, 1300, -775,0))
+        this.game.addEntity(new Bulldozer(this.game, 1450, -775));
         this.game.addEntity(new Bulldozer(this.game, 1800, -775));
         this.game.addEntity(new Carock(this.game, 1950, -775, this.megaman));
        
         this.game.addEntity(new Wheelie(this.game, 2200, -1050));
         this.game.addEntity(new Wheelie(this.game, 2450, -1050));
 
-        this.game.addEntity(new Met(this.game, 1350, -1325, 0));
+        this.game.addEntity(new Mushroom(this.game, 1300, -1325,0))
+        this.game.addEntity(new Met(this.game, 1400, -1325, 0));
         this.game.addEntity(new Bulldozer(this.game, 1650, -1325));
         this.game.addEntity(new Met(this.game, 1800, -1325, 0));
 
@@ -745,8 +765,8 @@ class SceneManager {
         this.game.addEntity(new Mushroom(this.game, 2100, -2300,0))
         this.game.addEntity(new Mushroom(this.game, 1700, -3300,0))
         this.game.addEntity(new Mushroom(this.game, 2100, -3900,0))
-        this.game.addEntity(new Mushroom(this.game, 2600, -4350,0))
-        this.game.addEntity(new Mushroom(this.game, 3200, -4350, 0))
+        this.game.addEntity(new Mushroom(this.game, 2600, -4000,0))
+
         this.game.addEntity(this.megaman);
         this.game.addEntity(this);
 
@@ -852,7 +872,7 @@ class SceneManager {
             this.title = false;
             console.log("level start");
             //this.megaman = new Megaman(this.game, 6000, 500);
-            this.megaman = new Megaman(this.game, 100, 200);
+            this.DEATH_SCREEN_TEXT = "LIVES: " + this.lives;
             //this.megaman = new Megaman(this.game, 2600, -3900);
             this.loadLevel(this.level);
             //this.loadLevelTwo();
@@ -862,15 +882,38 @@ class SceneManager {
         if (this.tower && this.tower.transitionTimer <= 0) {
             this.game.clearEntities();
             this.removeFromWorld = false;
-            this.tower = null;
             this.megaman = new Megaman(this.game, 100, 200);
+            this.tower = null;
+            this.DEATH_SCREEN_TEXT = "LIVES: " + this.lives;
             this.loadLevel(++this.level);
+        } else if (this.megaman && this.megaman.deadTimer <= 0 && !this.deathScreen) {
+            this.game.clearEntities();
+            if (this.lives > 0) {
+                this.deathScreen = true;
+                this.lives--;
+                this.updateDeathText();
+            } else {
+                this.gameOverScreen = true;
+                this.level = 0;
+                this.lives = 3;
+            }
+            this.removeFromWorld = false;
+            this.megaman = new Megaman(this.game, 100, 200);
+            this.tower = null;
+            this.game.addEntity(this);
         }
 
+        if (this.deathScreen && this.game.space) {
+            this.deathScreen = false;
+            this.loadLevel(this.level);
+        }
 
+        if (this.gameOverScreen && this.game.space) {
+            this.gameOverScreen = false;
+            this.loadLevel(this.level);
+        }
 
         if (!this.title) {
-            console.log(this.megaman);
             this.x = this.megaman.x - midpoint_width;
             if (this.megaman.y < midpoint_height) {
                 this.y = this.megaman.y - midpoint_height;
@@ -880,6 +923,10 @@ class SceneManager {
             }
         }
     };
+
+    updateDeathText() {
+        this.DEATH_SCREEN_TEXT = "LIVES: " + this.lives;
+    }
 
     draw(ctx) {
         if(this.tutorial) {
@@ -914,11 +961,21 @@ class SceneManager {
         }
 
         if (this.title) {
-            ctx.drawImage(ASSET_MANAGER.getAsset("./sprites/intropage.png"),0,0);
+            ctx.drawImage(ASSET_MANAGER.getAsset("./sprites/intropage.png"), 0, 0);
             ctx.fillStyle = "White";
             ctx.font = 20 + 'px "Press Start 2P"';
             ctx.fillText("PRESS SPACE TO START", 600, 700)
-        } 
+        } else if (this.deathScreen) {
+            ctx.fillStyle = "White";
+            ctx.font = 20 + 'px "Press Start 2P"';
+            ctx.fillText(this.DEATH_SCREEN_TEXT, CANVAS_WIDTH / 2 - this.DEATH_SCREEN_TEXT.length * 10, CANVAS_HEIGHT / 2);
+            ctx.fillText(this.PRESS_SPACE_DEATH_TEXT, CANVAS_WIDTH / 2 - this.PRESS_SPACE_DEATH_TEXT.length * 10, CANVAS_HEIGHT / 2 + 30);
+        } else if (this.gameOverScreen) {
+            ctx.fillStyle = "White";
+            ctx.font = 20 + 'px "Press Start 2P"';
+            ctx.fillText(this.GAME_OVER_TEXT, CANVAS_WIDTH / 2 - this.GAME_OVER_TEXT.length * 10, CANVAS_HEIGHT / 2);
+            ctx.fillText(this.PRESS_SPACE_GAME_OVER_TEXT, CANVAS_WIDTH / 2 - this.PRESS_SPACE_GAME_OVER_TEXT.length * 10, CANVAS_HEIGHT / 2 + 30);
+        }
         // ctx.drawImage(ASSET_MANAGER.getAsset("./sprites/intropage.png"),0,0);
         ctx.fillStyle = "White";
         ctx.font = 20 + 'px "Press Start 2P"';

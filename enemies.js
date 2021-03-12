@@ -933,9 +933,11 @@ class ArmorKnight {
                 } else {
                     ctx.fillStyle = "Red";
                 }
-                ctx.fillText(" • ", this.BB.x - this.game.camera.x, this.BB.y- this.game.camera.y);
-                ctx.strokeStyle = "Red";
-                ctx.strokeRect(this.FDBB.x - this.game.camera.x, this.FDBB.y- this.game.camera.y, this.FDBB.width, this.FDBB.height);
+                if (PARAMS.DEBUG) {
+                    ctx.fillText(" • ", this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y);
+                    ctx.strokeStyle = "Red";
+                    ctx.strokeRect(this.FDBB.x - this.game.camera.x, this.FDBB.y - this.game.camera.y, this.FDBB.width, this.FDBB.height);
+                }
             }
         }
         //this.shield.draw(ctx);
@@ -1219,9 +1221,11 @@ class HammerBro {
                 } else {
                     ctx.fillStyle = "Red";
                 }
-                ctx.fillText(" • ", this.BB.x- this.game.camera.x, this.BB.y- this.game.camera.y);
-                ctx.strokeStyle = "Red";
-                ctx.strokeRect(this.FDBB.x - this.game.camera.x, this.FDBB.y- this.game.camera.y, this.FDBB.width, this.FDBB.height);
+                if (PARAMS.DEBUG) {
+                    ctx.fillText(" • ", this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y);
+                    ctx.strokeStyle = "Red";
+                    ctx.strokeRect(this.FDBB.x - this.game.camera.x, this.FDBB.y - this.game.camera.y, this.FDBB.width, this.FDBB.height);
+                }
                 
             }
         }
@@ -1457,10 +1461,11 @@ class Wheelie {
                     } else {
                         ctx.fillStyle = "Red";
                     }
-                    ctx.fillText(" • ", this.BB.x - this.game.camera.x, this.BB.y- this.game.camera.y);
+                    ctx.fillText(" • ", this.BB.x - this.game.camera.x, this.BB.y - this.game.camera.y);
+                    ctx.strokeStyle = "Red";
+                    ctx.strokeRect(this.FDBB.x - this.game.camera.x, this.FDBB.y - this.game.camera.y, this.FDBB.width, this.FDBB.height);
                 }
-                ctx.strokeStyle = "Red";
-                ctx.strokeRect(this.FDBB.x - this.game.camera.x, this.FDBB.y- this.game.camera.y, this.FDBB.width, this.FDBB.height);
+
          }
         
         //this.animations[0][0][0].drawFrame(this.game.clockTick, ctx, 16, 16, 3);
