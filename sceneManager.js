@@ -10,6 +10,10 @@ class SceneManager {
         
         ////this.megaman = new Megaman(game, 6000, 500);
         this.megaman = new Megaman(game, 100, 200);
+        this.megamansprite = ASSET_MANAGER.getAsset("./sprites/megaman.png");
+        this.endingscenesprite = ASSET_MANAGER.getAsset("./sprites/endingscene.png");
+        this.megamanTransitionAnimation = new Animator(this.megamansprite, 922, 564, 46, 46, 10, 0.15, 5, false, true)
+        this.endingAnimation = new Animator(this.endingscenesprite, 0, 0, 512, 288, 122, 0.3, 512, false, true)
         //this.megaman = new Megaman(game, 2600, -3900)
         game.addEntity(new HealthMeter(game, 975, 25));
         this.GAME_OVER_TEXT = "GAME OVER";
@@ -878,14 +882,25 @@ class SceneManager {
             //this.loadLevelTwo();
             // this.loadTutorialLevel();
         }
-
+        
         if (this.tower && this.tower.transitionTimer <= 0) {
-            this.game.clearEntities();
-            this.removeFromWorld = false;
-            this.megaman = new Megaman(this.game, 100, 200);
-            this.tower = null;
-            this.DEATH_SCREEN_TEXT = "LIVES: " + this.lives;
-            this.loadLevel(++this.level);
+            if(this.level == 2) {
+                this.endingscene = true
+                this.game.clearEntities();
+                this.removeFromWorld = false;
+            } else {
+                this.transitionScreen = true;
+                this.game.clearEntities();
+                this.removeFromWorld = false;
+                this.LEVEL_TRANSITION_TEXT = "LEVEL: " + (this.level + 1);
+                if (this.transitionScreen && this.game.space) {
+                    this.transitionScreen = false;
+                    this.megaman = new Megaman(this.game, 100, 200);
+                    this.tower = null;
+                    this.DEATH_SCREEN_TEXT = "LIVES: " + this.lives;    
+                    this.loadLevel(++this.level);
+                }
+            }
         } else if (this.megaman && this.megaman.deadTimer <= 0 && !this.deathScreen) {
             this.game.clearEntities();
             if (this.lives > 0) {
@@ -911,6 +926,15 @@ class SceneManager {
         if (this.gameOverScreen && this.game.space) {
             this.gameOverScreen = false;
             this.loadLevel(this.level);
+        }
+
+        if (this.endingscene && this.game.space) {
+            this.megaman = new Megaman(this.game, 100, 200);
+            this.tower = null;
+            this.lives = 3;
+            this.DEATH_SCREEN_TEXT = "LIVES: " + this.lives;    
+            this.endingscene = false;
+            this.loadLevel(1);
         }
 
         if (!this.title) {
@@ -967,7 +991,8 @@ class SceneManager {
             ctx.fillText("PRESS SPACE TO START", 600, 700)
         } else if (this.deathScreen) {
             ctx.fillStyle = "White";
-            ctx.font = 20 + 'px "Press Start 2P"';
+            ctx.font = 20 + 'px "Press Start 2P"'; 
+            ctx.drawImage(ASSET_MANAGER.getAsset("./sprites/deathscreen.png"),0,0, CANVAS_WIDTH, CANVAS_HEIGHT);
             ctx.fillText(this.DEATH_SCREEN_TEXT, CANVAS_WIDTH / 2 - this.DEATH_SCREEN_TEXT.length * 10, CANVAS_HEIGHT / 2);
             ctx.fillText(this.PRESS_SPACE_DEATH_TEXT, CANVAS_WIDTH / 2 - this.PRESS_SPACE_DEATH_TEXT.length * 10, CANVAS_HEIGHT / 2 + 30);
         } else if (this.gameOverScreen) {
@@ -975,6 +1000,20 @@ class SceneManager {
             ctx.font = 20 + 'px "Press Start 2P"';
             ctx.fillText(this.GAME_OVER_TEXT, CANVAS_WIDTH / 2 - this.GAME_OVER_TEXT.length * 10, CANVAS_HEIGHT / 2);
             ctx.fillText(this.PRESS_SPACE_GAME_OVER_TEXT, CANVAS_WIDTH / 2 - this.PRESS_SPACE_GAME_OVER_TEXT.length * 10, CANVAS_HEIGHT / 2 + 30);
+        } else if (this.transitionScreen) {
+            ctx.fillStyle = "White";
+            ctx.font = 20 + 'px "Press Start 2P"';
+            ctx.drawImage(ASSET_MANAGER.getAsset("./sprites/transitionbackground.png"),0,0)
+            ctx.fillText(this.LEVEL_TRANSITION_TEXT, CANVAS_WIDTH / 2 - this.DEATH_SCREEN_TEXT.length * 10, CANVAS_HEIGHT / 2 - 80);
+            ctx.fillText(this.DEATH_SCREEN_TEXT, CANVAS_WIDTH / 2 - this.DEATH_SCREEN_TEXT.length * 10, CANVAS_HEIGHT / 2 - 40);
+            ctx.fillText("PRESS SPACE TO CONTINUE", CANVAS_WIDTH / 2 - this.DEATH_SCREEN_TEXT.length * 28, CANVAS_HEIGHT / 2 + 40);
+            this.megamanTransitionAnimation.drawFrame(this.game.clockTick, ctx, CANVAS_WIDTH / 2 - 23 * 8, CANVAS_HEIGHT / 2, 8);
+        } else if (this.endingscene) {
+            ctx.fillStyle = "Black";
+            ctx.fillRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+            this.endingAnimation.drawFrame(this.game.clockTick, ctx, 0, 96, 2);
+            ctx.fillStyle = "White";
+            ctx.fillText("PRESS SPACE TO PLAY AGAIN", CANVAS_WIDTH / 2 - this.DEATH_SCREEN_TEXT.length * 30, CANVAS_HEIGHT - 40);
         }
         // ctx.drawImage(ASSET_MANAGER.getAsset("./sprites/intropage.png"),0,0);
         ctx.fillStyle = "White";
